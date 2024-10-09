@@ -1,7 +1,7 @@
 CREATE TABLE household (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
-  code VARCHAR(4) NOT NULL UNIQUE -- Unique code for the household (0000-9999)
+  code VARCHAR(4) NOT NULL UNIQUE -- Unique code for the household (0000-ZZZZ)
 );
 
 CREATE TABLE chore (
@@ -9,7 +9,7 @@ CREATE TABLE chore (
   name VARCHAR(255) NOT NULL UNIQUE,
   household_id INTEGER REFERENCES household(id), -- Many-to-One: Each chore belongs to one household
   description VARCHAR(255) NOT NULL,
-  active BOOLEAN DEFAULT FALSE,
+  active BOOLEAN DEFAULT TRUE,
   frequency_days INTEGER NOT NULL, -- Frequency of the chore in days (e.g. every 7 days)
   archived BOOLEAN NOT NULL DEFAULT FALSE,
   voice_recording BYTEA, -- Binary data to store the actual file

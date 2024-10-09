@@ -17,7 +17,7 @@ Table chore {
   name varchar(255) [not null, unique]
   household_id integer [ref: > household.id, note: "Many-to-One: Each chore belongs to one household"]
   description varchar(255) [not null]
-  active bool [default: false]
+  active bool [default: true]
   frequency_days integer [not null, note: "Frequency of the chore in days (e.g. every 7 days)"]
   archived bool [not null, default: false]
   voice_recording bytea [note: "Binary data to store the actual file"]
