@@ -9,8 +9,7 @@ Project project_name {
 Table household {
   id integer [primary key]
   name varchar(255) [not null, unique, note: "Unique name for the household"]
-  // code integer [not null, unique, note: "Unique code for the household"]
-  code varchar(4) [not null, unique, note: "Unique code for the household "] // so we can have 0000-9999. Consider indexing to speed up queries
+  code varchar(4) [not null, unique, note: "Unique code for the household "] // so we can have 0000-ZZZZ. Consider indexing to speed up queries
 }
 
 Table chore {
@@ -18,7 +17,7 @@ Table chore {
   name varchar(255) [not null, unique]
   household_id integer [ref: > household.id, note: "Many-to-One: Each chore belongs to one household"]
   description varchar(255) [not null]
-  active bool [default: false]
+  active bool [default: true]
   frequency_days integer [not null, note: "Frequency of the chore in days (e.g. every 7 days)"]
   archived bool [not null, default: false]
   voice_recording blob [note: "Binary data to store the actual file"]

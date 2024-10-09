@@ -9,7 +9,7 @@ Project project_name {
 Table household {
   id serial [primary key]
   name varchar(255) [not null, unique, note: "Unique name for the household"]
-  code varchar(4) [not null, unique, note: "Unique code for the household "] // so we can have 0000-9999. Consider indexing to speed up queries
+  code varchar(4) [not null, unique, note: "Unique code for the household "] // so we can have 0000-ZZZZ. Consider indexing to speed up queries
 }
 
 Table chore {
