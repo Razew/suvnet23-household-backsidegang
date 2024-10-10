@@ -22,8 +22,8 @@ Table chore {
   isArchived bool [not null, default: false]
   voice_recording bytea [note: "Binary data to store the actual file"]
   image bytea [note: "Binary data to store the actual file"]
-  weight integer [not null, note: "Weight of the chore (1-10). Constraint: weight should be between 1 and 10"]
-}
+  weight integer [not null, note: "Weight of the chore. Constraint: weight should be one of 1, 2, 4, 6, 8"]
+ }
 
 Table user {
   id serial [primary key]
