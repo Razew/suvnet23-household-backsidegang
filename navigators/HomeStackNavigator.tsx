@@ -27,7 +27,7 @@ export default function HomeStackNavigator() {
             style={s.tempExit}
             onPress={() => navigation.replace('Loading')}
           >
-            <Text style={s.tempText}>Start</Text>
+            <Text style={s.tempText}>Loading screen</Text>
             <MaterialIcons
               name="exit-to-app"
               size={24}
@@ -62,7 +62,7 @@ export default function HomeStackNavigator() {
               style={s.tempExit}
               onPress={() => navigation.replace('Home')}
             >
-              <Text style={s.tempText}>Home</Text>
+              <Text style={s.tempText}>Home screen</Text>
               <MaterialIcons
                 name="exit-to-app"
                 size={24}
