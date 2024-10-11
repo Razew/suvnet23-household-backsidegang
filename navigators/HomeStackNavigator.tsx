@@ -13,7 +13,10 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 
 export default function HomeStackNavigator() {
   return (
-    <HomeStack.Navigator initialRouteName="Home">
+    <HomeStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{ headerBackTitle: 'Back' }}
+    >
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
@@ -21,12 +24,12 @@ export default function HomeStackNavigator() {
       <HomeStack.Screen
         name="JoinHousehold"
         component={JoinHouseholdScreen}
-        options={{ headerBackTitle: 'Back' }} // iOS text for going back button
+        options={{ title: 'Join Household' }}
       />
       <HomeStack.Screen
         name="CreateHousehold"
         component={CreateHouseholdScreen}
-        options={{ headerBackTitle: 'Back' }} // iOS
+        options={{ title: 'Create Household' }}
       />
     </HomeStack.Navigator>
   );
