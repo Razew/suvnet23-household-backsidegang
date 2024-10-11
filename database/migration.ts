@@ -1,5 +1,28 @@
 import { supabase } from './supabase';
 
+async function dropTables() {
+  console.log('Running dropTables()...');
+  await grantPermissionsToTables();
+
+  const dropTablesQuery = `
+  DROP TABLE IF EXISTS user_to_household;
+  DROP TABLE IF EXISTS chore_to_user;
+  DROP TABLE IF EXISTS chore;
+  DROP TABLE IF EXISTS household;
+  DROP TABLE IF EXISTS account;
+  DROP TABLE IF EXISTS avatar;
+  `;
+
+  const { data, error } = await supabase.rpc('execute_sql', {
+    sql: dropTablesQuery,
+  });
+  if (error) {
+    console.error('Error while running function dropTables():', error);
+  } else {
+    console.log('"dropTables() result:', data);
+  }
+}
+
 async function grantPermissionsToTables() {
   console.log('Running grantPermissionsToTables()...');
   const grantPermissionsToTablesQuery = `
@@ -50,5 +73,7 @@ export function migrate() {
     }
     console.log('signing in...');
     await signUpOrLogIn(supabaseUsername, supabasePassword);
+    console.log('dropping tables...');
+    await dropTables();
   })();
 }
