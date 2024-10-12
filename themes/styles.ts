@@ -6,6 +6,7 @@ export const { container, large } = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 5, // Temporary solution to keep buttons apart
   },
   large: {
     fontSize: 24,
