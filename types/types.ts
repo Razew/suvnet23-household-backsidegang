@@ -1,5 +1,7 @@
 export type Account = {
   id: number;
+  user_name: string;
+  hashed_password: string;
 };
 export type Chore = {
   id: number;
