@@ -99,7 +99,7 @@ async function grantPermissionsToTables() {
   }
 }
 
-async function signUpOrLogIn(email: string, password: string) {
+export async function signUpOrLogIn(email: string, password: string) {
   console.log('Running signUpOrLogIn()...');
   let { data, error } = await supabase.auth.signInWithPassword({
     email,
