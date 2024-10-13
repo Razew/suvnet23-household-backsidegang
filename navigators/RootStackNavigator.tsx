@@ -3,12 +3,14 @@ import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeStackNavigator from './HomeStackNavigator';
+import UploadFileTestScreen from '../screens/UploadFileTestScreen';
 
 export type RootStackParamList = {
   Loading: undefined;
   Login: undefined;
   Register: undefined;
   HomeNavigator: undefined;
+  UploadFileTest: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -31,6 +33,10 @@ export default function RootStackNavigator() {
       <RootStack.Screen
         name="Register"
         component={RegisterScreen}
+      />
+      <RootStack.Screen
+        name="UploadFileTest"
+        component={UploadFileTestScreen}
       />
       <RootStack.Screen
         name="HomeNavigator"

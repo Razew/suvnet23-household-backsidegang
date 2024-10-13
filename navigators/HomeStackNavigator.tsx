@@ -5,12 +5,14 @@ import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
 import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import HouseholdTabNavigator from './HouseholdTabNavigator';
+import UploadFileTestScreen from '../screens/UploadFileTestScreen';
 
 export type HomeStackParamList = {
   Home: undefined;
   JoinHousehold: undefined;
   CreateHousehold: undefined;
   HouseholdNavigator: undefined;
+  UploadFileTest: undefined; // for testing purposes
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -51,6 +53,11 @@ export default function HomeStackNavigator() {
         name="CreateHousehold"
         component={CreateHouseholdScreen}
         options={{ title: 'Create Household' }}
+      />
+      <HomeStack.Screen
+        name="UploadFileTest"
+        component={UploadFileTestScreen}
+        options={{ title: 'Upload File Test' }}
       />
       <HomeStack.Screen
         name="HouseholdNavigator"

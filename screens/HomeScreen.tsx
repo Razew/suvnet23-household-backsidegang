@@ -25,6 +25,10 @@ export default function HomeScreen({ navigation }: Props) {
         title="Create Household"
         onPress={() => navigation.navigate('CreateHousehold')}
       />
+      <Button
+        title="Upload File Test"
+        onPress={() => navigation.navigate('UploadFileTest')}
+      />
     </View>
   );
 }
