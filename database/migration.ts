@@ -99,7 +99,7 @@ async function grantPermissionsToTables() {
   }
 }
 
-export async function signUpOrLogIn(email: string, password: string) {
+async function signUpOrLogIn(email: string, password: string) {
   console.log('Running signUpOrLogIn()...');
   let { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -163,11 +163,11 @@ export function migrate() {
     }
     console.log('signing in...');
     await signUpOrLogIn(supabaseUsername, supabasePassword);
-    // console.log('dropping tables...');
-    // await dropTables();
-    // console.log('creating tables...');
-    // await createTables();
-    // console.log('adding mock data...');
-    // await addMockData();
+    console.log('dropping tables...');
+    await dropTables();
+    console.log('creating tables...');
+    await createTables();
+    console.log('adding mock data...');
+    await addMockData();
   })();
 }
