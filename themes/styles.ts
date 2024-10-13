@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const { container, large } = StyleSheet.create({
+export const { container, large, image } = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -10,5 +10,9 @@ export const { container, large } = StyleSheet.create({
   },
   large: {
     fontSize: 24,
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
