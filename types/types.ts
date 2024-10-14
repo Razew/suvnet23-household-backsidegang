@@ -37,3 +37,12 @@ export type HouseholdUserProfile = {
   is_active: boolean;
   is_admin: boolean;
 };
+
+export type ChoreStatus = {
+  id: number;
+  chore: Chore;
+  user: HouseholdUserProfile;
+  is_completed: boolean;
+  due_date: Date;
+  done_date: Date | null;
+};
