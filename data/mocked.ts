@@ -4,6 +4,7 @@ import {
   Account,
   Avatar,
   HouseholdUserProfile,
+  ChoreStatus,
 } from '../types/types';
 
 export const mockedHouseholds: Household[] = [
@@ -227,9 +228,85 @@ export const mockedHouseholdUserProfiles: HouseholdUserProfile[] = [
   },
 ];
 
+const mockedChoreStatuses: ChoreStatus[] = [
+  {
+    id: 1,
+    user: mockedHouseholdUserProfiles[0],
+    chore: mockedChores[0],
+    is_completed: false,
+    due_date: new Date('2023-10-01 10:00:00'),
+    done_date: null,
+  },
+  {
+    id: 2,
+    user: mockedHouseholdUserProfiles[1],
+    chore: mockedChores[1],
+    is_completed: true,
+    due_date: new Date('2023-10-02 10:00:00'),
+    done_date: new Date('2023-10-02 18:00:00'),
+  },
+  {
+    id: 3,
+    user: mockedHouseholdUserProfiles[2],
+    chore: mockedChores[2],
+    is_completed: false,
+    due_date: new Date('2023-10-03 10:00:00'),
+    done_date: null,
+  },
+  {
+    id: 4,
+    user: mockedHouseholdUserProfiles[3],
+    chore: mockedChores[3],
+    is_completed: true,
+    due_date: new Date('2023-10-04 10:00:00'),
+    done_date: new Date('2023-10-04 12:00:00'),
+  },
+  {
+    id: 5,
+    user: mockedHouseholdUserProfiles[4],
+    chore: mockedChores[4],
+    is_completed: false,
+    due_date: new Date('2023-10-05 10:00:00'),
+    done_date: null,
+  },
+  {
+    id: 6,
+    user: mockedHouseholdUserProfiles[0],
+    chore: mockedChores[5],
+    is_completed: true,
+    due_date: new Date('2023-10-06 10:00:00'),
+    done_date: new Date('2023-10-06 19:00:00'),
+  },
+  {
+    id: 7,
+    user: mockedHouseholdUserProfiles[1],
+    chore: mockedChores[6],
+    is_completed: false,
+    due_date: new Date('2023-10-07 10:00:00'),
+    done_date: null,
+  },
+  {
+    id: 8,
+    user: mockedHouseholdUserProfiles[2],
+    chore: mockedChores[7],
+    is_completed: true,
+    due_date: new Date('2023-10-08 10:00:00'),
+    done_date: new Date('2023-10-08 20:00:00'),
+  },
+  {
+    id: 9,
+    user: mockedHouseholdUserProfiles[3],
+    chore: mockedChores[8],
+    is_completed: false,
+    due_date: new Date('2023-10-09 10:00:00'),
+    done_date: null,
+  },
+];
+
 export const logMockedData = () => {
   console.log('Mocked data:');
   console.log('---------------------------------');
+
   console.log(' Accounts:');
   mockedAccounts.forEach((account) => {
     console.log('   Account id: ', account.id);
@@ -238,15 +315,18 @@ export const logMockedData = () => {
     console.log(' ');
   });
   console.log('---------------------------------');
-  console.log(' Avatars:');
-  mockedAvatars.forEach((avatar) => {
-    console.log('   Avatar id: ', avatar.id);
-    console.log('   Name: ', avatar.name);
-    console.log('   Image: ', avatar.image);
-    console.log('   Colour code: ', avatar.colour_code);
-    console.log(' ');
+
+  console.log(' Households:');
+  mockedHouseholds.forEach((household) => {
+    console.log('   Household id: ', household.id);
+    console.log('   Name: ', household.name);
+    console.log('   Code: ', household.code);
+    console.log('   Chores: ');
+    household.chores.forEach((chore) => console.log('     ' + chore.name)),
+      console.log(' ');
   });
   console.log('---------------------------------');
+
   console.log(' Chores:');
   mockedChores.forEach((chore) => {
     console.log('   Chore id: ', chore.id);
@@ -261,6 +341,7 @@ export const logMockedData = () => {
     console.log('   Weight: ', chore.weight);
     console.log(' ');
   });
+
   console.log('---------------------------------');
   console.log(' Household user profiles:');
   mockedHouseholdUserProfiles.forEach((householdUserProfile) => {
@@ -273,16 +354,26 @@ export const logMockedData = () => {
     console.log('   Is admin: ', householdUserProfile.is_admin);
     console.log(' ');
   });
-  console.log('---------------------------------');
-  console.log(' Households:');
-  mockedHouseholds.forEach((household) => {
-    console.log('   Household id: ', household.id);
-    console.log('   Name: ', household.name);
-    console.log('   Code: ', household.code);
-    console.log('   Chores: ');
-    household.chores.forEach((chore) => console.log('     ' + chore.name)),
-      console.log(' ');
+
+  console.log(' Avatars:');
+  mockedAvatars.forEach((avatar) => {
+    console.log('   Avatar id: ', avatar.id);
+    console.log('   Name: ', avatar.name);
+    console.log('   Image: ', avatar.image);
+    console.log('   Colour code: ', avatar.colour_code);
+    console.log(' ');
   });
   console.log('---------------------------------');
-  console.log(' ');
+
+  console.log(' Chore statuses:');
+  mockedChoreStatuses.forEach((choreStatus) => {
+    console.log('   Chore status id: ', choreStatus.id);
+    console.log('   Chore: ', choreStatus.chore.name);
+    console.log('   User: ', choreStatus.user.nickname);
+    console.log('   Is completed: ', choreStatus.is_completed);
+    console.log('   Due date: ', choreStatus.due_date);
+    console.log('   Done date: ', choreStatus.done_date);
+    console.log(' ');
+  });
+  console.log('---------------------------------');
 };
