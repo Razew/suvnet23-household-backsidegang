@@ -158,7 +158,7 @@ export const mockedAvatars: Avatar[] = [
     id: 2,
     name: 'Pig',
     image: '🐷',
-    colour_code: '#ffd3b0',
+    colour_code: '#FFD3B0',
   },
   {
     id: 3,
@@ -176,7 +176,7 @@ export const mockedAvatars: Avatar[] = [
     id: 5,
     name: 'Octopus',
     image: '🐙',
-    colour_code: '#ff605d',
+    colour_code: '#FF605D',
   },
   {
     id: 5,
