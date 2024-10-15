@@ -340,8 +340,10 @@ export const logMockedData = () => {
     console.log('   Name: ', household.name);
     console.log('   Code: ', household.code);
     console.log('   Chores: ');
-    household.chores.forEach((chore) => console.log('     ' + chore.name)),
-      console.log(' ');
+    household.chores.forEach((chore) => {
+      console.log('     ' + chore.name);
+    });
+    console.log(' ');
   });
   console.log('---------------------------------');
 
