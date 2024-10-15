@@ -43,6 +43,6 @@ export type ChoreStatus = {
   chore: Chore;
   user: HouseholdUserProfile;
   is_completed: boolean;
-  due_date: Date;
+  due_date: Date | null;
   done_date: Date | null;
 };
