@@ -77,9 +77,7 @@ const SignUp = () => {
               style={{ marginTop: 10 }}
               icon="login"
               mode="contained"
-              onPress={() =>
-                console.log(`Pressed ${form.username}, ${form.password}`)
-              }
+              onPress={() => submit()}
             >
               Sign-Up
             </Button>

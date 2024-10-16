@@ -9,6 +9,23 @@ const SignIn = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
+  //  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // const submit = async () => {
+  //   if (!form.email || !form.password) {
+  //     Alert.alert("Error", "Please fill in all fields");
+  //   }
+  //   setIsSubmitting(true);
+  //   try {
+  //     await signIn(form.email, form.password);
+  //     router.replace("/home");
+  //   } catch (error: any) {
+  //     setIsSubmitting(false);
+  //     Alert.alert("Error", error.message);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   return (
     <SafeAreaView>
