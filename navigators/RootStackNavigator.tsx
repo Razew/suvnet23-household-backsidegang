@@ -17,7 +17,7 @@ export default function RootStackNavigator() {
   return (
     <RootStack.Navigator
       initialRouteName="Loading"
-      screenOptions={{ headerBackTitle: 'Back' }} // Only relevant for iOS
+      screenOptions={{ headerBackTitle: 'Back', headerTitleAlign: 'center' }} // headerBackTitle is only relevant for iOS
     >
       <RootStack.Screen
         name="Loading"
