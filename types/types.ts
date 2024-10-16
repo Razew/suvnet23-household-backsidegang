@@ -15,12 +15,21 @@ export type Chore = {
   image: string;
   weight: 1 | 2 | 4 | 6 | 8;
 };
+
 export type Household = {
   id: number;
   name: string;
   code: string;
   chores: Chore[];
+  completedChores: CompletedChore[];
+  users: HouseholdUserProfile[];
 };
+
+export interface CompletedChore extends Chore {
+  user: HouseholdUserProfile;
+  done_date: Date;
+}
+
 export type Avatar = {
   id: number;
   name: string;
