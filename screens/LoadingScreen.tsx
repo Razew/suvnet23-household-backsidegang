@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, Image, View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import hushalletLogo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { container } from '../themes/styles';
@@ -15,9 +16,11 @@ export default function LoadingScreen({ navigation }: Props) {
         resizeMode="contain"
       />
       <Button
-        title="Go to Login"
+        mode="elevated"
         onPress={() => navigation.replace('Login')}
-      />
+      >
+        Go to Login
+      </Button>
     </View>
   );
 }
