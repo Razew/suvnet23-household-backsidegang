@@ -27,10 +27,12 @@ export default function RootStackNavigator() {
       <RootStack.Screen
         name="Login"
         component={LoginScreen}
+        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="Register"
         component={RegisterScreen}
+        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="HomeNavigator"
