@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
@@ -5,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 
 const SignIn = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView>
       <ScrollView>
@@ -44,7 +46,7 @@ const SignIn = () => {
               }}
             >
               <Text>Dont have an account? </Text>
-              <TouchableOpacity onPress={() => console.log('Pressed')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                 <Text
                   style={{ color: 'blue', textDecorationLine: 'underline' }}
                 >
