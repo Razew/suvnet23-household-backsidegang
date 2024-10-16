@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { container, large } from '../themes/styles';
 
@@ -10,13 +11,17 @@ export default function LoginScreen({ navigation }: Props) {
     <View style={container}>
       <Text style={large}>Login screen</Text>
       <Button
-        title="Log in"
+        mode="elevated"
         onPress={() => navigation.replace('HomeNavigator')}
-      />
+      >
+        Log in
+      </Button>
       <Button
-        title="Register"
+        mode="elevated"
         onPress={() => navigation.navigate('Register')}
-      />
+      >
+        Register
+      </Button>
     </View>
   );
 }
