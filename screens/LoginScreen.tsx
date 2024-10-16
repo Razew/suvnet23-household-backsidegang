@@ -39,23 +39,23 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <View style={s.root}>
+        <View style={authStyles.root}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"
-            style={s.logo}
+            style={authStyles.logo}
           />
-          <View style={s.container}>
-            <Text style={s.title}>Log in</Text>
+          <View style={authStyles.container}>
+            <Text style={authStyles.title}>Log in</Text>
             <TextInput
-              style={s.input}
+              style={authStyles.input}
               mode="outlined"
               label="Username"
               value={form.username}
               onChangeText={(e) => setForm({ ...form, username: e })}
             />
             <TextInput
-              style={s.input}
+              style={authStyles.input}
               mode="outlined"
               label="Password"
               secureTextEntry={!showPassword}
@@ -69,17 +69,17 @@ const LoginScreen = ({ navigation }: Props) => {
               onChangeText={(e) => setForm({ ...form, password: e })}
             />
             <Button
-              style={s.button}
+              style={authStyles.button}
               icon="login"
               mode="contained"
               onPress={() => console.log('Pressed')}
             >
-              Log-in
+              Log In
             </Button>
-            <View style={s.signUpTextContainer}>
+            <View style={authStyles.linkTextContainer}>
               <Text>Dont have an account? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={s.signUpLink}>Sign-up</Text>
+                <Text style={authStyles.linkText}>Sign up</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -89,7 +89,7 @@ const LoginScreen = ({ navigation }: Props) => {
   );
 };
 
-const s = StyleSheet.create({
+export const authStyles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
@@ -111,12 +111,12 @@ const s = StyleSheet.create({
   button: {
     marginTop: 10,
   },
-  signUpTextContainer: {
+  linkTextContainer: {
     flexDirection: 'row',
     marginTop: 10,
     justifyContent: 'center',
   },
-  signUpLink: {
+  linkText: {
     color: 'blue', // If keeping the link as text, might want to set color by theme instead
     textDecorationLine: 'underline',
   },
