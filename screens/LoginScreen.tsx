@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps={'handled'}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Image
             source={hushallet_logo}

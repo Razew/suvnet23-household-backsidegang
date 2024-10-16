@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Button, TextInput, Text } from 'react-native-paper';
+import { Button, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
@@ -35,10 +35,8 @@ const RegisterScreen = ({ navigation }: Props) => {
   };
   return (
     <SafeAreaView>
-      <ScrollView>
-        <View
-          style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}
-        >
+      <ScrollView keyboardShouldPersistTaps={'handled'}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"
