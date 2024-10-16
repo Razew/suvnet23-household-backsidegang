@@ -16,8 +16,8 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 export default function RootStackNavigator() {
   return (
     <RootStack.Navigator
-      initialRouteName="Loading"
-      screenOptions={{ headerBackTitle: 'Back' }} // Only relevant for iOS
+      initialRouteName="Login"
+      screenOptions={{ headerBackTitle: 'Back', headerShown: false }} // Only relevant for iOS
     >
       <RootStack.Screen
         name="Loading"
