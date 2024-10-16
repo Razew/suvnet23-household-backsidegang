@@ -1,20 +1,14 @@
-import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import {
-  Alert,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Button, TextInput, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 
-const SignUp = () => {
-  const navigation = useNavigation();
+type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
+const RegisterScreen = ({ navigation }: Props) => {
   const [form, setForm] = useState({ username: '', password: '' });
 
   //const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,4 +98,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default RegisterScreen;

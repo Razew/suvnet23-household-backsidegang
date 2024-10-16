@@ -1,12 +1,14 @@
-import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Button, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 
-const SignIn = () => {
-  const navigation = useNavigation();
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+const LoginScreen = ({ navigation }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
   //  const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +69,7 @@ const SignIn = () => {
               mode="contained"
               onPress={() => console.log('Pressed')}
             >
-              log in
+              Log-in
             </Button>
             <View
               style={{
@@ -92,4 +94,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default LoginScreen;
