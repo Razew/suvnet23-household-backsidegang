@@ -22,7 +22,7 @@ export default function App() {
         console.log('No avatars found');
       }
     } catch (error) {
-      console.error('Error fetching avatars:', error.message);
+      console.error('Error fetching avatars:', (error as Error).message);
     }
   };
 
@@ -39,7 +39,7 @@ export default function App() {
       console.log('Shark avatar inserted successfully:', data);
       getAvatars(); // Refresh the avatars list
     } catch (error) {
-      console.error('Error inserting shark avatar:', error.message);
+      console.error('Error inserting shark avatar:', (error as Error).message);
     }
   };
 
