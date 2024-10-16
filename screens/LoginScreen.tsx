@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -32,9 +32,7 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <View
-          style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}
-        >
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"

@@ -1,15 +1,14 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import HomeStackNavigator, { HomeStackParamList } from './HomeStackNavigator';
+import HomeStackNavigator from './HomeStackNavigator';
 
 export type RootStackParamList = {
   Loading: undefined;
   Login: undefined;
   Register: undefined;
-  HomeNavigator: NavigatorScreenParams<HomeStackParamList>;
+  HomeNavigator: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
