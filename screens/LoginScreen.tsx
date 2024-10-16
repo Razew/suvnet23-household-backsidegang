@@ -1,6 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
@@ -33,23 +39,23 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={authStyles.root}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"
-            style={{ width: '60%' }}
+            style={authStyles.logo}
           />
-          <View style={{ width: '80%', gap: 5 }}>
-            <Text>Log in to Household</Text>
+          <View style={authStyles.container}>
+            <Text style={authStyles.title}>Log in</Text>
             <TextInput
-              style={{ borderRadius: 10 }}
+              style={authStyles.input}
               mode="outlined"
               label="Username"
               value={form.username}
               onChangeText={(e) => setForm({ ...form, username: e })}
             />
             <TextInput
-              style={{ borderRadius: 10 }}
+              style={authStyles.input}
               mode="outlined"
               label="Password"
               secureTextEntry={!showPassword}
@@ -63,27 +69,17 @@ const LoginScreen = ({ navigation }: Props) => {
               onChangeText={(e) => setForm({ ...form, password: e })}
             />
             <Button
-              style={{ marginTop: 10 }}
+              style={authStyles.button}
               icon="login"
               mode="contained"
               onPress={() => console.log('Pressed')}
             >
-              Log-in
+              Log In
             </Button>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                justifyContent: 'center',
-              }}
-            >
+            <View style={authStyles.linkTextContainer}>
               <Text>Dont have an account? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text
-                  style={{ color: 'blue', textDecorationLine: 'underline' }}
-                >
-                  Sign-up
-                </Text>
+                <Text style={authStyles.linkText}>Sign up</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -92,5 +88,38 @@ const LoginScreen = ({ navigation }: Props) => {
     </SafeAreaView>
   );
 };
+
+export const authStyles = StyleSheet.create({
+  root: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  container: {
+    width: '80%',
+    gap: 5,
+  },
+  logo: {
+    width: '60%',
+  },
+  title: {
+    fontSize: 16,
+    fontStyle: 'normal',
+  },
+  input: {
+    borderRadius: 10,
+  },
+  button: {
+    marginTop: 10,
+  },
+  linkTextContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'center',
+  },
+  linkText: {
+    color: 'blue', // If keeping the link as text, might want to set color by theme instead
+    textDecorationLine: 'underline',
+  },
+});
 
 export default LoginScreen;

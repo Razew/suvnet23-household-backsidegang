@@ -17,22 +17,19 @@ export default function RootStackNavigator() {
   return (
     <RootStack.Navigator
       initialRouteName="Loading"
-      screenOptions={{ headerBackTitle: 'Back' }} // Only relevant for iOS
+      screenOptions={{ headerBackTitle: 'Back', headerShown: false }} // Only relevant for iOS
     >
       <RootStack.Screen
         name="Loading"
         component={LoadingScreen}
-        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="HomeNavigator"
