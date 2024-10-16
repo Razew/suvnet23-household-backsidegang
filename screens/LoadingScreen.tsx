@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import hushalletLogo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { container } from '../themes/styles';
@@ -8,8 +8,9 @@ import { container } from '../themes/styles';
 type Props = NativeStackScreenProps<RootStackParamList, 'Loading'>;
 
 export default function LoadingScreen({ navigation }: Props) {
+  const { colors } = useTheme();
   return (
-    <View style={container}>
+    <View style={[container, { backgroundColor: colors.primaryContainer }]}>
       <Image
         source={hushalletLogo}
         style={{ width: '100%' }}

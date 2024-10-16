@@ -5,6 +5,7 @@ import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { authStyles } from './LoginScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -37,23 +38,23 @@ const RegisterScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={authStyles.root}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"
-            style={{ width: '60%' }}
+            style={authStyles.logo}
           />
-          <View style={{ width: '80%', gap: 5 }}>
-            <Text style={{ fontSize: 16, fontStyle: 'normal' }}>Sign up</Text>
+          <View style={authStyles.container}>
+            <Text style={authStyles.title}>Sign up</Text>
             <TextInput
-              style={{ borderRadius: 10 }}
+              style={authStyles.input}
               mode="outlined"
               label="Username"
               onChangeText={(e) => setForm({ ...form, username: e })}
               value={form.username}
             />
             <TextInput
-              style={{ borderRadius: 10 }}
+              style={authStyles.input}
               mode="outlined"
               label="Password"
               secureTextEntry={!showPassword}
@@ -67,27 +68,17 @@ const RegisterScreen = ({ navigation }: Props) => {
               onChangeText={(e) => setForm({ ...form, password: e })}
             />
             <Button
-              style={{ marginTop: 10 }}
+              style={authStyles.button}
               icon="login"
               mode="contained"
               onPress={() => submit()}
             >
-              Sign-Up
+              Sign Up
             </Button>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                justifyContent: 'center',
-              }}
-            >
+            <View style={authStyles.linkTextContainer}>
               <Text>Already have an account? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text
-                  style={{ color: 'blue', textDecorationLine: 'underline' }}
-                >
-                  Log-In
-                </Text>
+                <Text style={authStyles.linkText}>Log in</Text>
               </TouchableOpacity>
             </View>
           </View>
