@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
@@ -9,6 +9,7 @@ import { RootStackParamList } from '../navigators/RootStackNavigator';
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen = ({ navigation }: Props) => {
+  const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
   //  const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,13 +31,13 @@ const LoginScreen = ({ navigation }: Props) => {
   // };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Image
             source={hushallet_logo}
             resizeMode="contain"
-            style={{ width: '100%' }}
+            style={{ width: '60%' }}
           />
           <View style={{ width: '80%', gap: 5 }}>
             <Text>Log in to Household</Text>
