@@ -5,12 +5,42 @@ import {
   Avatar,
   HouseholdUserProfile,
   ChoreStatus,
+  CompletedChore,
 } from '../types/types';
 
+const dates = {
+  today: new Date(Date.now()),
+  lastWeek: new Date(Date.now()),
+  lastMonth: new Date(Date.now()),
+};
+dates['lastWeek'].setDate(dates['lastWeek'].getDate() - 7);
+dates['lastMonth'].setMonth(dates['lastMonth'].getMonth() - 1);
+
 export const mockedHouseholds: Household[] = [
-  { id: 1, name: 'Svensson Family', code: 'A123', chores: [] },
-  { id: 2, name: 'Johansson Family', code: 'B456', chores: [] },
-  { id: 3, name: 'Nilsson Family', code: 'C789', chores: [] },
+  {
+    id: 1,
+    name: 'Svensson Family',
+    code: 'A123',
+    chores: [],
+    completedChores: [],
+    users: [],
+  },
+  {
+    id: 2,
+    name: 'Johansson Family',
+    code: 'B456',
+    chores: [],
+    completedChores: [],
+    users: [],
+  },
+  {
+    id: 3,
+    name: 'Nilsson Family',
+    code: 'C789',
+    chores: [],
+    completedChores: [],
+    users: [],
+  },
 ];
 
 export const mockedChores: Chore[] = [
@@ -122,23 +152,41 @@ export const mockedChores: Chore[] = [
     voice_recording: '',
     image: '',
   },
+  {
+    id: 10,
+    name: 'Format computer',
+    description: 'Format the computer',
+    household: mockedHouseholds[0],
+    is_active: true,
+    frequency: 1,
+    is_archived: false,
+    weight: 2,
+    voice_recording: '',
+    image: '',
+  },
 ];
 
 mockedHouseholds[0].chores = [
   mockedChores[0],
   mockedChores[1],
-  mockedChores[7],
-];
-mockedHouseholds[1].chores = [
   mockedChores[2],
-  mockedChores[4],
-  mockedChores[8],
-];
-mockedHouseholds[2].chores = [
   mockedChores[3],
+  mockedChores[4],
   mockedChores[5],
   mockedChores[6],
+  mockedChores[7],
 ];
+
+// mockedHouseholds[1].chores = [
+//   mockedChores[2],
+//   mockedChores[4],
+//   mockedChores[8],
+// ];
+// mockedHouseholds[2].chores = [
+//   mockedChores[3],
+//   mockedChores[5],
+//   mockedChores[6],
+// ];
 
 export const mockedAccounts: Account[] = [
   { id: 1, user_name: 'anna_svensson', hashed_password: 'hashed_password_1' },
@@ -211,7 +259,7 @@ export const mockedHouseholdUserProfiles: HouseholdUserProfile[] = [
   {
     id: 2,
     nickname: 'Johan',
-    household: mockedHouseholds[1],
+    household: mockedHouseholds[0],
     avatar: mockedAvatars[1],
     account: mockedAccounts[1],
     is_active: true,
@@ -220,10 +268,10 @@ export const mockedHouseholdUserProfiles: HouseholdUserProfile[] = [
   {
     id: 3,
     nickname: 'Lisa',
-    household: mockedHouseholds[2],
+    household: mockedHouseholds[0],
     avatar: mockedAvatars[2],
     account: mockedAccounts[2],
-    is_active: false,
+    is_active: true,
     is_admin: false,
   },
   {
@@ -238,7 +286,7 @@ export const mockedHouseholdUserProfiles: HouseholdUserProfile[] = [
   {
     id: 5,
     nickname: 'Sara',
-    household: mockedHouseholds[1],
+    household: mockedHouseholds[0],
     avatar: mockedAvatars[4],
     account: mockedAccounts[4],
     is_active: false,
@@ -246,80 +294,204 @@ export const mockedHouseholdUserProfiles: HouseholdUserProfile[] = [
   },
 ];
 
-const mockedChoreStatuses: ChoreStatus[] = [
-  {
-    id: 1,
-    user: mockedHouseholdUserProfiles[0],
-    chore: mockedChores[0],
-    is_completed: false,
-    due_date: new Date('2023-10-01 10:00:00'),
-    done_date: null,
-  },
-  {
-    id: 2,
-    user: mockedHouseholdUserProfiles[1],
-    chore: mockedChores[1],
-    is_completed: true,
-    due_date: new Date('2023-10-02 10:00:00'),
-    done_date: new Date('2023-10-02 18:00:00'),
-  },
-  {
-    id: 3,
-    user: mockedHouseholdUserProfiles[2],
-    chore: mockedChores[2],
-    is_completed: false,
-    due_date: new Date('2023-10-03 10:00:00'),
-    done_date: null,
-  },
-  {
-    id: 4,
-    user: mockedHouseholdUserProfiles[3],
-    chore: mockedChores[3],
-    is_completed: true,
-    due_date: new Date('2023-10-04 10:00:00'),
-    done_date: new Date('2023-10-04 12:00:00'),
-  },
-  {
-    id: 5,
-    user: mockedHouseholdUserProfiles[4],
-    chore: mockedChores[4],
-    is_completed: false,
-    due_date: new Date('2023-10-05 10:00:00'),
-    done_date: null,
-  },
-  {
-    id: 6,
-    user: mockedHouseholdUserProfiles[0],
-    chore: mockedChores[5],
-    is_completed: true,
-    due_date: new Date('2023-10-06 10:00:00'),
-    done_date: new Date('2023-10-06 19:00:00'),
-  },
-  {
-    id: 7,
-    user: mockedHouseholdUserProfiles[1],
-    chore: mockedChores[6],
-    is_completed: false,
-    due_date: new Date('2023-10-07 10:00:00'),
-    done_date: null,
-  },
-  {
-    id: 8,
-    user: mockedHouseholdUserProfiles[2],
-    chore: mockedChores[7],
-    is_completed: true,
-    due_date: new Date('2023-10-08 10:00:00'),
-    done_date: new Date('2023-10-08 20:00:00'),
-  },
-  {
-    id: 9,
-    user: mockedHouseholdUserProfiles[3],
-    chore: mockedChores[8],
-    is_completed: false,
-    due_date: new Date('2023-10-09 10:00:00'),
-    done_date: null,
-  },
+mockedHouseholds[0].users = [
+  mockedHouseholdUserProfiles[0],
+  mockedHouseholdUserProfiles[1],
+  mockedHouseholdUserProfiles[2],
+  mockedHouseholdUserProfiles[3],
+  mockedHouseholdUserProfiles[4],
 ];
+
+mockedHouseholds[0].completedChores = [
+  {
+    ...mockedChores[0],
+    user: mockedHouseholdUserProfiles[0],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[1],
+    user: mockedHouseholdUserProfiles[0],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[1],
+    user: mockedHouseholdUserProfiles[1],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[1],
+    user: mockedHouseholdUserProfiles[2],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[2],
+    user: mockedHouseholdUserProfiles[0],
+    done_date: dates['lastMonth'],
+  } as CompletedChore,
+  {
+    ...mockedChores[2],
+    user: mockedHouseholdUserProfiles[4],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[2],
+    user: mockedHouseholdUserProfiles[2],
+    done_date: dates['lastWeek'],
+  } as CompletedChore,
+  {
+    ...mockedChores[3],
+    user: mockedHouseholdUserProfiles[0],
+    done_date: dates['lastWeek'],
+  } as CompletedChore,
+  {
+    ...mockedChores[3],
+    user: mockedHouseholdUserProfiles[1],
+    done_date: dates['lastMonth'],
+  } as CompletedChore,
+  {
+    ...mockedChores[3],
+    user: mockedHouseholdUserProfiles[2],
+    done_date: dates['lastWeek'],
+  } as CompletedChore,
+  {
+    ...mockedChores[3],
+    user: mockedHouseholdUserProfiles[3],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[3],
+    user: mockedHouseholdUserProfiles[4],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[4],
+    user: mockedHouseholdUserProfiles[0],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[4],
+    user: mockedHouseholdUserProfiles[1],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[4],
+    user: mockedHouseholdUserProfiles[3],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[4],
+    user: mockedHouseholdUserProfiles[4],
+    done_date: dates['lastWeek'],
+  } as CompletedChore,
+  {
+    ...mockedChores[5],
+    user: mockedHouseholdUserProfiles[1],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[5],
+    user: mockedHouseholdUserProfiles[2],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[5],
+    user: mockedHouseholdUserProfiles[3],
+    done_date: new Date('2023-10-01 10:00:00'),
+  } as CompletedChore,
+  {
+    ...mockedChores[6],
+    user: mockedHouseholdUserProfiles[3],
+    done_date: dates['today'],
+  } as CompletedChore,
+  {
+    ...mockedChores[6],
+    user: mockedHouseholdUserProfiles[4],
+    done_date: dates['lastMonth'],
+  } as CompletedChore,
+];
+
+// export const mockedChoreStatuses: ChoreStatus[] = [
+//   {
+//     id: 1,
+//     user: mockedHouseholdUserProfiles[0],
+//     chore: mockedChores[0],
+//     is_completed: false,
+//     due_date: new Date('2023-10-01 10:00:00'),
+//     done_date: null,
+//   },
+//   {
+//     id: 2,
+//     user: mockedHouseholdUserProfiles[1],
+//     chore: mockedChores[1],
+//     is_completed: true,
+//     due_date: new Date('2023-10-02 10:00:00'),
+//     done_date: new Date('2023-10-02 18:00:00'),
+//   },
+//   {
+//     id: 3,
+//     user: mockedHouseholdUserProfiles[2],
+//     chore: mockedChores[2],
+//     is_completed: false,
+//     due_date: new Date('2023-10-03 10:00:00'),
+//     done_date: null,
+//   },
+//   {
+//     id: 4,
+//     user: mockedHouseholdUserProfiles[3],
+//     chore: mockedChores[3],
+//     is_completed: true,
+//     due_date: new Date('2023-10-04 10:00:00'),
+//     done_date: new Date('2023-10-04 12:00:00'),
+//   },
+//   {
+//     id: 5,
+//     user: mockedHouseholdUserProfiles[4],
+//     chore: mockedChores[4],
+//     is_completed: false,
+//     due_date: new Date('2023-10-05 10:00:00'),
+//     done_date: null,
+//   },
+//   {
+//     id: 6,
+//     user: mockedHouseholdUserProfiles[0],
+//     chore: mockedChores[5],
+//     is_completed: true,
+//     due_date: new Date('2023-10-06 10:00:00'),
+//     done_date: new Date('2023-10-06 19:00:00'),
+//   },
+//   {
+//     id: 7,
+//     user: mockedHouseholdUserProfiles[1],
+//     chore: mockedChores[6],
+//     is_completed: false,
+//     due_date: new Date('2023-10-07 10:00:00'),
+//     done_date: null,
+//   },
+//   {
+//     id: 8,
+//     user: mockedHouseholdUserProfiles[2],
+//     chore: mockedChores[7],
+//     is_completed: true,
+//     due_date: new Date('2023-10-08 10:00:00'),
+//     done_date: new Date('2023-10-08 20:00:00'),
+//   },
+//   {
+//     id: 9,
+//     user: mockedHouseholdUserProfiles[3],
+//     chore: mockedChores[8],
+//     is_completed: false,
+//     due_date: new Date('2023-10-09 10:00:00'),
+//     done_date: null,
+//   },
+//   {
+//     id: 10,
+//     user: mockedHouseholdUserProfiles[0],
+//     chore: mockedChores[9],
+//     is_completed: true,
+//     due_date: new Date('2023-10-09 10:00:00'),
+//     done_date: null,
+//   },
+// ];
 
 export const logMockedData = () => {
   console.log('Mocked data:');
@@ -385,15 +557,15 @@ export const logMockedData = () => {
   });
   console.log('---------------------------------');
 
-  console.log(' Chore statuses:');
-  mockedChoreStatuses.forEach((choreStatus) => {
-    console.log('   Chore status id: ', choreStatus.id);
-    console.log('   Chore: ', choreStatus.chore.name);
-    console.log('   User: ', choreStatus.user.nickname);
-    console.log('   Is completed: ', choreStatus.is_completed);
-    console.log('   Due date: ', choreStatus.due_date);
-    console.log('   Done date: ', choreStatus.done_date);
-    console.log(' ');
-  });
-  console.log('---------------------------------');
+  // console.log(' Chore statuses:');
+  // mockedChoreStatuses.forEach((choreStatus) => {
+  //   console.log('   Chore status id: ', choreStatus.id);
+  //   console.log('   Chore: ', choreStatus.chore.name);
+  //   console.log('   User: ', choreStatus.user.nickname);
+  //   console.log('   Is completed: ', choreStatus.is_completed);
+  //   console.log('   Due date: ', choreStatus.due_date);
+  //   console.log('   Done date: ', choreStatus.done_date);
+  //   console.log(' ');
+  // });
+  // console.log('---------------------------------');
 };
