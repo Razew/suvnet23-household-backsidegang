@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text, useTheme } from 'react-native-paper';
-import { mockedHouseholdUserProfiles } from '../data/mocked';
+import { mockedChoreStatuses } from '../data/mocked';
 import { Chore } from '../types/types';
 
 type Props = {
@@ -8,9 +8,11 @@ type Props = {
 };
 
 export default function ChoreCard({ chore }: Props) {
-  const avatar = mockedHouseholdUserProfiles[0].avatar.image;
-  const daysSinceLastCompleted = 5; // Example value, replace with actual logic with appselector(?)
   const { colors } = useTheme();
+  const avatars = mockedChoreStatuses
+    .filter((status) => status.chore.id === chore.id)
+    .map((status) => status.user.avatar.image);
+  const daysSinceLastCompleted = 0; // Example value, replace with actual logic with appselector(?)
 
   const getDaysContainerStyle = () => ({
     ...s.daysContainer,
@@ -42,7 +44,14 @@ export default function ChoreCard({ chore }: Props) {
             <Text style={getDaysTextStyle()}>{daysSinceLastCompleted}</Text>
           </View>
         ) : (
-          <Text style={s.avatar}>{avatar}</Text>
+          avatars.slice(0, 3).map((avatar, index) => (
+            <Text
+              key={index}
+              style={s.avatar}
+            >
+              {avatar}
+            </Text>
+          ))
         )}
       </Surface>
     </Pressable>
