@@ -21,6 +21,12 @@ export default function LoadingScreen({ navigation }: Props) {
       >
         Go to Login
       </Button>
+      <Button
+        mode="elevated"
+        onPress={() => navigation.replace('Register')}
+      >
+        Register an account
+      </Button>
     </View>
   );
 }
