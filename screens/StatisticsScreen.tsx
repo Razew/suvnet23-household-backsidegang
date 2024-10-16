@@ -21,6 +21,9 @@ const months = [
 ];
 
 export default function StatisticsScreen() {
+  // const currentHousehold = useAppSelector(selectCurrentHousehold());
+  // const chores = useAppSelector(selectChoresByHousehold());
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentTitle, setCurrentTitle] = useState('Today');
   const [currentPage, setCurrentPage] = useState(0);

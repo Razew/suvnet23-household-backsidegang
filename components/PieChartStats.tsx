@@ -23,6 +23,8 @@ export default function PieChartStats({
   timespan: Date[];
   currentHousehold: Household;
 }) {
+  // const completedChores = useAppSelector(selectCompletedChoresByChoreId(chores[0].id));
+
   let completedChores: CompletedChore[] = [];
   const widthAndHeight = size;
 
