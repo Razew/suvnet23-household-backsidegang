@@ -24,7 +24,7 @@ export type Household = {
 export type Avatar = {
   id: number;
   name: string;
-  image: string;
+  emoji: string;
   colour_code: string;
 };
 

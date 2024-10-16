@@ -1,10 +1,10 @@
 import {
-  Household,
-  Chore,
   Account,
   Avatar,
-  HouseholdUserProfile,
+  Chore,
   ChoreStatus,
+  Household,
+  HouseholdUserProfile,
 } from '../types/types';
 
 export const mockedHouseholds: Household[] = [
@@ -151,49 +151,49 @@ export const mockedAvatars: Avatar[] = [
   {
     id: 1,
     name: 'Fox',
-    image: '🦊',
+    emoji: '🦊',
     colour_code: '#FFA500',
   },
   {
     id: 2,
     name: 'Pig',
-    image: '🐷',
+    emoji: '🐷',
     colour_code: '#FFD3B0',
   },
   {
     id: 3,
     name: 'Frog',
-    image: '🐸',
+    emoji: '🐸',
     colour_code: '#00FF00',
   },
   {
     id: 4,
     name: 'Chicken',
-    image: '🐥',
+    emoji: '🐥',
     colour_code: '#FFFF00',
   },
   {
     id: 5,
     name: 'Octopus',
-    image: '🐙',
+    emoji: '🐙',
     colour_code: '#FF605D',
   },
   {
-    id: 5,
+    id: 6,
     name: 'Dolphin',
-    image: '🐬',
+    emoji: '🐬',
     colour_code: '#0000FF',
   },
   {
-    id: 5,
+    id: 7,
     name: 'Owl',
-    image: '🦉',
+    emoji: '🦉',
     colour_code: '#964B00',
   },
   {
-    id: 5,
+    id: 8,
     name: 'Unicorn',
-    image: '🦄',
+    emoji: '🦄',
     colour_code: '#BF40BF',
   },
 ];
@@ -379,7 +379,7 @@ export const logMockedData = () => {
   mockedAvatars.forEach((avatar) => {
     console.log('   Avatar id: ', avatar.id);
     console.log('   Name: ', avatar.name);
-    console.log('   Image: ', avatar.image);
+    console.log('   Emoji: ', avatar.emoji);
     console.log('   Colour code: ', avatar.colour_code);
     console.log(' ');
   });

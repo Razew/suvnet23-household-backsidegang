@@ -1,10 +1,8 @@
-
 CREATE TABLE IF NOT EXISTS household (
     id SERIAL PRIMARY KEY,
     name VARCHAR(64) NOT NULL, 
     code VARCHAR(4) NOT NULL,
     CONSTRAINT unique_name_code UNIQUE (name, code)  -- Ensure that the combination of name and code is unique
-
 );
 
 CREATE TABLE IF NOT EXISTS chore (
@@ -28,8 +26,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 
 CREATE TABLE IF NOT EXISTS avatar (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(64) NOT NULL,
-    image BYTEA NOT NULL, -- Binary data to store the actual file
+    name VARCHAR(64) NOT NULL UNIQUE,
+    emoji VARCHAR NOT NULL UNIQUE, -- Store the emoji as text
     colour_code VARCHAR(7) NOT NULL -- Represents colour codes like #FF5733
 );
 

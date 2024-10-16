@@ -9,9 +9,6 @@ DROP TABLE IF EXISTS chore_to_user;
 -- Drop avatar table
 DROP TABLE IF EXISTS avatar;
 
--- Drop account table
-DROP TABLE IF EXISTS account;
-
 -- Drop user table
 DROP TABLE IF EXISTS "user";
 

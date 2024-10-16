@@ -49,6 +49,8 @@ sql_paths = [
     './migrations/20241016145616_drop_tables.sql',
     './migrations/20241016145708_create_tables.sql',
     './migrations/20241016151539_enable_row_level_security.sql',
+    './migrations/20241016161912_insert_mocked_data.sql',
+    './migrations/20241016202501_create__read_access_policies.sql'
     ]
 
 [realtime]
