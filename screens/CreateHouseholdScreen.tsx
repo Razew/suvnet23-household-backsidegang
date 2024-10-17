@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, Snackbar, TextInput } from 'react-native-paper';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
 
@@ -8,6 +8,13 @@ export default function CreateHouseholdScreen() {
   const [newHousehold, setNewHousehold] = useState('');
   const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [code, setCode] = useState('');
+  const [snackBarMessage, setSnackBarMessage] = useState('');
+  const [AddedToDataBase, setAddedToDataBase] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const onToggleSnackBar = () => setVisible(!visible);
+
+  const onDismissSnackBar = () => setVisible(false);
 
   useEffect(() => {
     getHouseholds();
@@ -45,15 +52,21 @@ export default function CreateHouseholdScreen() {
     );
 
     if (householdExists) {
-      console.log(
-        `Household ${newHousehold} with code ${code} already exists in DB`,
-        // Display feedback on screen // Snackbar?
-      );
+      const errorMessage: string = `Household ${newHousehold} with code ${code} already exists in DB`;
+      // Display feedback on screen // Snackbar?
+      console.log(errorMessage);
+      setSnackBarMessage(errorMessage);
+      setAddedToDataBase(false);
     } else {
-      console.log(`You have added ${newHousehold} with code ${code} to the DB`);
+      const successMessage: string = `You have added ${newHousehold} with code ${code} to the DB`;
+      console.log(successMessage);
+      setSnackBarMessage(successMessage);
+      setAddedToDataBase(true);
       // Display feedback on screen // Snackbar?
       // Then navigate to household screen (How? timed/ continue button? Something else?)
     }
+
+    onToggleSnackBar();
   };
 
   return (
@@ -75,6 +88,35 @@ export default function CreateHouseholdScreen() {
       >
         Create
       </Button>
+      {AddedToDataBase ? (
+        <Snackbar
+          // style={style.greenSnackBar}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          action={{
+            label: 'Continue',
+            onPress: () => {
+              // Go to HouseholdScreen
+            },
+          }}
+        >
+          {snackBarMessage}
+        </Snackbar>
+      ) : (
+        <Snackbar
+          // style={style.redSnackBar}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          action={{
+            label: 'Try again',
+            onPress: () => {
+              // Do nothing
+            },
+          }}
+        >
+          {snackBarMessage}
+        </Snackbar>
+      )}
     </View>
   );
 }
@@ -86,4 +128,10 @@ const style = StyleSheet.create({
   button: {
     marginTop: 10,
   },
+  // redSnackBar: {
+  //   backgroundColor: 'red',
+  // },
+  // greenSnackBar: {
+  //   backgroundColor: 'green',
+  // },
 });
