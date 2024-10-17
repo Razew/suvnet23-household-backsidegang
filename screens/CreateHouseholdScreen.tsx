@@ -3,8 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Snackbar, TextInput } from 'react-native-paper';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
+import { HomeStackParamList } from '../navigators/HomeStackNavigator';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function CreateHouseholdScreen() {
+type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
+
+export default function CreateHouseholdScreen({ navigation }: Props) {
   const [newHousehold, setNewHousehold] = useState('');
   const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [code, setCode] = useState('');
@@ -96,7 +100,7 @@ export default function CreateHouseholdScreen() {
           action={{
             label: 'Continue',
             onPress: () => {
-              // Go to HouseholdScreen
+              navigation.replace('HouseholdNavigator');
             },
           }}
         >
