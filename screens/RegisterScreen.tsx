@@ -20,6 +20,8 @@ const RegisterScreen = ({ navigation }: Props) => {
   const submit = async () => {
     if (!form.password || !form.username) {
       Alert.alert('Error', 'Please fill in all fields');
+    } else {
+      navigation.replace('HomeNavigator');
     }
     //   setIsSubmitting(true);
     //   try {
