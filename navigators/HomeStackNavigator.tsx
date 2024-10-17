@@ -27,7 +27,7 @@ export default function HomeStackNavigator() {
             style={s.tempExit}
             onPress={() => navigation.replace('Loading')}
           >
-            <Text style={s.tempText}>Loading screen</Text>
+            <Text style={s.tempText}>LoadingScreen</Text>
             <MaterialIcons
               name="exit-to-app"
               size={24}
@@ -36,6 +36,7 @@ export default function HomeStackNavigator() {
           </Pressable>
         ),
         headerBackTitle: 'Back',
+        headerTitleAlign: 'center',
       })}
     >
       <HomeStack.Screen
@@ -62,7 +63,7 @@ export default function HomeStackNavigator() {
               style={s.tempExit}
               onPress={() => navigation.replace('Home')}
             >
-              <Text style={s.tempText}>Home screen</Text>
+              <Text style={s.tempText}>HomeScreen</Text>
               <MaterialIcons
                 name="exit-to-app"
                 size={24}
