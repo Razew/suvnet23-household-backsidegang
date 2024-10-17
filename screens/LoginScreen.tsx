@@ -72,7 +72,7 @@ const LoginScreen = ({ navigation }: Props) => {
               style={authStyles.button}
               icon="login"
               mode="contained"
-              onPress={() => console.log('Pressed')}
+              onPress={() => navigation.replace('HomeNavigator')}
             >
               Log In
             </Button>
