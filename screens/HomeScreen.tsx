@@ -1,14 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
-import { useAppDispatch, useAppSelector } from '../store/store';
-import {
-  fetchHouseholds,
-  selectAllHouseholds,
-} from '../store/households/slice';
+// import { useAppDispatch, useAppSelector } from '../store/store';
+// import {
+//   fetchHouseholds,
+//   selectAllHouseholds,
+// } from '../store/households/slice';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
