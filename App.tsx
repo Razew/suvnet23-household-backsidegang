@@ -5,7 +5,7 @@ import ThemeProvider from './providers/ThemeProvider';
 export default function App() {
   return (
     <ThemeProvider>
-      <StatusBar style={'auto'} />
+      <StatusBar style="auto" />
       <RootStackNavigator />
     </ThemeProvider>
   );
