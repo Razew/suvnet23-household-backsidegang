@@ -1,11 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, createAsyncThunk } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import accountsReducer from './accounts/slice';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import householdsReducer from './households/slice';
 
 export const store = configureStore({
   reducer: {
-    accounts: accountsReducer,
+    households: householdsReducer,
   },
 });
 
