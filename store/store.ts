@@ -1,10 +1,12 @@
 import { configureStore, createAsyncThunk } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import householdsReducer from './households/slice';
+import { useReducer } from 'react';
 
 export const store = configureStore({
   reducer: {
     households: householdsReducer,
+    user: useReducer,
   },
 });
 
