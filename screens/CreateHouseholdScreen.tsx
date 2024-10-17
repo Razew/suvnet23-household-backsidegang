@@ -47,9 +47,12 @@ export default function CreateHouseholdScreen() {
     if (householdExists) {
       console.log(
         `Household ${newHousehold} with code ${code} already exists in DB`,
+        // Display feedback on screen // Snackbar?
       );
     } else {
       console.log(`You have added ${newHousehold} with code ${code} to the DB`);
+      // Display feedback on screen // Snackbar?
+      // Then navigate to household screen (How? timed/ continue button? Something else?)
     }
   };
 
