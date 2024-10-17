@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
 
@@ -11,20 +12,26 @@ export default function HomeScreen({ navigation }: Props) {
     <View style={container}>
       <Text style={large}>Home screen</Text>
       <View style={s.tempHouseholdContainer}>
-        <Text style={s.tempHouseholdName}>Davidsson Household</Text>
+        <Text style={s.tempHouseholdName}>CodeDiddy Household</Text>
         <Button
-          title="Enter"
+          mode="elevated"
           onPress={() => navigation.replace('HouseholdNavigator')}
-        />
+        >
+          Enter
+        </Button>
       </View>
       <Button
-        title="Join Household"
+        mode="elevated"
         onPress={() => navigation.navigate('JoinHousehold')}
-      />
+      >
+        Join Household
+      </Button>
       <Button
-        title="Create Household"
+        mode="elevated"
         onPress={() => navigation.navigate('CreateHousehold')}
-      />
+      >
+        Create Household
+      </Button>
     </View>
   );
 }
