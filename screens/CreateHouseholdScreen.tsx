@@ -74,7 +74,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   };
 
   const handleSubmit = async () => {
-    // check if our user household name & code match the db
+    // check if our user household name & code already exists in the DB
+    // If household exists return an errormessage, else insert the new household
     const householdExists = existingHouseholds.some(
       (h) =>
         newHousehold.toLowerCase() === h.name.toLowerCase() &&
@@ -83,20 +84,12 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
     if (householdExists) {
       const errorMessage: string = `Household ${newHousehold} with code ${code} already exists in DB`;
-      // Display feedback on screen // Snackbar?
       console.log(errorMessage);
       setSnackBarMessage(errorMessage);
       setAddedToDataBase(false);
     } else {
-      // Add new household/code to DB
       insertNewHousehold();
-
-      // const successMessage: string = `You have added ${newHousehold} with code ${code} to the DB`;
-      // console.log(successMessage);
-      // setSnackBarMessage(successMessage);
       setAddedToDataBase(true);
-      // Display feedback on screen // Snackbar?
-      // Then navigate to household screen (How? timed/ continue button? Something else?)
     }
 
     onToggleSnackBar();
