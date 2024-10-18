@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { supabase } from '../../utils/supabase';
+import { RootState } from '../store';
 
 interface AuthState {
   isSignedIn: boolean;
@@ -119,5 +120,8 @@ const authSlice = createSlice({
       });
   },
 });
+
+
+export const selectLoggedInUser = (state: RootState) => state.auth.userName;
 
 export default authSlice.reducer;
