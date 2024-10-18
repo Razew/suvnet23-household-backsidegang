@@ -6,37 +6,37 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { authStyles } from '../themes/styles';
+import { createUser } from '../store/Auth/slice';
+import { useAppDispatch } from '../store/store';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
 const RegisterScreen = ({ navigation }: Props) => {
   const { colors } = useTheme();
   const [form, setForm] = useState({ username: '', password: '' });
-
-  //const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const submit = async () => {
-    if (!form.password || !form.username) {
+  const handleRegister = async () => {
+    if (!form.username || !form.password) {
       Alert.alert('Error', 'Please fill in all fields');
-    } else {
-      navigation.replace('HomeNavigator');
+      return;
     }
-    //   setIsSubmitting(true);
-    //   try {
-    //     const result = await createAccount(
-    //       form.password,
-    //       form.username
-    //     );
-    //     navigation.navigate("Home");
-    //   } catch (error: any) {
-    //     setIsSubmitting(false);
-    //     Alert.alert("Error", error.message);
-    //   } finally {
-    //     setIsSubmitting(false);
-    //   }
+    try {
+      const resultAction = await dispatch(
+        createUser({ username: form.username, password: form.password }),
+      );
+      if (createUser.fulfilled.match(resultAction)) {
+        console.log('User created');
+        navigation.navigate('Login');
+      } else {
+        throw new Error(resultAction.payload as string);
+      }
+    } catch {
+      Alert.alert('Error something went wrong');
+    }
   };
+
   return (
     <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
@@ -73,7 +73,7 @@ const RegisterScreen = ({ navigation }: Props) => {
               style={authStyles.button}
               icon="login"
               mode="contained"
-              onPress={() => submit()}
+              onPress={() => handleRegister()}
             >
               Sign Up
             </Button>

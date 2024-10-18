@@ -1,7 +1,8 @@
 export type User = {
   id: number;
-  user_name: string;
-  hashed_password: string;
+  username: string;
+  password: string;
+  loggedIn: boolean;
 };
 
 export type Household = {
