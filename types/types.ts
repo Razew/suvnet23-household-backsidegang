@@ -1,57 +1,50 @@
-export type Account = {
+export type User = {
   id: number;
   user_name: string;
   hashed_password: string;
-};
-export type Chore = {
-  id: number;
-  name: string;
-  description: string;
-  household: Household;
-  is_active: boolean;
-  frequency: number;
-  is_archived: boolean;
-  voice_recording: string;
-  image: string;
-  weight: 1 | 2 | 4 | 6 | 8;
 };
 
 export type Household = {
   id: number;
   name: string;
   code: string;
-  chores: Chore[];
-  completedChores: CompletedChore[];
-  users: HouseholdUserProfile[];
 };
 
-export interface CompletedChore extends Chore {
-  user: HouseholdUserProfile;
-  done_date: Date;
-}
+export type Chore = {
+  id: number;
+  name: string;
+  household_id: number;
+  description: string;
+  is_active: boolean;
+  frequency: number;
+  is_archived: boolean;
+  voice_recording: string; // unsure if this is the correct type. will need to check
+  image: string; // unsure if this is the correct type. will need to check
+  weight: 1 | 2 | 4 | 6 | 8;
+};
 
 export type Avatar = {
   id: number;
   name: string;
-  image: string;
+  emoji: string;
   colour_code: string;
 };
 
-export type HouseholdUserProfile = {
+export type User_To_Household = {
   id: number;
+  user_id: number;
+  household_id: number;
+  avatar_id: number;
   nickname: string;
-  account: Account;
-  household: Household;
-  avatar: Avatar;
   is_active: boolean;
   is_admin: boolean;
 };
 
-export type ChoreStatus = {
+export type Chore_To_User = {
   id: number;
-  chore: Chore;
-  user: HouseholdUserProfile;
-  is_completed: boolean;
-  due_date: Date | null;
-  done_date: Date | null;
+  user_id: number;
+  chore_id: number;
+  is_complete: boolean;
+  due_data: Date; // unsure if this is the correct type, maybe string? will need to check
+  done_date: Date; // unsure if this is the correct type, maybe string? will need to check
 };

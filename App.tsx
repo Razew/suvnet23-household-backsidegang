@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import RootStackNavigator from './navigators/RootStackNavigator';
 import StatisticsScreen from './screens/StatisticsScreen';
