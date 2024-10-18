@@ -1,10 +1,10 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Snackbar, TextInput } from 'react-native-paper';
+import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
-import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
 
@@ -23,6 +23,32 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   useEffect(() => {
     getHouseholds();
   }, []);
+
+  const insertNewHousehold = async () => {
+    console.log(`Inserting ${newHousehold} ${code}`);
+
+    try {
+      const { data: dbQueryResult, error } = await supabase
+        .from('household')
+        .insert({ name: newHousehold, code: code })
+        .select();
+
+      if (error) {
+        console.error(error.message);
+        throw error;
+      }
+
+      if (dbQueryResult) {
+        const householdAddedMessage: string = `Added id:${dbQueryResult[0].id} ${dbQueryResult[0].name} ${dbQueryResult[0].code}`;
+        console.log(householdAddedMessage);
+        setSnackBarMessage(householdAddedMessage);
+      } else {
+        console.log('Something did not work');
+      }
+    } catch (error) {
+      console.error('Error inserting household:', (error as Error).message);
+    }
+  };
 
   const getHouseholds = async () => {
     try {
@@ -62,9 +88,12 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       setSnackBarMessage(errorMessage);
       setAddedToDataBase(false);
     } else {
-      const successMessage: string = `You have added ${newHousehold} with code ${code} to the DB`;
-      console.log(successMessage);
-      setSnackBarMessage(successMessage);
+      // Add new household/code to DB
+      insertNewHousehold();
+
+      // const successMessage: string = `You have added ${newHousehold} with code ${code} to the DB`;
+      // console.log(successMessage);
+      // setSnackBarMessage(successMessage);
       setAddedToDataBase(true);
       // Display feedback on screen // Snackbar?
       // Then navigate to household screen (How? timed/ continue button? Something else?)
