@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import ChoreCard from '../components/ChoreCard';
-import { fetchChores, selectAllChores } from '../store/chores/choresSlice';
+import { fetchChores, selectAllChores } from '../store/chores/slice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { large } from '../themes/styles';
 
