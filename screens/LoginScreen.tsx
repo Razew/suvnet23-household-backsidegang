@@ -11,13 +11,17 @@ import { useAppDispatch } from '../store/store';
 
 export type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-export const LoginScreen = ({ navigation }: Props) => {
+export default function LoginScreen({ navigation }: Props) {
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
   const dispatch = useAppDispatch();
 
   const handleLogin = async () => {
+    if (!form.username || !form.password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
     try {
       const resultAction = await dispatch(
         loginUser({ username: form.username, password: form.password }),
@@ -89,4 +93,4 @@ export const LoginScreen = ({ navigation }: Props) => {
       </SafeAreaView>
     </>
   );
-};
+}
