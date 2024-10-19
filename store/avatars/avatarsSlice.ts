@@ -15,30 +15,7 @@ const initialState: AvatarsState = {
   loading: 'idle',
 };
 
-const avatarsSlice = createSlice({
-  name: 'avatars',
-  initialState: initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(fetchAvatars.pending, (state) => {
-      state.loading = 'pending';
-      state.errorMessage = undefined;
-    });
-    builder.addCase(
-      fetchAvatars.fulfilled,
-      (state, action: PayloadAction<Avatar[]>) => {
-        state.allAvatars = action.payload;
-        state.loading = 'succeeded';
-      },
-    );
-    builder.addCase(fetchAvatars.rejected, (state, action) => {
-      state.errorMessage = action.payload;
-      state.loading = 'failed';
-    });
-  },
-});
-
-export const fetchAvatars = createAppAsyncThunk(
+export const fetchAvatars = createAppAsyncThunk<Avatar[], void>(
   'avatars/fetchAvatars',
   async (_, { rejectWithValue }) => {
     console.log('Fetching avatars...');
@@ -65,6 +42,29 @@ export const fetchAvatars = createAppAsyncThunk(
     }
   },
 );
+
+const avatarsSlice = createSlice({
+  name: 'avatars',
+  initialState: initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchAvatars.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      fetchAvatars.fulfilled,
+      (state, action: PayloadAction<Avatar[]>) => {
+        state.allAvatars = action.payload;
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(fetchAvatars.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+  },
+});
 
 export const selectAllAvatars = (state: RootState) => state.avatars.allAvatars;
 
