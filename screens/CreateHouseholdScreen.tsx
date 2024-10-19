@@ -1,30 +1,44 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { Button, Snackbar, TextInput } from 'react-native-paper';
+import { Button, Snackbar, Text, TextInput } from 'react-native-paper';
+import { z } from 'zod';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
 
+const schema = z.object({
+  household: z.string().min(1, 'Household name is required'),
+  code: z.string().length(4, 'Code must be exactly 4 characters'),
+});
+
+type FormData = z.infer<typeof schema>;
+
 export default function CreateHouseholdScreen({ navigation }: Props) {
-  const [newHousehold, setNewHousehold] = useState('');
   const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
-  const [code, setCode] = useState('');
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
   const [visible, setVisible] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
   const onToggleSnackBar = () => setVisible(!visible);
-
   const onDismissSnackBar = () => setVisible(false);
 
   useEffect(() => {
     getHouseholds();
   }, []);
 
-  const insertNewHousehold = async () => {
+  const insertNewHousehold = async (newHousehold: string, code: string) => {
     console.log(`Inserting ${newHousehold} ${code}`);
 
     try {
@@ -74,22 +88,23 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     }
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data: FormData) => {
+    const { household, code } = data;
     // check if our user household name & code already exists in the DB
     // If household exists return an errormessage, else insert the new household
     const householdExists = existingHouseholds.some(
       (h) =>
-        newHousehold.toLowerCase() === h.name.toLowerCase() &&
+        household.toLowerCase() === h.name.toLowerCase() &&
         code.toLowerCase() === h.code.toLowerCase(),
     );
 
     if (householdExists) {
-      const errorMessage: string = `Household ${newHousehold} with code ${code} already exists in DB`;
+      const errorMessage: string = `Household ${household} with code ${code} already exists in DB`;
       console.log(errorMessage);
       setSnackBarMessage(errorMessage);
       setAddedToDataBase(false);
     } else {
-      insertNewHousehold();
+      insertNewHousehold(household, code);
       setAddedToDataBase(true);
     }
 
@@ -98,7 +113,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
   return (
     <View style={style.container}>
-      <TextInput
+      {/* <TextInput
         label="Enter Household"
         value={newHousehold}
         onChangeText={(household) => setNewHousehold(household)}
@@ -107,10 +122,39 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         label="Enter code"
         value={code}
         onChangeText={(code) => setCode(code)}
+      /> */}
+      <Controller
+        control={control}
+        name="household"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label="Enter Household"
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            error={!!errors.household}
+          />
+        )}
       />
+      {errors.household && <Text>{errors.household.message}</Text>}
+
+      <Controller
+        control={control}
+        name="code"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label="Enter Code"
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            error={!!errors.code}
+          />
+        )}
+      />
+      {errors.code && <Text>{errors.code.message}</Text>}
       <Button
         mode="contained"
-        onPress={handleSubmit}
+        onPress={handleSubmit(onSubmit)}
         style={style.button}
       >
         Create
