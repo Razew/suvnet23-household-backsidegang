@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import ChoreCard from '../components/ChoreCard';
-import { mockedChores } from '../data/mocked';
+import { fetchChores, selectAllChores } from '../store/chores/choresSlice';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import { large } from '../themes/styles';
-import { Chore } from '../types/types';
 
 export default function HouseholdScreen() {
-  const chores: Chore[] = mockedChores;
+  const chores = useAppSelector(selectAllChores);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchChores());
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={s.root}>
