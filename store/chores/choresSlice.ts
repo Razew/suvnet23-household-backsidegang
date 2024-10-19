@@ -41,12 +41,10 @@ const choresSlice = createSlice({
 export const fetchChores = createAppAsyncThunk(
   'chores/fetch-chores',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching chores...');
     try {
       const { data: fetchedChores, error } = await supabase
         .from('chore')
         .select('*');
-      console.log('Fetched Chores:', fetchedChores);
 
       if (error) {
         console.error('Supabase Error:', error);
