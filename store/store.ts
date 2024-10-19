@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import avatarsReducer from './avatars/avatarsSlice';
+import avatarsReducer from './avatars/slice';
 import householdsReducer from './households/slice';
 
 export const store = configureStore({

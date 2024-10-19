@@ -4,11 +4,11 @@ import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
-type AvatarsState = {
+interface AvatarsState {
   allAvatars: Avatar[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
-};
+}
 
 const initialState: AvatarsState = {
   allAvatars: [],
