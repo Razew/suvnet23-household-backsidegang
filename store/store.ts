@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import choresReducer from './chores/choresSlice';
+import choresReducer from './chores/slice';
 import householdsReducer from './households/slice';
 
 export const store = configureStore({

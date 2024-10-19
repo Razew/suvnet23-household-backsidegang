@@ -4,11 +4,11 @@ import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
-type ChoresState = {
+interface ChoresState {
   allChores: Chore[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
-};
+}
 
 const initialState: ChoresState = {
   allChores: [],
