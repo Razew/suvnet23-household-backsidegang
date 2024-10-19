@@ -13,7 +13,7 @@ type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
 
 const schema = z.object({
   household: z.string().min(1, 'Household name is required'),
-  code: z.string().length(4, 'Code must be exactly 4 characters'),
+  code: z.string().length(4, 'Code must be 4 characters long'),
 });
 
 type FormData = z.infer<typeof schema>;
