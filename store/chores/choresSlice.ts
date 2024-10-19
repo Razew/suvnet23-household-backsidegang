@@ -15,6 +15,32 @@ const initialState: ChoresState = {
   loading: 'idle',
 };
 
+export const fetchChores = createAppAsyncThunk<Chore[], void>(
+  'chores/fetchChores',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data: fetchedChores, error } = await supabase
+        .from('chore')
+        .select('*');
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      if (!fetchedChores || fetchedChores.length === 0) {
+        console.error('No chores found');
+        return rejectWithValue('No chores found');
+      }
+
+      return fetchedChores;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while fetching chores');
+    }
+  },
+);
+
 const choresSlice = createSlice({
   name: 'chores',
   initialState: initialState,
@@ -37,32 +63,6 @@ const choresSlice = createSlice({
     });
   },
 });
-
-export const fetchChores = createAppAsyncThunk(
-  'chores/fetch-chores',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data: fetchedChores, error } = await supabase
-        .from('chore')
-        .select('*');
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      if (!fetchedChores || fetchChores.length === 0) {
-        console.error('No chores found');
-        return rejectWithValue('No chores found');
-      }
-
-      return fetchedChores;
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while fetching chores');
-    }
-  },
-);
 
 export const selectAllChores = (state: RootState) => state.chores.allChores;
 // export const selectChoresForCurrentHousehold = (state: RootState) =>
