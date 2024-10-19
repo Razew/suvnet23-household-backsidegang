@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text, useTheme } from 'react-native-paper';
-import { mockedChoreStatuses } from '../data/mocked';
 import { Chore } from '../types/types';
 
 type Props = {
