@@ -39,7 +39,7 @@ const avatarsSlice = createSlice({
 });
 
 export const fetchAvatars = createAppAsyncThunk(
-  'avatars/fetch-avatars',
+  'avatars/fetchAvatars',
   async (_, { rejectWithValue }) => {
     console.log('Fetching avatars...');
     try {
