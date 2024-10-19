@@ -41,12 +41,13 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       if (dbQueryResult) {
         const householdAddedMessage: string = `Added id:${dbQueryResult[0].id} ${dbQueryResult[0].name} ${dbQueryResult[0].code}`;
         console.log(householdAddedMessage);
+        console.log(JSON.stringify(dbQueryResult, null, 2));
         setSnackBarMessage(householdAddedMessage);
       } else {
         console.log('Something did not work');
       }
     } catch (error) {
-      console.error('Error inserting household:', (error as Error).message);
+      console.log('Error inserting household:', (error as Error).message);
     }
   };
 
@@ -63,7 +64,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
       if (dbQueryResult && dbQueryResult.length > 0) {
         console.log(`Total households in DB: ${dbQueryResult.length}`);
-        console.log(dbQueryResult);
+        console.log(JSON.stringify(dbQueryResult, null, 2));
         setExistingHouseholds(dbQueryResult);
       } else {
         console.log('No household records found');
