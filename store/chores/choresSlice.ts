@@ -67,5 +67,9 @@ export const fetchChores = createAppAsyncThunk(
 );
 
 export const selectAllChores = (state: RootState) => state.chores.allChores;
+// export const selectChoresForCurrentHousehold = (state: RootState) =>
+//   state.chores.allChores.filter(
+//     (chore) => chore.household_id === state.households.current,
+//   );
 
 export default choresSlice.reducer;
