@@ -1,7 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Button, Text, TextInput, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Text,
+  TextInput,
+  useTheme,
+  Dialog,
+  Portal,
+} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
@@ -15,11 +22,26 @@ const RegisterScreen = ({ navigation }: Props) => {
   const { colors } = useTheme();
   const [form, setForm] = useState({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const hideDialog = () => setVisible(false);
   const dispatch = useAppDispatch();
 
   const handleRegister = async () => {
     if (!form.username || !form.password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+        >
+          <Dialog.Title>Error:</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Please fill in all fields</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>;
       return;
     }
     try {
@@ -28,12 +50,26 @@ const RegisterScreen = ({ navigation }: Props) => {
       );
       if (createUser.fulfilled.match(resultAction)) {
         console.log('User created');
-        navigation.navigate('Login');
+        navigation.navigate('HomeNavigator');
       } else {
         throw new Error(resultAction.payload as string);
       }
     } catch {
-      Alert.alert('Error something went wrong');
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+        >
+          <Dialog.Title>Error:</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Someting went wrong</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>;
+      return;
     }
   };
 

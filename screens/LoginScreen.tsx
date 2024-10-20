@@ -1,7 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Button, Text, TextInput, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Portal,
+  Text,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
@@ -9,17 +16,32 @@ import { authStyles } from '../themes/styles';
 import { loginUser } from '../store/Auth/slice';
 import { useAppDispatch } from '../store/store';
 
-export type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({ navigation }: Props) {
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
+  const [visible, setVisible] = useState(false);
+  const hideDialog = () => setVisible(false);
   const dispatch = useAppDispatch();
 
   const handleLogin = async () => {
     if (!form.username || !form.password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+        >
+          <Dialog.Title>Error:</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Please fill in all fields</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>;
       return;
     }
     try {
@@ -32,7 +54,21 @@ export default function LoginScreen({ navigation }: Props) {
         throw new Error(resultAction.payload as string);
       }
     } catch {
-      Alert.alert('Error', 'Invalid username or password');
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+        >
+          <Dialog.Title>Error:</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Wrong username or password</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>;
+      return;
     }
   };
 

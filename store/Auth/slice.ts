@@ -1,17 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { supabase } from '../../utils/supabase';
 import { RootState } from '../store';
+import { User } from '../../types/types';
 
 interface AuthState {
+  user: User;
   isSignedIn: boolean;
-  userName: string;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   isSignedIn: false,
-  userName: '',
+  user: { id: 0, username: '', password: '' },
   loading: false,
   error: null,
 };
@@ -22,7 +23,7 @@ export const loginUser = createAsyncThunk(
     try {
       const { data, error } = await supabase
         .from("user")
-        .select("user_name, hashed_password")
+        .select("id, user_name, hashed_password")
         .eq("user_name", username)
         .eq("hashed_password", password)
         .single();
@@ -33,7 +34,7 @@ export const loginUser = createAsyncThunk(
         return rejectWithValue('User not found');
       }
 
-      return { username: data.user_name};
+      return { user: data };
     } catch (error) {
       console.log('error', error);
       return rejectWithValue((error as Error).message);
@@ -55,7 +56,7 @@ export const createUser = createAsyncThunk(
   'auth/createUser',
   async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("user")
         .insert([{ user_name: username, hashed_password: password }]);
 
@@ -64,7 +65,19 @@ export const createUser = createAsyncThunk(
         throw error;
       }
 
-      return { username: data};
+      const { data: updatedData, error: updatedError } = await supabase
+        .from("user")
+        .select("id, user_name, hashed_password")
+        .eq("user_name", username)
+        .eq("hashed_password", password)
+        .single();
+      
+      if (updatedError) {
+        console.log('Supabase error:', updatedError);
+        throw updatedError;
+      }
+
+      return { user: updatedData };
     } catch (error) {
       console.log('Catch error:', error);
       return rejectWithValue((error as Error).message);
@@ -86,7 +99,11 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isSignedIn = true;
-        state.userName = action.payload.username;
+        state.user = {
+          id: action.payload.user.id,
+          username: action.payload.user.user_name,
+          password: action.payload.user.hashed_password,
+        };
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -99,7 +116,7 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;
         state.isSignedIn = false;
-        state.userName = '';
+        state.user = initialState.user;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
@@ -112,7 +129,11 @@ const authSlice = createSlice({
       .addCase(createUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isSignedIn = true;
-        state.userName = action.payload.username ?? '';
+        state.user = {
+          id: action.payload.user.id,
+          username: action.payload.user.user_name,
+          password: action.payload.user.hashed_password,
+        };
       })
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
@@ -122,6 +143,6 @@ const authSlice = createSlice({
 });
 
 
-export const selectLoggedInUser = (state: RootState) => state.auth.userName;
+export const selectLoggedInUser = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

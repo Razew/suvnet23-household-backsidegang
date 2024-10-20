@@ -53,7 +53,10 @@ export default function HomeScreen({ navigation }: Props) {
       <Button mode="elevated">Another Button</Button>
 
       <View>
-        <Text>Logged in as: {loggedInUser}</Text>
+        <Text>
+          Logged in as:{' '}
+          {[loggedInUser.id, loggedInUser.username, loggedInUser.password]}
+        </Text>
       </View>
     </View>
   );
