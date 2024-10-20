@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { Button, Snackbar, Text, TextInput } from 'react-native-paper';
+import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { Household } from '../types/types';
@@ -113,52 +113,57 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
   return (
     <View style={style.container}>
-      {/* <TextInput
+      <Card>
+        <Card.Content>
+          {/* <TextInput
         label="Enter Household"
         value={newHousehold}
         onChangeText={(household) => setNewHousehold(household)}
-      />
-      <TextInput
+        />
+        <TextInput
         label="Enter code"
         value={code}
         onChangeText={(code) => setCode(code)}
-      /> */}
-      <Controller
-        control={control}
-        name="household"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            label="Enter Household"
-            value={value}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            error={!!errors.household}
+        /> */}
+          <Controller
+            control={control}
+            name="household"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Enter Household"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={!!errors.household}
+              />
+            )}
           />
-        )}
-      />
-      {errors.household && <Text>{errors.household.message}</Text>}
+          {errors.household && <Text>{errors.household.message}</Text>}
 
-      <Controller
-        control={control}
-        name="code"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            label="Enter Code"
-            value={value}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            error={!!errors.code}
+          <Controller
+            control={control}
+            name="code"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Enter Code"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={!!errors.code}
+              />
+            )}
           />
-        )}
-      />
-      {errors.code && <Text>{errors.code.message}</Text>}
-      <Button
-        mode="contained"
-        onPress={handleSubmit(onSubmit)}
-        style={style.button}
-      >
-        Create
-      </Button>
+          {errors.code && <Text>{errors.code.message}</Text>}
+          <Button
+            mode="contained"
+            onPress={handleSubmit(onSubmit)}
+            style={style.button}
+          >
+            Create
+          </Button>
+        </Card.Content>
+      </Card>
+
       {AddedToDataBase ? (
         <Snackbar
           // style={style.greenSnackBar}
@@ -197,7 +202,7 @@ const style = StyleSheet.create({
     flex: 1,
   },
   button: {
-    marginTop: 10,
+    marginTop: 20,
   },
   // redSnackBar: {
   //   backgroundColor: 'red',
