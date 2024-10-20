@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { Household } from '../types/types';
+import { Household, NewHousehold } from '../types/types';
 import { supabase } from '../utils/supabase';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
@@ -38,14 +38,15 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     getHouseholds();
   }, []);
 
-  const insertNewHousehold = async (newHousehold: string, code: string) => {
-    console.log(`Inserting ${newHousehold} ${code}`);
+  const insertNewHousehold = async (newHousehold: NewHousehold) => {
+    console.log(`Inserting ${newHousehold.name} ${newHousehold.code}`);
 
     try {
       const { data: dbQueryResult, error } = await supabase
         .from('household')
-        .insert({ name: newHousehold, code: code })
-        .select();
+        .insert(newHousehold)
+        .select()
+        .single();
 
       if (error) {
         console.error(error.message);
@@ -53,7 +54,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       }
 
       if (dbQueryResult) {
-        const householdAddedMessage: string = `Added id:${dbQueryResult[0].id} ${dbQueryResult[0].name} ${dbQueryResult[0].code}`;
+        const householdAddedMessage: string = `Added id:${dbQueryResult.id} ${dbQueryResult.name} ${dbQueryResult.code}`;
         console.log(householdAddedMessage);
         console.log(JSON.stringify(dbQueryResult, null, 2));
         setSnackBarMessage(householdAddedMessage);
@@ -77,8 +78,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       }
 
       if (dbQueryResult && dbQueryResult.length > 0) {
-        console.log(`Total households in DB: ${dbQueryResult.length}`);
         console.log(JSON.stringify(dbQueryResult, null, 2));
+        console.log(`Total households in DB: ${dbQueryResult.length}`);
         setExistingHouseholds(dbQueryResult);
       } else {
         console.log('No household records found');
@@ -90,21 +91,26 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
   const onSubmit = async (data: FormData) => {
     const { household, code } = data;
+    const newHousehold: NewHousehold = {
+      name: household,
+      code: code,
+    };
+
     // check if our user household name & code already exists in the DB
     // If household exists return an errormessage, else insert the new household
     const householdExists = existingHouseholds.some(
       (h) =>
-        household.toLowerCase() === h.name.toLowerCase() &&
-        code.toLowerCase() === h.code.toLowerCase(),
+        newHousehold.name.toLowerCase() === h.name.toLowerCase() &&
+        newHousehold.code.toLowerCase() === h.code.toLowerCase(),
     );
 
     if (householdExists) {
-      const errorMessage: string = `Household ${household} with code ${code} already exists in DB`;
+      const errorMessage: string = `Household ${newHousehold.name} with code ${newHousehold.code} already exists in DB`;
       console.log(errorMessage);
       setSnackBarMessage(errorMessage);
       setAddedToDataBase(false);
     } else {
-      insertNewHousehold(household, code);
+      insertNewHousehold(newHousehold);
       setAddedToDataBase(true);
     }
 
@@ -113,16 +119,6 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
   return (
     <View style={style.container}>
-      {/* <TextInput
-        label="Enter Household"
-        value={newHousehold}
-        onChangeText={(household) => setNewHousehold(household)}
-      />
-      <TextInput
-        label="Enter code"
-        value={code}
-        onChangeText={(code) => setCode(code)}
-      /> */}
       <Controller
         control={control}
         name="household"
