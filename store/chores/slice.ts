@@ -67,7 +67,7 @@ const choresSlice = createSlice({
 export const selectChores = (state: RootState) => state.chores.entities;
 // export const selectChoresCurrentHousehold = (state: RootState) =>
 //   state.chores.entities.filter(
-//     (chore) => chore.household_id === state.households.current,
+//     (chore) => chore.household_id === state.households.current.id,
 //   );
 
 export default choresSlice.reducer;
