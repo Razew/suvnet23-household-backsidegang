@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import ChoreCard from '../components/ChoreCard';
-import { fetchChores, selectAllChores } from '../store/chores/slice';
+import { fetchChores, selectChores } from '../store/chores/slice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { large } from '../themes/styles';
 
 export default function HouseholdScreen() {
-  const chores = useAppSelector(selectAllChores);
+  const chores = useAppSelector(selectChores);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
