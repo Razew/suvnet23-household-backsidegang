@@ -4,69 +4,72 @@ import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
-interface UserToHouseholdState {
-  allUserToHousehold: UserToHousehold[];
+interface UsersToHouseholdsState {
+  usersToHouseholds: UserToHousehold[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
-const initialState: UserToHouseholdState = {
-  allUserToHousehold: [],
+const initialState: UsersToHouseholdsState = {
+  usersToHouseholds: [],
   loading: 'idle',
 };
 
-export const fetchUserToHousehold = createAppAsyncThunk<
+export const fetchUsersToHouseholds = createAppAsyncThunk<
   UserToHousehold[],
   void
->('userToHousehold/fetchUserToHousehold', async (_, { rejectWithValue }) => {
-  console.log('Fetching user to household...');
-  try {
-    const { data: fetchedUserToHousehold, error } = await supabase
-      .from('user_to_household')
-      .select('*');
-    console.log('Fetched user to household:', fetchedUserToHousehold);
+>(
+  'usersToHouseholds/fetchUsersToHouseholds',
+  async (_, { rejectWithValue }) => {
+    console.log('Fetching users to households...');
+    try {
+      const { data: fetchedUsersToHouseholds, error } = await supabase
+        .from('user_to_household')
+        .select('*');
+      console.log('Fetched users to households:', fetchedUsersToHouseholds);
 
-    if (error) {
-      console.error('Supabase Error:', error);
-      return rejectWithValue(error.message);
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      if (!fetchedUsersToHouseholds || fetchedUsersToHouseholds.length === 0) {
+        console.error('No user to household found');
+        return rejectWithValue('No user to household found');
+      }
+
+      return fetchedUsersToHouseholds;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while fetching user to household');
     }
+  },
+);
 
-    if (!fetchedUserToHousehold || fetchedUserToHousehold.length === 0) {
-      console.error('No user to household found');
-      return rejectWithValue('No user to household found');
-    }
-
-    return fetchedUserToHousehold;
-  } catch (error) {
-    console.error(error);
-    return rejectWithValue('Error while fetching user to household');
-  }
-});
-
-const userToHouseholdSlice = createSlice({
-  name: 'userToHousehold',
+const usersToHouseholdsSlice = createSlice({
+  name: 'usersToHouseholds',
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchUserToHousehold.pending, (state) => {
+    builder.addCase(fetchUsersToHouseholds.pending, (state) => {
       state.loading = 'pending';
       state.errorMessage = undefined;
     });
     builder.addCase(
-      fetchUserToHousehold.fulfilled,
+      fetchUsersToHouseholds.fulfilled,
       (state, action: PayloadAction<UserToHousehold[]>) => {
-        state.allUserToHousehold = action.payload;
+        state.usersToHouseholds = action.payload;
         state.loading = 'succeeded';
       },
     );
-    builder.addCase(fetchUserToHousehold.rejected, (state, action) => {
+    builder.addCase(fetchUsersToHouseholds.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
   },
 });
 
-export const selectAllUserToHousehold = (state: RootState) =>
-  state.userToHousehold.allUserToHousehold;
+export const selectUsersToHouseholds = (state: RootState) =>
+  state.usersToHouseholds.usersToHouseholds;
 
-export default userToHouseholdSlice.reducer;
+export default usersToHouseholdsSlice.reducer;
