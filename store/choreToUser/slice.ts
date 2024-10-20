@@ -4,38 +4,38 @@ import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
-interface ChoreToUserState {
-  allChoreToUser: ChoreToUser[];
+interface ChoresToUsersState {
+  entities: ChoreToUser[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
-const initialState: ChoreToUserState = {
-  allChoreToUser: [],
+const initialState: ChoresToUsersState = {
+  entities: [],
   loading: 'idle',
 };
 
-export const fetchChoreToUser = createAppAsyncThunk<ChoreToUser[], void>(
-  'choreToUser/fetchChoreToUser',
+export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
+  'choresToUsers/fetchChoresToUsers',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching chore to user...');
+    console.log('Fetching chores to users...');
     try {
-      const { data: fetchedChoreToUser, error } = await supabase
+      const { data: fetchedChoresToUsers, error } = await supabase
         .from('chore_to_user')
         .select('*');
-      console.log('Fetched Chore To User:', fetchedChoreToUser);
+      console.log('Fetched Chores To Users:', fetchedChoresToUsers);
 
       if (error) {
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
 
-      if (!fetchedChoreToUser || fetchedChoreToUser.length === 0) {
+      if (!fetchedChoresToUsers || fetchedChoresToUsers.length === 0) {
         console.error('No chore to user found');
         return rejectWithValue('No chore to user found');
       }
 
-      return fetchedChoreToUser;
+      return fetchedChoresToUsers;
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while fetching chore to user');
@@ -43,30 +43,30 @@ export const fetchChoreToUser = createAppAsyncThunk<ChoreToUser[], void>(
   },
 );
 
-const choreToUserSlice = createSlice({
-  name: 'choreToUser',
+const choresToUsersSlice = createSlice({
+  name: 'choresToUsers',
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchChoreToUser.pending, (state) => {
+    builder.addCase(fetchChoresToUsers.pending, (state) => {
       state.loading = 'pending';
       state.errorMessage = undefined;
     });
     builder.addCase(
-      fetchChoreToUser.fulfilled,
+      fetchChoresToUsers.fulfilled,
       (state, action: PayloadAction<ChoreToUser[]>) => {
-        state.allChoreToUser = action.payload;
+        state.entities = action.payload;
         state.loading = 'succeeded';
       },
     );
-    builder.addCase(fetchChoreToUser.rejected, (state, action) => {
+    builder.addCase(fetchChoresToUsers.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
   },
 });
 
-export const selectAllChoreToUser = (state: RootState) =>
-  state.choreToUser.allChoreToUser;
+export const selectChoresToUsers = (state: RootState) =>
+  state.choresToUsers.entities;
 
-export default choreToUserSlice.reducer;
+export default choresToUsersSlice.reducer;
