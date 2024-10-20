@@ -4,8 +4,6 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
-import { selectLoggedInUser } from '../store/Auth/slice';
-import { useAppSelector } from '../store/store';
 // import { useAppDispatch, useAppSelector } from '../store/store';
 // import {
 //   fetchHouseholds,
@@ -25,7 +23,6 @@ export default function HomeScreen({ navigation }: Props) {
   //     dispatch(fetchHouseholds());
   //   }
   // }, [householdsStatus, dispatch]);
-  const loggedInUser = useAppSelector(selectLoggedInUser);
 
   return (
     <View style={container}>
@@ -51,13 +48,6 @@ export default function HomeScreen({ navigation }: Props) {
         </Button>
       </View>
       <Button mode="elevated">Another Button</Button>
-
-      <View>
-        <Text>
-          Logged in as:{' '}
-          {[loggedInUser.id, loggedInUser.username, loggedInUser.password]}
-        </Text>
-      </View>
     </View>
   );
 }

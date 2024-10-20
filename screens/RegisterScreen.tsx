@@ -1,20 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import {
-  Button,
-  Text,
-  TextInput,
-  useTheme,
-  Dialog,
-  Portal,
-} from 'react-native-paper';
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { authStyles } from '../themes/styles';
-import { createUser } from '../store/Auth/slice';
-import { useAppDispatch } from '../store/store';
+import { createUser, resetState } from '../store/Auth/slice';
+import { useAppDispatch, useAppSelector } from '../store/store';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -22,55 +15,24 @@ const RegisterScreen = ({ navigation }: Props) => {
   const { colors } = useTheme();
   const [form, setForm] = useState({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const hideDialog = () => setVisible(false);
+
   const dispatch = useAppDispatch();
+  const error = useAppSelector((state) => state.auth.error);
+  const loading = useAppSelector((state) => state.auth.loading);
 
   const handleRegister = async () => {
-    if (!form.username || !form.password) {
-      <Portal>
-        <Dialog
-          visible={visible}
-          onDismiss={hideDialog}
-        >
-          <Dialog.Title>Error:</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Please fill in all fields</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>;
-      return;
+    const resultAction = await dispatch(
+      createUser({ username: form.username, password: form.password }),
+    );
+    if (createUser.fulfilled.match(resultAction)) {
+      console.log('User created');
+      navigation.navigate('HomeNavigator');
     }
-    try {
-      const resultAction = await dispatch(
-        createUser({ username: form.username, password: form.password }),
-      );
-      if (createUser.fulfilled.match(resultAction)) {
-        console.log('User created');
-        navigation.navigate('HomeNavigator');
-      } else {
-        throw new Error(resultAction.payload as string);
-      }
-    } catch {
-      <Portal>
-        <Dialog
-          visible={visible}
-          onDismiss={hideDialog}
-        >
-          <Dialog.Title>Error:</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Someting went wrong</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>;
-      return;
-    }
+  };
+
+  const handleNavigate = () => {
+    dispatch(resetState());
+    navigation.navigate('Login');
   };
 
   return (
@@ -84,6 +46,11 @@ const RegisterScreen = ({ navigation }: Props) => {
           />
           <View style={authStyles.container}>
             <Text style={authStyles.title}>Sign up</Text>
+            {error && (
+              <View>
+                <Text style={{ color: colors.error }}>{error}</Text>
+              </View>
+            )}
             <TextInput
               style={authStyles.input}
               mode="outlined"
@@ -111,11 +78,11 @@ const RegisterScreen = ({ navigation }: Props) => {
               mode="contained"
               onPress={() => handleRegister()}
             >
-              Sign Up
+              {loading ? 'Loggin in' : 'Register'}
             </Button>
             <View style={authStyles.linkTextContainer}>
               <Text>Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity onPress={() => handleNavigate()}>
                 <Text style={authStyles.linkText}>Log in</Text>
               </TouchableOpacity>
             </View>
