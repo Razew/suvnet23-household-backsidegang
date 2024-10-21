@@ -69,7 +69,7 @@ const usersToHouseholdsSlice = createSlice({
   },
 });
 
-export default usersToHouseholdsSlice.reducer;
+export const usersToHouseholdsReducer = usersToHouseholdsSlice.reducer;
 
 // SELECTORS
 export const selectUsersToHouseholds = (state: RootState) =>
