@@ -177,5 +177,7 @@ const authSlice = createSlice({
 });
 
 export const selectLoggedInUser = (state: RootState) => state.auth.currentUser;
+export const selectLogInSuccess = (state: RootState) =>
+  state.auth.currentUser !== undefined;
 export const { resetState } = authSlice.actions;
 export default authSlice.reducer;

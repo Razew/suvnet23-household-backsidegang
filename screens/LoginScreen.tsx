@@ -5,9 +5,9 @@ import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { authStyles } from '../themes/styles';
-import { loginUser, resetState } from '../store/Auth/slice';
+import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/store';
+import { authStyles } from '../themes/styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -18,12 +18,13 @@ export default function LoginScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const error = useAppSelector((state) => state.auth.error);
   const loading = useAppSelector((state) => state.auth.loading);
+  const success = useAppSelector(selectLogInSuccess);
 
   const handleLogin = async () => {
-    const resultAction = await dispatch(
+    await dispatch(
       loginUser({ username: form.username, password: form.password }),
     );
-    if (loginUser.fulfilled.match(resultAction)) {
+    if (success) {
       navigation.replace('HomeNavigator');
     }
   };
