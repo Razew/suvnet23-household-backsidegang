@@ -5,13 +5,14 @@ import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
 interface AvatarsState {
-  entities: Avatar[];
+  list: Avatar[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: AvatarsState = {
-  entities: [],
+  list: [],
+  errorMessage: undefined,
   loading: 'idle',
 };
 
@@ -55,7 +56,7 @@ const avatarsSlice = createSlice({
     builder.addCase(
       fetchAvatars.fulfilled,
       (state, action: PayloadAction<Avatar[]>) => {
-        state.entities = action.payload;
+        state.list = action.payload;
         state.loading = 'succeeded';
       },
     );
@@ -66,6 +67,7 @@ const avatarsSlice = createSlice({
   },
 });
 
-export const selectAvatars = (state: RootState) => state.avatars.entities;
+export const avatarsReducer = avatarsSlice.reducer;
 
-export default avatarsSlice.reducer;
+// SELECTORS
+export const selectAvatars = (state: RootState) => state.avatars.list;
