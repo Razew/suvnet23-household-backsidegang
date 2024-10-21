@@ -116,7 +116,7 @@ export const createUser = createAsyncThunk(
       return { user: updatedData };
     } catch (error) {
       console.log('Catch error:', error);
-      return rejectWithValue('Invalid login details');
+      return rejectWithValue('Failed to register');
     }
   },
 );

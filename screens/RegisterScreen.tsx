@@ -82,7 +82,7 @@ const RegisterScreen = ({ navigation }: Props) => {
               mode="contained"
               onPress={handleRegister}
             >
-              {loading ? 'Loggin in' : 'Register'}
+              {loading ? 'Trying to Register..' : 'Register'}
             </Button>
             <View style={authStyles.linkTextContainer}>
               <Text>Already have an account? </Text>
