@@ -1,9 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { User } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { RootState } from '../store';
-import { User } from '../../types/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 interface AuthState {
   currentUser?: User;
@@ -17,27 +15,34 @@ const initialState: AuthState = {
   error: undefined,
 };
 
-async function saveUserToLocalStorage(user: { id: string, user_name: string, hashed_password: string }) {
-    try {
-        const userJson = JSON.stringify(user);
-        await AsyncStorage.setItem('loggedInUser', userJson);
-    } catch (error) {
-        console.error('Failed to save user to local storage', error);
-    }
-}
+// async function saveUserToLocalStorage(user: {
+//   id: string;
+//   user_name: string;
+//   hashed_password: string;
+// }) {
+//   try {
+//     const userJson = JSON.stringify(user);
+//     await AsyncStorage.setItem('loggedInUser', userJson);
+//   } catch (error) {
+//     console.error('Failed to save user to local storage', error);
+//   }
+// }
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
+  async (
+    { username, password }: { username: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
       if (username === '' || password === '') {
-        return rejectWithValue("Fill in username and password");
+        return rejectWithValue('Fill in username and password');
       }
       const { data, error } = await supabase
-        .from("user")
-        .select("id, user_name, hashed_password")
-        .eq("user_name", username)
-        .eq("hashed_password", password)
+        .from('user')
+        .select('id, user_name, hashed_password')
+        .eq('user_name', username)
+        .eq('hashed_password', password)
         .single();
 
       if (error) {
@@ -47,56 +52,62 @@ export const loginUser = createAsyncThunk(
       if (!data) {
         return rejectWithValue('User not found');
       }
-      const user = {
-        id: data.id,
-        user_name: data.user_name,
-        hashed_password: data.hashed_password
-      };
-      saveUserToLocalStorage(user);
+      // const user = {
+      //   id: data.id,
+      //   user_name: data.user_name,
+      //   hashed_password: data.hashed_password,
+      // };
+      // saveUserToLocalStorage(user);
       return { user: data };
     } catch (error) {
       console.log('error', error);
-      return rejectWithValue("Invalid login details");
+      return rejectWithValue('Invalid login details');
     }
-  }
+  },
 );
 
-export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    return true;
-  } catch (error) {
-    return rejectWithValue((error as Error).message);
-  }
-});
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  },
+);
 
 export const createUser = createAsyncThunk(
   'auth/createUser',
-  async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
+  async (
+    { username, password }: { username: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
       if (username === '') {
-        return rejectWithValue("Username cannot be empty");
+        return rejectWithValue('Username cannot be empty');
       }
       if (password === '' || password.length < 8) {
-        return rejectWithValue("Password must be at least 8 characters long");
+        return rejectWithValue('Password must be at least 8 characters long');
       }
       const { error } = await supabase
-        .from("user")
+        .from('user')
         .insert([{ user_name: username, hashed_password: password }]);
 
       if (error) {
         console.log('Supabase error:', error);
-        return rejectWithValue("Username already exists");
+        return rejectWithValue('Username already exists');
       }
 
       const { data: updatedData, error: updatedError } = await supabase
-        .from("user")
-        .select("id, user_name, hashed_password")
-        .eq("user_name", username)
-        .eq("hashed_password", password)
+        .from('user')
+        .select('id, user_name, hashed_password')
+        .eq('user_name', username)
+        .eq('hashed_password', password)
         .single();
-      
+
       if (updatedError) {
         console.log('Supabase error:', updatedError);
         throw updatedError;
@@ -105,17 +116,16 @@ export const createUser = createAsyncThunk(
       return { user: updatedData };
     } catch (error) {
       console.log('Catch error:', error);
-      return rejectWithValue("Invalid login details");
+      return rejectWithValue('Invalid login details');
     }
-  }
+  },
 );
-
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-  resetState: () => initialState,
+    resetState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -165,7 +175,6 @@ const authSlice = createSlice({
       });
   },
 });
-
 
 export const selectLoggedInUser = (state: RootState) => state.auth.currentUser;
 export const { resetState } = authSlice.actions;
