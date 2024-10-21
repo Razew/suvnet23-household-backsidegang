@@ -5,13 +5,14 @@ import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
 interface ChoresState {
-  entities: Chore[];
+  list: Chore[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: ChoresState = {
-  entities: [],
+  list: [],
+  errorMessage: undefined,
   loading: 'idle',
 };
 
@@ -53,7 +54,7 @@ const choresSlice = createSlice({
     builder.addCase(
       fetchChores.fulfilled,
       (state, action: PayloadAction<Chore[]>) => {
-        state.entities = action.payload;
+        state.list = action.payload;
         state.loading = 'succeeded';
       },
     );
@@ -64,10 +65,11 @@ const choresSlice = createSlice({
   },
 });
 
-export const selectChores = (state: RootState) => state.chores.entities;
+export const choresReducer = choresSlice.reducer;
+
+// SELECTORS
+export const selectChores = (state: RootState) => state.chores.list;
 // export const selectChoresCurrentHousehold = (state: RootState) =>
-//   state.chores.entities.filter(
+//   state.chores.list.filter(
 //     (chore) => chore.household_id === state.households.current.id,
 //   );
-
-export default choresSlice.reducer;
