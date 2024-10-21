@@ -4,6 +4,8 @@ export type User = {
   password: string;
 };
 
+export type CredentialsPayload = { username: string; password: string };
+
 export type Household = {
   id: number;
   name: string;

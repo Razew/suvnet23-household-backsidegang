@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { User } from '../../types/types';
+import { CredentialsPayload, User } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { RootState } from '../store';
 
@@ -31,7 +31,7 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (
-    { username, password }: { username: string; password: string },
+    { username, password }: CredentialsPayload,
     { rejectWithValue },
   ) => {
     try {
@@ -82,7 +82,7 @@ export const logoutUser = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'auth/createUser',
   async (
-    { username, password }: { username: string; password: string },
+    { username, password }: CredentialsPayload,
     { rejectWithValue },
   ) => {
     try {

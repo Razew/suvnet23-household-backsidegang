@@ -78,14 +78,14 @@ export default function LoginScreen({ navigation }: Props) {
                 style={authStyles.button}
                 icon="login"
                 mode="contained"
-                onPress={() => handleLogin()}
+                onPress={handleLogin}
               >
                 {/* Log In */}
                 {loading ? 'Logging in...' : 'Log In'}
               </Button>
               <View style={authStyles.linkTextContainer}>
                 <Text>Dont have an account? </Text>
-                <TouchableOpacity onPress={() => handleNavigate()}>
+                <TouchableOpacity onPress={handleNavigate}>
                   <Text style={authStyles.linkText}>Sign up</Text>
                 </TouchableOpacity>
               </View>

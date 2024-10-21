@@ -30,8 +30,7 @@ const RegisterScreen = ({ navigation }: Props) => {
       createUser({ username: form.username, password: form.password }),
     );
     if (success) {
-      console.log('User created');
-      navigation.navigate('HomeNavigator');
+      navigation.replace('HomeNavigator');
     }
   };
 
@@ -81,13 +80,13 @@ const RegisterScreen = ({ navigation }: Props) => {
               style={authStyles.button}
               icon="login"
               mode="contained"
-              onPress={() => handleRegister()}
+              onPress={handleRegister}
             >
               {loading ? 'Loggin in' : 'Register'}
             </Button>
             <View style={authStyles.linkTextContainer}>
               <Text>Already have an account? </Text>
-              <TouchableOpacity onPress={() => handleNavigate()}>
+              <TouchableOpacity onPress={handleNavigate}>
                 <Text style={authStyles.linkText}>Log in</Text>
               </TouchableOpacity>
             </View>
