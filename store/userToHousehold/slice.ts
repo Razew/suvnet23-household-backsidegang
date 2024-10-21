@@ -5,13 +5,13 @@ import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
 
 interface UsersToHouseholdsState {
-  entities: UserToHousehold[];
+  list: UserToHousehold[];
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: UsersToHouseholdsState = {
-  entities: [],
+  list: [],
   loading: 'idle',
 };
 
@@ -58,7 +58,7 @@ const usersToHouseholdsSlice = createSlice({
     builder.addCase(
       fetchUsersToHouseholds.fulfilled,
       (state, action: PayloadAction<UserToHousehold[]>) => {
-        state.entities = action.payload;
+        state.list = action.payload;
         state.loading = 'succeeded';
       },
     );
@@ -69,7 +69,8 @@ const usersToHouseholdsSlice = createSlice({
   },
 });
 
-export const selectUsersToHouseholds = (state: RootState) =>
-  state.usersToHouseholds.entities;
-
 export default usersToHouseholdsSlice.reducer;
+
+// SELECTORS
+export const selectUsersToHouseholds = (state: RootState) =>
+  state.usersToHouseholds.list;
