@@ -5,9 +5,13 @@ import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { authStyles } from '../themes/styles';
-import { createUser, resetState } from '../store/Auth/slice';
+import {
+  createUser,
+  resetState,
+  selectLogInSuccess,
+} from '../store/Auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/store';
+import { authStyles } from '../themes/styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -19,12 +23,13 @@ const RegisterScreen = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const error = useAppSelector((state) => state.auth.error);
   const loading = useAppSelector((state) => state.auth.loading);
+  const success = useAppSelector(selectLogInSuccess);
 
   const handleRegister = async () => {
-    const resultAction = await dispatch(
+    await dispatch(
       createUser({ username: form.username, password: form.password }),
     );
-    if (createUser.fulfilled.match(resultAction)) {
+    if (success) {
       console.log('User created');
       navigation.navigate('HomeNavigator');
     }
