@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { CredentialsPayload, User } from '../../types/types';
+import { User } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { RootState } from '../store';
 
@@ -14,6 +14,8 @@ const initialState: AuthState = {
   loading: false,
   error: undefined,
 };
+
+export type CredentialsPayload = { username: string; password: string };
 
 // async function saveUserToLocalStorage(user: {
 //   id: string;
