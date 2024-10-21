@@ -30,10 +30,7 @@ const initialState: AuthState = {
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async (
-    { username, password }: CredentialsPayload,
-    { rejectWithValue },
-  ) => {
+  async ({ username, password }: CredentialsPayload, { rejectWithValue }) => {
     try {
       if (username === '' || password === '') {
         return rejectWithValue('Fill in username and password');
@@ -81,10 +78,7 @@ export const logoutUser = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
   'auth/createUser',
-  async (
-    { username, password }: CredentialsPayload,
-    { rejectWithValue },
-  ) => {
+  async ({ username, password }: CredentialsPayload, { rejectWithValue }) => {
     try {
       if (username === '') {
         return rejectWithValue('Username cannot be empty');
