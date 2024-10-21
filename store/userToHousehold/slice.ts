@@ -12,6 +12,7 @@ interface UsersToHouseholdsState {
 
 const initialState: UsersToHouseholdsState = {
   list: [],
+  errorMessage: undefined,
   loading: 'idle',
 };
 
