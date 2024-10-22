@@ -4,9 +4,9 @@
 
 ### General (3)
 
-- [ ] 1. A logo, splash screen, and app icon should be designed and used.
-- [ ] 2. The application should be built with RN, Expo & TS.
-- [ ] 3. The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented.
+- [x] 1. A logo, splash screen, and app icon should be designed and used.
+- [x] 2. The application should be built with RN, Expo & TS.
+- [x] 3. The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented.
 
 ### Household (1)
 
