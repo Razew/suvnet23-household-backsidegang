@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-const initialValue: number = 1;
+const initialValue: number = 2;
 
 const ChoreWeight = () => (
   <Card style={s.container}>
