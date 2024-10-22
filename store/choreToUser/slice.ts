@@ -72,3 +72,5 @@ export const choresToUsersReducer = choresToUsersSlice.reducer;
 // SELECTORS
 export const selectChoresToUsers = (state: RootState) =>
   state.choresToUsers.list;
+export const selectChoresToUserById = (id: number) => (state: RootState) =>
+  state.choresToUsers.list.find((choreRecord) => choreRecord.user_id === id);
