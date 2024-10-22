@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Surface, Text } from 'react-native-paper';
 
 export default function DailyViewScreen() {
   return (
-    <View style={styles.container}>
+    <Surface
+      style={styles.container}
+      elevation={0}
+    >
       <Text style={styles.text}>Daily View Screen</Text>
       {/* Add your list of chores and completed chores here */}
-    </View>
+    </Surface>
   );
 }
 
