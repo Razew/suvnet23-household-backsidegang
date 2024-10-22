@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { avatarsReducer } from './avatars/slice';
 import { choresReducer } from './chores/slice';
 import { choresToUsersReducer } from './choreToUser/slice';
-import householdsReducer from './households/slice';
+import { householdsReducer } from './households/slice';
 import { usersToHouseholdsReducer } from './userToHousehold/slice';
 
 export const store = configureStore({
