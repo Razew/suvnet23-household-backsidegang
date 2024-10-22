@@ -16,6 +16,22 @@ import {
 import CustomPieChart from '../components/CustomPieChart';
 import { Surface } from 'react-native-paper';
 import { container } from '../themes/styles';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectLoggedInUser } from '../store/Auth/slice';
+import {
+  fetchHouseholds,
+  selectAllHouseholds,
+} from '../store/households/slice';
+import { fetchChores, selectAllChores } from '../store/chores/slice';
+import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
+import {
+  fetchChoresToUsers,
+  selectChoresToUsers,
+} from '../store/choreToUser/slice';
+import {
+  fetchUsersToHouseholds,
+  selectUsersToHouseholds,
+} from '../store/userToHousehold/slice';
 
 interface StatisticsScreenProps {
   timespan: string[];
@@ -36,6 +52,29 @@ const screenWidth = Dimensions.get('window').width;
 const smallChartRadius = screenWidth * 0.14;
 
 export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchChores());
+    dispatch(fetchAvatars());
+    dispatch(fetchChoresToUsers());
+    dispatch(fetchHouseholds());
+    dispatch(fetchUsersToHouseholds());
+  }, []);
+
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  const allHouseholds = useAppSelector(selectAllHouseholds);
+  const allAvatars = useAppSelector(selectAvatars);
+  const allChoreToUser = useAppSelector(selectChoresToUsers);
+  const allUserToHousehold = useAppSelector(selectUsersToHouseholds);
+  // const allChores = useAppSelector(selectAllChores);
+
+  console.log('Logged in user: ', loggedInUser);
+  console.log('selectAllHouseholds: ', allHouseholds);
+  console.log('allAvatars: ', allAvatars);
+  console.log('allChoreToUser: ', allChoreToUser);
+  console.log('allUserToHousehold: ', allUserToHousehold);
+
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<PieDataItem[]>([]);
   const [choreData, setChoreData] = useState<ChoreDataMap>({});
