@@ -27,7 +27,6 @@ const PieSlice: React.FC<PieSliceProps> = ({
   startAngle,
   endAngle,
   radius,
-  isSingleSlice,
 }) => {
   const animatedStartAngle = useSharedValue(startAngle);
   const animatedEndAngle = useSharedValue(endAngle);
