@@ -12,6 +12,12 @@ import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
 import { getLastWeekDates, getMonthDates } from '../utils/statistics';
 import { container } from '../themes/styles';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 // type Props = MaterialTopTabScreenProps<HouseholdTabParamList, 'Household'>;
 
@@ -34,6 +40,7 @@ export default function HouseholdScreen() {
   ];
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
+  const translateX = useSharedValue(0);
 
   const updateTitle = (page: number) => {
     if (page === 0) {
@@ -50,18 +57,23 @@ export default function HouseholdScreen() {
       setTitle(months[targetMonth.getMonth()]);
     }
   };
-
   const handleRightPress = () => {
     const newPage = currentPage + 1;
     setCurrentPage(newPage);
     updateTitle(newPage);
+    if (currentPage === 0) {
+      translateX.value = 1000;
+      translateX.value = withTiming(0, { duration: 300 });
+    }
   };
 
   const handleLeftPress = () => {
-    if (currentPage > 0) {
-      const newPage = currentPage - 1;
-      setCurrentPage(newPage);
-      updateTitle(newPage);
+    const newPage = currentPage - 1;
+    setCurrentPage(newPage);
+    updateTitle(newPage);
+    if (currentPage === 1) {
+      translateX.value = -1000;
+      translateX.value = withTiming(0, { duration: 300 });
     }
   };
 
@@ -80,8 +92,13 @@ export default function HouseholdScreen() {
     updateTitle(currentPage);
   }, [currentPage]);
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
   const renderScreen = () => {
-    console.log(currentPage);
     if (currentPage === 0) {
       return <DailyViewScreen />;
     } else if (currentPage === 1) {
@@ -122,11 +139,10 @@ export default function HouseholdScreen() {
         </Surface>
 
         <PanGestureHandler onHandlerStateChange={handleSwipe}>
-          <Surface
-            style={{ flex: 1 }}
-            elevation={0}
-          >
-            {renderScreen()}
+          <Surface style={[container, { width: '100%' }]}>
+            <Animated.View style={[{ flex: 1 }, animatedStyle]}>
+              {renderScreen()}
+            </Animated.View>
           </Surface>
         </PanGestureHandler>
       </Surface>
