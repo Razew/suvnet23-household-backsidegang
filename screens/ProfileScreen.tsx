@@ -12,16 +12,15 @@ import {
   fetchHouseholds,
   selectAllHouseholds,
 } from '../store/households/slice';
-import { supabase } from '../utils/supabase';
 
 export default function ProfileScreen() {
   const [nickname, setNickname] = useState('');
   const [avatar, setAvatar] = useState('');
   // const [allAvatars, setAllAvatars] = useState(allAvatars);
-  const allAvatars = useAppSelector(selectAvatars); // Avatar[]x
-  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]x
+  const allAvatars = useAppSelector(selectAvatars); // Avatar[]
+  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
-  const allHousehold = useAppSelector(selectAllHouseholds); //Household[]x
+  const allHousehold = useAppSelector(selectAllHouseholds); //Household[]
 
   const dispatch = useAppDispatch();
 

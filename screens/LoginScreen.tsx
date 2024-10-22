@@ -10,12 +10,11 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import hushallet_logo from '../assets/image/icon_2.png';
+import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
 import { fetchAvatars } from '../store/avatars/slice';
 import { fetchChoresToUsers } from '../store/choreToUser/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
 import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 import { authStyles } from '../themes/styles';
@@ -25,7 +24,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({ navigation }: Props) {
   useEffect(() => {
-    // dispatch(fetchChores());
+    //dispatch(fetchChores());
     dispatch(fetchAvatars());
     dispatch(fetchChoresToUsers());
     dispatch(fetchHouseholds());
