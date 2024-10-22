@@ -6,8 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
-import { useAppDispatch, useAppSelector } from '../store/store';
 import { authStyles } from '../themes/styles';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 

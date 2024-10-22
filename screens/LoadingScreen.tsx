@@ -4,11 +4,20 @@ import { Button, useTheme } from 'react-native-paper';
 import hushalletLogo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { container } from '../themes/styles';
+// import { useAppSelector } from '../store/hooks';
+// import { selectLoggedInUser } from '../store/Auth/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Loading'>;
 
 export default function LoadingScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  // const loggedInUser = useAppSelector(selectLoggedInUser);
+
+  // if (loggedInUser !== null && loggedInUser !== undefined) {
+  //   console.log(loggedInUser);
+  //   navigation.replace('HomeNavigator');
+  // }
+
   return (
     <View style={[container, { backgroundColor: colors.primaryContainer }]}>
       <Image

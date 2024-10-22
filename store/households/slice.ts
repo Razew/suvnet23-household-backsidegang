@@ -19,12 +19,12 @@ const initialState: HouseholdState = {
 export const fetchHouseholds = createAsyncThunk(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching households...');
+    // console.log('Fetching households...');
     try {
       const { data: fetchedHouseholds, error } = await supabase
         .from('household')
         .select('*');
-      console.log('Fetched Households:', fetchedHouseholds);
+      // console.log('Fetched Households:', fetchedHouseholds);
 
       if (error) {
         console.error('Supabase Error:', error);
