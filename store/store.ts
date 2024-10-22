@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './auth/slice';
 import { avatarsReducer } from './avatars/slice';
 import { choresReducer } from './chores/slice';
 import { choresToUsersReducer } from './choreToUser/slice';
 import { householdsReducer } from './households/slice';
 import { usersToHouseholdsReducer } from './userToHousehold/slice';
-import authReducer from './Auth/slice';
 
 export const store = configureStore({
   reducer: {
