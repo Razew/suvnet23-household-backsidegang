@@ -21,6 +21,8 @@ export const selectActiveChoresCurrentHousehold = createSelector(
   },
 );
 
+// export const selectChoreRecords;
+
 // USERS
 export const selectUsersCurrentHousehold = createSelector(
   [selectUsersToHouseholds, selectCurrentHousehold],
@@ -29,6 +31,8 @@ export const selectUsersCurrentHousehold = createSelector(
   },
 );
 
+// TODO: Select only active users for current household
+
 export const selectUsersWithAvatarsCurrentHousehold = createSelector(
   [selectUsersCurrentHousehold, selectAvatars],
   (users, avatars) => {
@@ -36,5 +40,14 @@ export const selectUsersWithAvatarsCurrentHousehold = createSelector(
       ...user,
       avatar: avatars.find((avatar) => avatar.id === user.avatar_id),
     }));
+  },
+);
+
+// AVATARS
+export const selectAvailableAvatarsCurrentHousehold = createSelector(
+  [selectUsersCurrentHousehold, selectAvatars],
+  (users, avatars) => {
+    const usedAvatarIds = users.map((user) => user.avatar_id);
+    return avatars.filter((avatar) => !usedAvatarIds.includes(avatar.id));
   },
 );
