@@ -69,3 +69,5 @@ export const choresReducer = choresSlice.reducer;
 
 // SELECTORS
 export const selectChores = (state: RootState) => state.chores.list;
+export const selectActiveChores = (state: RootState) =>
+  state.chores.list.filter((chore) => chore.is_active && !chore.is_archived);
