@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,14 +20,15 @@ export default function LoginScreen({ navigation }: Props) {
   const loading = useAppSelector((state) => state.auth.loading);
   const success = useAppSelector(selectLogInSuccess);
 
-  const handleLogin = async () => {
-    await dispatch(
-      loginUser({ username: form.username, password: form.password }),
-    );
+  const handleLogin = () => {
+    dispatch(loginUser({ username: form.username, password: form.password }));
+  };
+
+  useEffect(() => {
     if (success) {
       navigation.replace('HomeNavigator');
     }
-  };
+  }, [success]);
 
   const handleNavigate = () => {
     dispatch(resetState());
