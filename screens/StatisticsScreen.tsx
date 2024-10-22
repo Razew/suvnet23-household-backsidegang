@@ -1,188 +1,177 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { IconButton } from 'react-native-paper'; // Ensure correct import
-import { container } from '../themes/styles'; // Ensure correct import
-import PieChartStats from '../components/PieChartStats'; // Ensure correct import
-import { mockedHouseholds } from '../data/mocked'; // Ensure correct import
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import {
+  getChoresData,
+  users,
+  households,
+  chores,
+  completedChores,
+} from '../mocked'; // Import the mocked data function, users, households, chores, and completedChores
+import CustomPieChart from '../components/CustomPieChart'; // Import the custom pie chart
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+interface StatisticsScreenProps {
+  timespan: string[];
+}
 
-export default function StatisticsScreen() {
-  // const currentHousehold = useAppSelector(selectCurrentHousehold());
-  // const chores = useAppSelector(selectChoresByHousehold());
+interface PieDataItem {
+  value: number;
+  color: string;
+  emoji: string;
+}
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentTitle, setCurrentTitle] = useState('Today');
-  const [currentPage, setCurrentPage] = useState(0);
-  const [timespan, setTimespan] = useState([new Date()]);
+interface ChoreDataMap {
+  [key: number]: PieDataItem[];
+}
 
-  const updateTitle = (date: Date, page: number) => {
-    if (page === 0) {
-      return 'Today';
-    } else if (page === 1) {
-      return 'Last Week';
-    } else if (page === 2) {
-      return 'This Month';
-    } else {
-      return months[date.getMonth()] + ' ' + date.getFullYear();
-    }
+const household = households[0];
+const screenWidth = Dimensions.get('window').width;
+const smallChartRadius = screenWidth * 0.1;
+
+export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<PieDataItem[]>([]);
+  const [choreData, setChoreData] = useState<ChoreDataMap>({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const choresData = getChoresData(timespan, household.id);
+      const filteredData = choresData.filter((chore) => chore.completed > 0); // Filter out users with zero completed chores
+      const totalData = filteredData.map((chore) => {
+        const user = users.find((user) => user.name === chore.user);
+        return {
+          value: chore.completed,
+          color: user?.color || '#000000',
+          emoji: user?.emoji || '',
+        };
+      });
+
+      const choreDataMap: ChoreDataMap = {};
+      chores
+        .filter((chore) => chore.householdId === household.id)
+        .forEach((chore) => {
+          const data = getChoreData(chore.id);
+          choreDataMap[chore.id] = data;
+        });
+
+      setData(totalData);
+      setChoreData(choreDataMap);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [timespan]);
+
+  const getChoreData = (choreId: number) => {
+    const choreData = completedChores.filter(
+      (chore) => chore.choreId === choreId && timespan.includes(chore.date),
+    );
+    const userChoreCounts = users
+      .filter((user) => user.householdId === household.id)
+      .map((user) => {
+        const completed = choreData.filter(
+          (chore) => chore.userId === user.id,
+        ).length;
+        return {
+          value: completed,
+          color: user?.color || '#000000',
+          emoji: user?.emoji || '',
+        };
+      })
+      .filter((chore) => chore.value > 0);
+    return userChoreCounts;
   };
 
-  const updateTimespan = (page: number, date: Date) => {
-    if (page === 0) {
-      return [new Date()];
-    } else if (page === 1) {
-      const lastWeek = new Date();
-      lastWeek.setDate(date.getDate() - 7);
-      return [lastWeek, date];
-    } else if (page === 2) {
-      const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-      return [startOfMonth, date];
-    } else {
-      const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      return [startOfMonth, endOfMonth];
-    }
-  };
-
-  const goToPrevPage = () => {
-    let newDate = new Date(currentDate);
-    let newPage = currentPage;
-
-    if (currentPage === 1) {
-      // Go back to today
-      newDate = new Date();
-      newPage = 0;
-    } else if (currentPage === 2) {
-      // Go back to last week
-      newDate.setDate(newDate.getDate() - 7);
-      newPage = 1;
-    } else if (currentPage > 2) {
-      // Go back by one month
-      newDate.setMonth(currentDate.getMonth() + 1);
-      newPage -= 1;
-    }
-
-    setCurrentDate(newDate);
-    setCurrentTitle(updateTitle(newDate, newPage));
-    setCurrentPage(newPage);
-    setTimespan(updateTimespan(newPage, newDate));
-  };
-
-  const goToNextPage = () => {
-    let newDate = new Date(currentDate);
-    let newPage = currentPage;
-
-    if (currentPage === 0) {
-      // Go to last week
-      newDate.setDate(currentDate.getDate() - 7);
-      newPage = 1;
-    } else if (currentPage === 1) {
-      // Go to this month
-      newDate = new Date();
-      newPage = 2;
-    } else {
-      // Go back by one month
-      newDate.setMonth(currentDate.getMonth() - 1);
-      newPage += 1;
-    }
-
-    setCurrentDate(newDate);
-    setCurrentTitle(updateTitle(newDate, newPage));
-    setCurrentPage(newPage);
-    setTimespan(updateTimespan(newPage, newDate));
-  };
-
-  const completedChoreIds = new Set(
-    mockedHouseholds[0].completedChores.map((chore) => chore.id),
-  );
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+        />
+        <Text>Loading data...</Text>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={{ flex: 1, width: '100%' }}>
-      <View style={[container, { flexDirection: 'column', marginTop: 20 }]}>
-        <View style={{ flexDirection: 'row', alignContent: 'center' }}>
-          <IconButton
-            icon="arrow-left"
-            size={30}
-            onPress={goToPrevPage}
-          />
-          <Text style={{ textAlignVertical: 'center' }}>{currentTitle}</Text>
-          <IconButton
-            icon="arrow-right"
-            size={30}
-            onPress={goToNextPage}
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignContent: 'center',
-            height: 300,
-          }}
-        >
-          <Text style={{ textAlign: 'center' }}>Total</Text>
-          <PieChartStats
-            pieKey={Math.random()}
-            currentHousehold={mockedHouseholds[0]}
-            timespan={timespan}
-            size={200}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            flexWrap: 'wrap',
-          }}
-        >
-          {mockedHouseholds[0].chores
-            .filter((chore) => completedChoreIds.has(chore.id))
-            .map((chore, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    width: '33.33%',
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    height: 80,
-                    marginBottom: 64,
-                  }}
-                >
-                  <Text
-                    style={{
-                      alignSelf: 'center',
-                    }}
-                  >
-                    {chore.name}
-                  </Text>
-                  <View style={{ alignSelf: 'center' }}>
-                    <PieChartStats
-                      chores={[chore]}
-                      pieKey={Math.random()}
-                      currentHousehold={mockedHouseholds[0]}
-                      timespan={timespan}
-                      size={64}
-                    />
-                  </View>
-                </View>
-              );
-            })}
-        </View>
+    <View style={styles.container}>
+      <View style={styles.totalContainer}>
+        <CustomPieChart
+          data={data}
+          radius={150}
+        />
       </View>
-    </ScrollView>
+      <View style={styles.choresContainer}>
+        {chores
+          .filter((chore) => chore.householdId === household.id)
+          .map((chore) => (
+            <View
+              key={chore.id}
+              style={styles.choreChart}
+            >
+              <Text style={styles.choreText}>{chore.name}</Text>
+              <CustomPieChart
+                data={choreData[chore.id]}
+                radius={smallChartRadius}
+              />
+            </View>
+          ))}
+      </View>
+      {/* <View style={styles.exampleContainer}>
+				<Text style={styles.exampleText}>Example Pie Chart</Text>
+				<CustomPieChart
+					data={[
+						{ value: 100, color: "#0000FF", emoji: "🐶" }, // 100% filled
+					]}
+					radius={150}
+				/>
+			</View> */}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  totalContainer: {
+    marginBottom: 20,
+  },
+  choresContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  choreChart: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  choreText: {
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  exampleContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  exampleText: {
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
