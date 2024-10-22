@@ -69,7 +69,3 @@ export const choresReducer = choresSlice.reducer;
 
 // SELECTORS
 export const selectChores = (state: RootState) => state.chores.list;
-// export const selectChoresCurrentHousehold = (state: RootState) =>
-//   state.chores.list.filter(
-//     (chore) => chore.household_id === state.households.current.id,
-//   );
