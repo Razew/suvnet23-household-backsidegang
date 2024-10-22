@@ -1,6 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/image/icon_2.png';
@@ -51,59 +58,63 @@ export default function LoginScreen({ navigation }: Props) {
       <SafeAreaView
         style={{ backgroundColor: colors.primaryContainer, flex: 1 }}
       >
-        <ScrollView keyboardShouldPersistTaps={'handled'}>
-          <View style={authStyles.root}>
-            <Image
-              source={hushallet_logo}
-              resizeMode="contain"
-              style={authStyles.logo}
-            />
-            <View style={authStyles.container}>
-              <Text style={authStyles.title}>Log in</Text>
-              {error && (
-                <View>
-                  <Text style={{ color: colors.error }}>{error}</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView keyboardShouldPersistTaps={'handled'}>
+            <View style={authStyles.root}>
+              <Image
+                source={hushallet_logo}
+                resizeMode="contain"
+                style={authStyles.logo}
+              />
+              <View style={authStyles.container}>
+                <Text style={authStyles.title}>Log in</Text>
+                {error && (
+                  <View>
+                    <Text style={{ color: colors.error }}>{error}</Text>
+                  </View>
+                )}
+                <TextInput
+                  style={authStyles.input}
+                  mode="outlined"
+                  label="Username"
+                  value={form.username}
+                  onChangeText={(e) => setForm({ ...form, username: e })}
+                />
+                <TextInput
+                  style={authStyles.input}
+                  mode="outlined"
+                  label="Password"
+                  secureTextEntry={!showPassword}
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? 'eye-off' : 'eye'}
+                      onPress={() => setShowPassword(!showPassword)}
+                    />
+                  }
+                  value={form.password}
+                  onChangeText={(e) => setForm({ ...form, password: e })}
+                />
+                <Button
+                  style={authStyles.button}
+                  icon="login"
+                  mode="contained"
+                  onPress={handleLogin}
+                >
+                  {/* Log In */}
+                  {loading ? 'Logging in...' : 'Log In'}
+                </Button>
+                <View style={authStyles.linkTextContainer}>
+                  <Text>Dont have an account? </Text>
+                  <TouchableOpacity onPress={handleNavigate}>
+                    <Text style={authStyles.linkText}>Sign up</Text>
+                  </TouchableOpacity>
                 </View>
-              )}
-              <TextInput
-                style={authStyles.input}
-                mode="outlined"
-                label="Username"
-                value={form.username}
-                onChangeText={(e) => setForm({ ...form, username: e })}
-              />
-              <TextInput
-                style={authStyles.input}
-                mode="outlined"
-                label="Password"
-                secureTextEntry={!showPassword}
-                right={
-                  <TextInput.Icon
-                    icon={showPassword ? 'eye-off' : 'eye'}
-                    onPress={() => setShowPassword(!showPassword)}
-                  />
-                }
-                value={form.password}
-                onChangeText={(e) => setForm({ ...form, password: e })}
-              />
-              <Button
-                style={authStyles.button}
-                icon="login"
-                mode="contained"
-                onPress={handleLogin}
-              >
-                {/* Log In */}
-                {loading ? 'Logging in...' : 'Log In'}
-              </Button>
-              <View style={authStyles.linkTextContainer}>
-                <Text>Dont have an account? </Text>
-                <TouchableOpacity onPress={handleNavigate}>
-                  <Text style={authStyles.linkText}>Sign up</Text>
-                </TouchableOpacity>
               </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );
