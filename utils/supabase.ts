@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import 'react-native-url-polyfill/auto';
 
 export const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL || '',
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '',
+  'https://cekznfkclcpyfxvzipqb.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNla3puZmtjbGNweWZ4dnppcHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyMzM0NTIsImV4cCI6MjA0NDgwOTQ1Mn0.puPkuPS1TgNLIH1ub_ZDoj1YMBDVBvkjllhUqUv4K5A',
   {
     auth: {
       storage: AsyncStorage,
