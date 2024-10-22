@@ -45,6 +45,6 @@ export type Chore_To_User = {
   user_id: number;
   chore_id: number;
   is_completed: boolean;
-  due_date: Date; // unsure if this is the correct type, maybe string? will need to check
-  done_date: Date; // unsure if this is the correct type, maybe string? will need to check
+  due_date: string;
+  done_date: string;
 };
