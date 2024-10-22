@@ -50,7 +50,7 @@ export default function ProfileScreen() {
 
   //******* FOR AVALIBALE AVATAR EMOJIS */
   const unavailableAvatarIds = allUsersToHouseholds
-    .filter((user) => user.household_id === state.household.current.id)
+    .filter((user) => user.household_id === 1)
     // .filter((user) => user.household_id === loggedInUser?.id)
     .map((user) => user.avatar_id);
 
@@ -72,8 +72,16 @@ export default function ProfileScreen() {
     (avatar) => getUserToHousehold?.avatar_id === avatar.id,
   );
 
-  const userHouseholds = user;
+  // const householdId = 1;
+  // const userHouseholds = allUsersToHouseholds.filter(
+  //   (uth) => uth.household_id === householdId,
+  // );
 
+  // const householdAvatars = userHouseholds.map((uh) =>
+  //   allAvatars.find((avatar) => avatar.id == uh.avatar_id),
+  // );
+
+  // const usedAvatars = householdAvatars.filter((avatar) => )
   const changeName = async () => {
     // const response = await supabase
     //   .from('users')
