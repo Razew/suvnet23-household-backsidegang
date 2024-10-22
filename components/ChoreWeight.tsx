@@ -4,28 +4,54 @@ import { Badge, Card } from 'react-native-paper';
 
 const initialValue: number = 2;
 
-const ChoreWeight = () => (
-  <Card style={s.container}>
-    <TouchableOpacity onPress={() => console.log('PRESSED')}>
-      <Card.Actions>
-        <View style={s.content}>
-          <View style={s.textContainer}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Value: </Text>
-            <Text>How energy-demanding is the task? </Text>
+const ChoreWeight = () => {
+  const [isPressed, setIsPressed] = React.useState(false);
+
+  const handlePress = () => {
+    setIsPressed(true);
+  };
+
+  return (
+    <Card style={s.container}>
+      <TouchableOpacity onPress={handlePress}>
+        {isPressed ? (
+          <View style={s.numberRow}>
+            {[1, 2, 4, 6, 8].map((num, index) => (
+              <View
+                key={num}
+                style={[
+                  s.circle,
+                  { backgroundColor: `rgba(0, 0, 0, ${0.1 + index * 0.1})` },
+                ]}
+              >
+                <Text style={s.circleText}>{num}</Text>
+              </View>
+            ))}
           </View>
-          <View>
-            <Badge
-              size={30}
-              style={s.badge}
-            >
-              {initialValue}
-            </Badge>
-          </View>
-        </View>
-      </Card.Actions>
-    </TouchableOpacity>
-  </Card>
-);
+        ) : (
+          <Card.Actions>
+            <View style={s.content}>
+              <View style={s.textContainer}>
+                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                  Värde:{' '}
+                </Text>
+                <Text>Hur energikrävande är sysslan?</Text>
+              </View>
+              <View>
+                <Badge
+                  size={30}
+                  style={s.badge}
+                >
+                  {initialValue}
+                </Badge>
+              </View>
+            </View>
+          </Card.Actions>
+        )}
+      </TouchableOpacity>
+    </Card>
+  );
+};
 
 const s = StyleSheet.create({
   container: {
@@ -46,6 +72,24 @@ const s = StyleSheet.create({
   badge: {
     backgroundColor: 'gray',
     color: 'black',
+  },
+  numberRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+  },
+  circle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  circleText: {
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
 
