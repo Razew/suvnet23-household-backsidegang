@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 // import { container } from '../themes/styles';
 import { Appbar, IconButton, Surface } from 'react-native-paper';
 import {
@@ -11,6 +11,7 @@ import {
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
 import { getLastWeekDates, getMonthDates } from '../utils/statistics';
+import { container } from '../themes/styles';
 
 // type Props = MaterialTopTabScreenProps<HouseholdTabParamList, 'Household'>;
 
@@ -67,9 +68,9 @@ export default function HouseholdScreen() {
   const handleSwipe = (event: PanGestureHandlerGestureEvent) => {
     if (event.nativeEvent.state === State.END) {
       const { translationX } = event.nativeEvent;
-      if (translationX < -50) {
+      if (translationX < -25) {
         handleRightPress();
-      } else if (translationX > 50) {
+      } else if (translationX > 25) {
         handleLeftPress();
       }
     }
@@ -80,11 +81,7 @@ export default function HouseholdScreen() {
   }, [currentPage]);
 
   const renderScreen = () => {
-    // if (currentScreen === 'Home') {
-    //   return (
-    //     <HomeScreen navigateToHousehold={() => setCurrentScreen('Household')} />
-    //   );
-    // } else if (currentScreen === 'Household') {
+    console.log(currentPage);
     if (currentPage === 0) {
       return <DailyViewScreen />;
     } else if (currentPage === 1) {
@@ -97,7 +94,7 @@ export default function HouseholdScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Surface style={styles.container}>
+      <Surface style={container}>
         <Surface
           style={styles.header}
           elevation={0}
@@ -114,7 +111,7 @@ export default function HouseholdScreen() {
           >
             <Appbar.Content
               title={title}
-              titleStyle={styles.title}
+              titleStyle={styles.headerTitle}
             />
           </Surface>
           <IconButton
@@ -137,19 +134,7 @@ export default function HouseholdScreen() {
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
   header: {
     flexDirection: 'row',
     height: 50,
@@ -162,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     alignSelf: 'center',
