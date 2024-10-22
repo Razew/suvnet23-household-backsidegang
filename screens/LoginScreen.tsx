@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,10 +8,22 @@ import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authStyles } from '../themes/styles';
+import { fetchAvatars } from '../store/avatars/slice';
+import { fetchChoresToUsers } from '../store/choreToUser/slice';
+import { fetchHouseholds } from '../store/households/slice';
+import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({ navigation }: Props) {
+  useEffect(() => {
+    // dispatch(fetchChores());
+    dispatch(fetchAvatars());
+    dispatch(fetchChoresToUsers());
+    dispatch(fetchHouseholds());
+    dispatch(fetchUsersToHouseholds());
+  }, []);
+
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
@@ -96,3 +108,26 @@ export default function LoginScreen({ navigation }: Props) {
     </>
   );
 }
+// function useEffect(arg0: () => void, arg1: never[]) {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchChores(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchAvatars(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchChoresToUsers(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchHouseholds(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchUsersToHouseholds(): any {
+//   throw new Error('Function not implemented.');
+// }
