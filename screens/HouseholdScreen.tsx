@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { container } from '../themes/styles';
+// import { container } from '../themes/styles';
 import { Appbar, IconButton, Surface } from 'react-native-paper';
 import {
   GestureHandlerRootView,
@@ -33,7 +33,6 @@ export default function HouseholdScreen() {
   ];
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
-  const [currentScreen, setCurrentScreen] = useState<string>('Household');
 
   const updateTitle = (page: number) => {
     if (page === 0) {
@@ -99,29 +98,26 @@ export default function HouseholdScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Surface style={styles.container}>
-        {currentScreen === 'Household' && (
-          // <HouseholdHeader>
-          <View style={styles.header}>
-            <IconButton
-              icon="arrow-left"
-              size={30}
-              onPress={handleLeftPress}
-              disabled={currentPage === 0}
-            />
-            <View style={styles.titleContainer}>
-              <Appbar.Content
-                title={title}
-                titleStyle={styles.title}
-              />
-            </View>
-            <IconButton
-              icon="arrow-right"
-              size={30}
-              onPress={handleRightPress}
+        <View style={styles.header}>
+          <IconButton
+            icon="arrow-left"
+            size={30}
+            onPress={handleLeftPress}
+            disabled={currentPage === 0}
+          />
+          <View style={styles.titleContainer}>
+            <Appbar.Content
+              title={title}
+              titleStyle={styles.title}
             />
           </View>
-          // </Appbar.Header>
-        )}
+          <IconButton
+            icon="arrow-right"
+            size={30}
+            onPress={handleRightPress}
+          />
+        </View>
+
         <PanGestureHandler onHandlerStateChange={handleSwipe}>
           <View style={{ flex: 1 }}>{renderScreen()}</View>
         </PanGestureHandler>
