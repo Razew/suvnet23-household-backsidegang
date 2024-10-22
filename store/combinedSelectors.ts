@@ -1,4 +1,12 @@
-// export const selectChoresCurrentHousehold = (state: RootState) =>
-//   state.chores.list.filter(
-//     (chore) => chore.household_id === state.households.current.id,
-//   );
+import { createSelector } from '@reduxjs/toolkit';
+import { selectChores } from './chores/slice';
+import { selectCurrentHousehold } from './households/slice';
+
+export const selectChoresCurrentHousehold = createSelector(
+  [selectChores, selectCurrentHousehold],
+  (chores, currentHousehold) => {
+    return chores.filter(
+      (chore) => chore.household_id === currentHousehold?.id,
+    );
+  },
+);
