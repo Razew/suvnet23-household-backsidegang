@@ -10,7 +10,7 @@ import {
   resetState,
   selectLogInSuccess,
 } from '../store/Auth/slice';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authStyles } from '../themes/styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
