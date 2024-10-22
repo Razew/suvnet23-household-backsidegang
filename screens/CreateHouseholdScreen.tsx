@@ -13,7 +13,6 @@ type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
 
 const schema = z.object({
   household: z.string().min(1, 'Household name is required'),
-  code: z.string().length(4, 'Code must be 4 characters long'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -35,8 +34,22 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   const onDismissSnackBar = () => setVisible(false);
 
   useEffect(() => {
-    getHouseholds();
+    getAllHouseholds();
   }, []);
+
+  const checkIfHouseholdCodeExists = (code: string): boolean => {
+    return existingHouseholds.some((household) => household.code === code);
+  };
+
+  const generateRandomHouseholdCode = (): string => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters[randomIndex];
+    }
+    return result;
+  };
 
   const insertNewHousehold = async (newHousehold: NewHousehold) => {
     console.log(`Inserting ${newHousehold.name} ${newHousehold.code}`);
@@ -54,7 +67,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       }
 
       if (dbQueryResult) {
-        const householdAddedMessage: string = `Added id:${dbQueryResult.id} ${dbQueryResult.name} ${dbQueryResult.code}`;
+        const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
         console.log(householdAddedMessage);
         console.log(JSON.stringify(dbQueryResult, null, 2));
         setSnackBarMessage(householdAddedMessage);
@@ -66,7 +79,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     }
   };
 
-  const getHouseholds = async () => {
+  const getAllHouseholds = async () => {
     try {
       const { data: dbQueryResult, error } = await supabase
         .from('household')
@@ -90,10 +103,17 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   };
 
   const onSubmit = async (data: FormData) => {
-    const { household, code } = data;
+    const { household } = data;
+    let newCode = generateRandomHouseholdCode();
+
+    // Generate a new code if the provided code already exists
+    while (await checkIfHouseholdCodeExists(newCode)) {
+      newCode = generateRandomHouseholdCode();
+    }
+
     const newHousehold: NewHousehold = {
       name: household,
-      code: code,
+      code: newCode,
     };
 
     // check if our user household name & code already exists in the DB
@@ -121,22 +141,12 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     <View style={style.container}>
       <Card>
         <Card.Content>
-          {/* <TextInput
-        label="Enter Household"
-        value={newHousehold}
-        onChangeText={(household) => setNewHousehold(household)}
-        />
-        <TextInput
-        label="Enter code"
-        value={code}
-        onChangeText={(code) => setCode(code)}
-        /> */}
           <Controller
             control={control}
             name="household"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Enter Household"
+                label="Enter household name"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -145,25 +155,11 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
             )}
           />
           {errors.household && <Text>{errors.household.message}</Text>}
-
-          <Controller
-            control={control}
-            name="code"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label="Enter Code"
-                value={value}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                error={!!errors.code}
-              />
-            )}
-          />
-          {errors.code && <Text>{errors.code.message}</Text>}
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmit)}
             style={style.button}
+            disabled={AddedToDataBase}
           >
             Create
           </Button>
@@ -172,9 +168,9 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
       {AddedToDataBase ? (
         <Snackbar
-          // style={style.greenSnackBar}
           visible={visible}
           onDismiss={onDismissSnackBar}
+          duration={1800000}
           action={{
             label: 'Continue',
             onPress: () => {
@@ -186,14 +182,11 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         </Snackbar>
       ) : (
         <Snackbar
-          // style={style.redSnackBar}
           visible={visible}
           onDismiss={onDismissSnackBar}
           action={{
             label: 'Try again',
-            onPress: () => {
-              // Do nothing
-            },
+            onPress: () => {},
           }}
         >
           {snackBarMessage}
@@ -210,10 +203,4 @@ const style = StyleSheet.create({
   button: {
     marginTop: 20,
   },
-  // redSnackBar: {
-  //   backgroundColor: 'red',
-  // },
-  // greenSnackBar: {
-  //   backgroundColor: 'green',
-  // },
 });
