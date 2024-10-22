@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS household (
 
 CREATE TABLE IF NOT EXISTS chore (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(64) NOT NULL,
+    name VARCHAR(15) NOT NULL,
     description VARCHAR(255),
     household_id INTEGER REFERENCES household(id), -- Many-to-One: Each chore belongs to one household. INTEGER is used here because household_id is a foreign key referencing the id column in the household table, which is of type SERIAL (INTEGER).
     is_active BOOLEAN DEFAULT TRUE,
