@@ -9,7 +9,6 @@ export default function DailyViewScreen() {
       elevation={0}
     >
       <Text style={styles.text}>Daily View Screen</Text>
-      {/* Add your list of chores and completed chores here */}
     </Surface>
   );
 }
