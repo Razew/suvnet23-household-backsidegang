@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import ChoreCard from '../components/ChoreCard';
 import { fetchChores, selectChores } from '../store/chores/slice';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { large } from '../themes/styles';
 
 export default function HouseholdScreen() {
