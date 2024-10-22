@@ -14,8 +14,8 @@ import {
   completedChores,
 } from '../mocked';
 import CustomPieChart from '../components/CustomPieChart';
-import { ScrollView } from 'react-native-gesture-handler';
 import { Surface } from 'react-native-paper';
+import { container } from '../themes/styles';
 
 interface StatisticsScreenProps {
   timespan: string[];
@@ -104,7 +104,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
 
   return (
     <Surface
-      style={styles.container}
+      style={container}
       elevation={0}
     >
       <Surface
@@ -141,25 +141,11 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
             </Surface>
           ))}
       </Surface>
-      {/* <View style={styles.exampleContainer}>
-				<Text style={styles.exampleText}>Example Pie Chart</Text>
-				<CustomPieChart
-					data={[
-						{ value: 100, color: "#0000FF", emoji: "🐶" }, // 100% filled
-					]}
-					radius={150}
-				/>
-			</View> */}
     </Surface>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -179,22 +165,11 @@ const styles = StyleSheet.create({
   },
   choreTextContainer: {
     width: screenWidth * 0.25,
-    // borderWidth: 1,
   },
   choreText: {
     marginTop: 5,
     fontSize: 16,
     fontWeight: 'bold',
-    // borderWidth: 1,
     textAlign: 'center',
-  },
-  exampleContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  exampleText: {
-    marginBottom: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
