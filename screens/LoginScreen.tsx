@@ -13,12 +13,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/image/icon_2.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { authStyles } from '../themes/styles';
 import { fetchAvatars } from '../store/avatars/slice';
 import { fetchChoresToUsers } from '../store/choreToUser/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
 import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
+import { authStyles } from '../themes/styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -39,14 +39,15 @@ export default function LoginScreen({ navigation }: Props) {
   const loading = useAppSelector((state) => state.auth.loading);
   const success = useAppSelector(selectLogInSuccess);
 
-  const handleLogin = async () => {
-    await dispatch(
-      loginUser({ username: form.username, password: form.password }),
-    );
+  const handleLogin = () => {
+    dispatch(loginUser({ username: form.username, password: form.password }));
+  };
+
+  useEffect(() => {
     if (success) {
       navigation.replace('HomeNavigator');
     }
-  };
+  }, [success]);
 
   const handleNavigate = () => {
     dispatch(resetState());
