@@ -19,7 +19,6 @@ import { fetchAvatars } from '../store/avatars/slice';
 import { fetchChoresToUsers } from '../store/choreToUser/slice';
 import { fetchHouseholds } from '../store/households/slice';
 import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
-import ChoreWeight from '../components/ChoreWeight';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -63,7 +62,6 @@ export default function LoginScreen({ navigation }: Props) {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <ScrollView keyboardShouldPersistTaps={'handled'}>
-            <ChoreWeight />
             <View style={authStyles.root}>
               <Image
                 source={hushallet_logo}

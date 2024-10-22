@@ -12,7 +12,7 @@ const ChoreWeight = () => {
     setIsPressed(true);
   };
 
-  const handleBackPress = (num: number, color: string) => {
+  const handleNumberPress = (num: number, color: string) => {
     setIsPressed(false);
     setValue(num);
     setBackgroundColor(color);
@@ -27,7 +27,7 @@ const ChoreWeight = () => {
               const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
               return (
                 <TouchableOpacity
-                  onPress={() => handleBackPress(num, color)}
+                  onPress={() => handleNumberPress(num, color)}
                   key={num}
                   style={[s.circle, { backgroundColor: color }]}
                 >
@@ -41,9 +41,9 @@ const ChoreWeight = () => {
             <View style={s.content}>
               <View style={s.textContainer}>
                 <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                  Värde:{' '}
+                  Value:{' '}
                 </Text>
-                <Text>Hur energikrävande är sysslan?</Text>
+                <Text>How energy-demanding is the task?</Text>
               </View>
               <View>
                 <Badge
