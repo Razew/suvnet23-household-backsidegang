@@ -1,7 +1,7 @@
 export type User = {
   id: number;
-  user_name: string;
-  hashed_password: string;
+  username: string;
+  password: string;
 };
 
 export type Household = {
@@ -9,6 +9,8 @@ export type Household = {
   name: string;
   code: string;
 };
+
+export type NewHousehold = Omit<Household, 'id'>;
 
 export type Chore = {
   id: number;

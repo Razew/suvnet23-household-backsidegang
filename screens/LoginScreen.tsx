@@ -1,125 +1,144 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import hushallet_logo from '../assets/logo/hushallet_logo.png';
+import hushallet_logo from '../assets/image/icon_2.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { authStyles } from '../themes/styles';
+import { fetchAvatars } from '../store/avatars/slice';
+import { fetchChoresToUsers } from '../store/choreToUser/slice';
+import { fetchHouseholds } from '../store/households/slice';
+import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-const LoginScreen = ({ navigation }: Props) => {
+export default function LoginScreen({ navigation }: Props) {
+  useEffect(() => {
+    // dispatch(fetchChores());
+    dispatch(fetchAvatars());
+    dispatch(fetchChoresToUsers());
+    dispatch(fetchHouseholds());
+    dispatch(fetchUsersToHouseholds());
+  }, []);
+
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });
-  //  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useAppDispatch();
+  const error = useAppSelector((state) => state.auth.error);
+  const loading = useAppSelector((state) => state.auth.loading);
+  const success = useAppSelector(selectLogInSuccess);
 
-  // const submit = async () => {
-  //   if (!form.email || !form.password) {
-  //     Alert.alert("Error", "Please fill in all fields");
-  //   }
-  //   setIsSubmitting(true);
-  //   try {
-  //     await signIn(form.email, form.password);
-  //     router.replace("/home");
-  //   } catch (error: any) {
-  //     setIsSubmitting(false);
-  //     Alert.alert("Error", error.message);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+  const handleLogin = async () => {
+    await dispatch(
+      loginUser({ username: form.username, password: form.password }),
+    );
+    if (success) {
+      navigation.replace('HomeNavigator');
+    }
+  };
+
+  const handleNavigate = () => {
+    dispatch(resetState());
+    navigation.navigate('Register');
+  };
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.primaryContainer, flex: 1 }}>
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <View style={authStyles.root}>
-          <Image
-            source={hushallet_logo}
-            resizeMode="contain"
-            style={authStyles.logo}
-          />
-          <View style={authStyles.container}>
-            <Text style={authStyles.title}>Log in</Text>
-            <TextInput
-              style={authStyles.input}
-              mode="outlined"
-              label="Username"
-              value={form.username}
-              onChangeText={(e) => setForm({ ...form, username: e })}
-            />
-            <TextInput
-              style={authStyles.input}
-              mode="outlined"
-              label="Password"
-              secureTextEntry={!showPassword}
-              right={
-                <TextInput.Icon
-                  icon={showPassword ? 'eye-off' : 'eye'}
-                  onPress={() => setShowPassword(!showPassword)}
+    <>
+      <SafeAreaView
+        style={{ backgroundColor: colors.primaryContainer, flex: 1 }}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView keyboardShouldPersistTaps={'handled'}>
+            <View style={authStyles.root}>
+              <Image
+                source={hushallet_logo}
+                resizeMode="contain"
+                style={authStyles.logo}
+              />
+              <View style={authStyles.container}>
+                <Text style={authStyles.title}>Log in</Text>
+                {error && (
+                  <View>
+                    <Text style={{ color: colors.error }}>{error}</Text>
+                  </View>
+                )}
+                <TextInput
+                  style={authStyles.input}
+                  mode="outlined"
+                  label="Username"
+                  value={form.username}
+                  onChangeText={(e) => setForm({ ...form, username: e })}
                 />
-              }
-              value={form.password}
-              onChangeText={(e) => setForm({ ...form, password: e })}
-            />
-            <Button
-              style={authStyles.button}
-              icon="login"
-              mode="contained"
-              onPress={() => navigation.replace('HomeNavigator')}
-            >
-              Log In
-            </Button>
-            <View style={authStyles.linkTextContainer}>
-              <Text>Dont have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={authStyles.linkText}>Sign up</Text>
-              </TouchableOpacity>
+                <TextInput
+                  style={authStyles.input}
+                  mode="outlined"
+                  label="Password"
+                  secureTextEntry={!showPassword}
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? 'eye-off' : 'eye'}
+                      onPress={() => setShowPassword(!showPassword)}
+                    />
+                  }
+                  value={form.password}
+                  onChangeText={(e) => setForm({ ...form, password: e })}
+                />
+                <Button
+                  style={authStyles.button}
+                  icon="login"
+                  mode="contained"
+                  onPress={handleLogin}
+                >
+                  {/* Log In */}
+                  {loading ? 'Logging in...' : 'Log In'}
+                </Button>
+                <View style={authStyles.linkTextContainer}>
+                  <Text>Dont have an account? </Text>
+                  <TouchableOpacity onPress={handleNavigate}>
+                    <Text style={authStyles.linkText}>Sign up</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </>
   );
-};
+}
+// function useEffect(arg0: () => void, arg1: never[]) {
+//   throw new Error('Function not implemented.');
+// }
 
-export const authStyles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  container: {
-    width: '80%',
-    gap: 5,
-  },
-  logo: {
-    width: '60%',
-  },
-  title: {
-    fontSize: 16,
-    fontStyle: 'normal',
-  },
-  input: {
-    borderRadius: 10,
-  },
-  button: {
-    marginTop: 10,
-  },
-  linkTextContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
-    justifyContent: 'center',
-  },
-  linkText: {
-    color: 'blue', // If keeping the link as text, might want to set color by theme instead
-    textDecorationLine: 'underline',
-  },
-});
+// function fetchChores(): any {
+//   throw new Error('Function not implemented.');
+// }
 
-export default LoginScreen;
+// function fetchAvatars(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchChoresToUsers(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchHouseholds(): any {
+//   throw new Error('Function not implemented.');
+// }
+
+// function fetchUsersToHouseholds(): any {
+//   throw new Error('Function not implemented.');
+// }
