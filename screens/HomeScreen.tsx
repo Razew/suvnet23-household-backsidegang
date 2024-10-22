@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }: Props) {
         <Text style={s.tempHouseholdName}>CodeDiddy Household</Text>
         <Button
           mode="elevated"
-          onPress={() => navigation.replace('HouseholdInfo')}
+          onPress={() => navigation.replace('HouseholdScreen')}
         >
           Enter
         </Button>

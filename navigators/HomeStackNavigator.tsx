@@ -15,7 +15,7 @@ export type HomeStackParamList = {
   Home: undefined;
   JoinHousehold: undefined;
   CreateHousehold: undefined;
-  HouseholdInfo: undefined;
+  HouseholdScreen: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -59,7 +59,7 @@ export default function HomeStackNavigator() {
         options={{ title: 'Create Household' }}
       />
       <HomeStack.Screen
-        name="HouseholdInfo"
+        name="HouseholdScreen"
         component={HouseholdScreen}
         options={{ title: 'Household' }}
         // options={({ navigation }) => ({
