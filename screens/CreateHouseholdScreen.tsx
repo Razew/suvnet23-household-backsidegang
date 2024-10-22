@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
+import { useHouseholdContext } from '../contexts/HouseholdContext';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { Household, NewHousehold } from '../types/types';
 import { supabase } from '../utils/supabase';
@@ -22,6 +23,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
   const [visible, setVisible] = useState(false);
+  const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
   const {
     control,
     handleSubmit,
@@ -35,6 +37,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
   useEffect(() => {
     getAllHouseholds();
+    console.log('Most recent household');
+    console.log(mostRecentHousehold);
   }, []);
 
   const checkIfHouseholdCodeExists = (code: string): boolean => {
@@ -70,6 +74,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
         console.log(householdAddedMessage);
         console.log(JSON.stringify(dbQueryResult, null, 2));
+        setMostRecentHousehold(dbQueryResult);
         setSnackBarMessage(householdAddedMessage);
       } else {
         console.log('Something did not work');
@@ -91,7 +96,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       }
 
       if (dbQueryResult && dbQueryResult.length > 0) {
-        console.log(JSON.stringify(dbQueryResult, null, 2));
+        // console.log(JSON.stringify(dbQueryResult, null, 2));
         console.log(`Total households in DB: ${dbQueryResult.length}`);
         setExistingHouseholds(dbQueryResult);
       } else {
