@@ -5,85 +5,85 @@ INSERT INTO household (name, code) VALUES
 
 -- Insert data into chore table for household_id 1
 INSERT INTO chore (name, description, household_id, is_active, frequency, is_archived, weight) VALUES
-('Vacuum Living Room', 'Vacuum the entire living room', 1, TRUE, 7, FALSE, 4), -- weekly
+('Vacuum Room', 'Vacuum the entire living room', 1, TRUE, 7, FALSE, 4), -- weekly
 ('Wash Dishes', 'Wash all the dirty dishes', 1, TRUE, 1, FALSE, 2), -- daily
 ('Mow Lawn', 'Mow the front and back lawn', 1, TRUE, 14, FALSE, 6), -- bi-weekly
 ('Laundry', 'Wash and fold all dirty clothes', 1, TRUE, 7, FALSE, 4), -- weekly
-('Clean Bathroom', 'Clean the sink, toilet, and shower', 1, TRUE, 7, FALSE, 4), -- weekly
-('Take Out Trash', 'Take out the trash and replace the bag', 1, TRUE, 1, FALSE, 2), -- daily
-('Dust Furniture', 'Dust all the furniture in the house', 1, TRUE, 14, FALSE, 4), -- bi-weekly
-('Clean Windows', 'Clean all the windows inside and out', 1, TRUE, 30, FALSE, 6), -- monthly
+('Clean Bathrm', 'Clean the sink, toilet, and shower', 1, TRUE, 7, FALSE, 4), -- weekly
+('Take Trash', 'Take out the trash and replace the bag', 1, TRUE, 1, FALSE, 2), -- daily
+('Dust Furnitr', 'Dust all the furniture in the house', 1, TRUE, 14, FALSE, 4), -- bi-weekly
+('Clean Windws', 'Clean all the windows inside and out', 1, TRUE, 30, FALSE, 6), -- monthly
 ('Water Plants', 'Water all indoor and outdoor plants', 1, TRUE, 3, FALSE, 2), -- every 3 days
-('Grocery Shopping', 'Buy groceries for the week', 1, TRUE, 7, FALSE, 4), -- weekly
+('Grocery Shop', 'Buy groceries for the week', 1, TRUE, 7, FALSE, 4), -- weekly
 ('Cook Dinner', 'Prepare and cook dinner for the family', 1, TRUE, 1, FALSE, 4), -- daily
 ('Feed Pets', 'Feed the pets and refill their water', 1, TRUE, 1, FALSE, 2), -- daily
 ('Walk Dog', 'Take the dog for a walk', 1, TRUE, 1, FALSE, 4), -- daily
 ('Clean Fridge', 'Clean out the fridge and throw away old food', 1, TRUE, 30, FALSE, 4), -- monthly
-('Organize Garage', 'Organize and clean the garage', 1, TRUE, 90, FALSE, 8), -- quarterly
+('Organize Gar', 'Organize and clean the garage', 1, TRUE, 90, FALSE, 8), -- quarterly
 ('Clean Car', 'Wash and vacuum the car', 1, TRUE, 30, FALSE, 6), -- monthly
 ('Pay Bills', 'Pay all the household bills', 1, TRUE, 30, FALSE, 4), -- monthly
-('Change Bed Sheets', 'Change and wash all bed sheets', 1, TRUE, 14, FALSE, 4), -- bi-weekly
+('Change Sheets', 'Change and wash all bed sheets', 1, TRUE, 14, FALSE, 4), -- bi-weekly
 ('Clean Oven', 'Clean the inside of the oven', 1, TRUE, 90, FALSE, 6), -- quarterly
-('Clean Microwave', 'Clean the inside of the microwave', 1, TRUE, 30, FALSE, 4), -- monthly
+('Clean Micro', 'Clean the inside of the microwave', 1, TRUE, 30, FALSE, 4), -- monthly
 ('Sweep Porch', 'Sweep the front and back porch', 1, TRUE, 7, FALSE, 2), -- weekly
 ('Clean Gutters', 'Clean out the gutters', 1, TRUE, 180, FALSE, 8), -- semi-annually
 ('Rake Leaves', 'Rake leaves in the yard', 1, TRUE, 30, FALSE, 6), -- monthly
 ('Shovel Snow', 'Shovel snow from the driveway and walkways', 1, TRUE, 1, FALSE, 6), -- daily
-('Clean Basement', 'Clean and organize the basement', 1, TRUE, 90, FALSE, 8), -- quarterly
+('Clean Basemt', 'Clean and organize the basement', 1, TRUE, 90, FALSE, 8), -- quarterly
 ('Clean Attic', 'Clean and organize the attic', 1, TRUE, 180, FALSE, 8), -- semi-annually
 ('Wash Windows', 'Wash all windows inside and out', 1, TRUE, 60, FALSE, 6), -- bi-monthly
 ('Clean Deck', 'Clean and organize the deck', 1, TRUE, 30, FALSE, 6), -- monthly
 ('Clean Pool', 'Clean and maintain the pool', 1, TRUE, 7, FALSE, 6), -- weekly
-('Clean BBQ Grill', 'Clean the BBQ grill', 1, TRUE, 30, FALSE, 4), -- monthly
-('Sweep Driveway', 'Sweep the driveway and remove debris', 1, FALSE, 14, FALSE, 4), -- bi-weekly, is_active set to FALSE
-('Organize Pantry', 'Organize and clean the pantry', 1, TRUE, 60, TRUE, 4), -- bi-monthly, is_archived set to TRUE
-('Clean Patio Furniture', 'Clean and maintain patio furniture', 1, TRUE, 30, TRUE, 4), -- monthly, is_archived set to TRUE
+('Clean Grill', 'Clean the BBQ grill', 1, TRUE, 30, FALSE, 4), -- monthly
+('Sweep Drive', 'Sweep the driveway and remove debris', 1, FALSE, 14, FALSE, 4), -- bi-weekly
+('Org. Pantry', 'Organize and clean the pantry', 1, TRUE, 60, TRUE, 4), -- bi-monthly, is_archived set to TRUE
+('Clean Patio', 'Clean and maintain patio furniture', 1, TRUE, 30, TRUE, 4), -- monthly, is_archived set to TRUE
 ('Wash Dog', 'Give the dog a bath', 1, TRUE, 30, FALSE, 4), -- monthly
-('Clean Fireplace', 'Clean out the fireplace and dispose of ashes', 1, TRUE, 90, TRUE, 6), -- quarterly, is_archived set to TRUE
+('Clean Firepl', 'Clean out the fireplace and dispose of ashes', 1, TRUE, 90, TRUE, 6), -- quarterly, is_archived set to TRUE
 ('Clean Garage', 'Clean and organize the garage', 1, FALSE, 90, FALSE, 8), -- quarterly, is_active set to FALSE
 ('Clean Attic', 'Clean and organize the attic', 1, TRUE, 180, TRUE, 8), -- semi-annually, is_archived set to TRUE
-('Clean Basement', 'Clean and organize the basement', 1, FALSE, 90, FALSE, 8); -- quarterly, is_active set to FALSE
+('Clean Basemt', 'Clean and organize the basement', 1, FALSE, 90, FALSE, 8); -- quarterly, is_active set to FALSE
 
 -- Insert data into chore table for household_id 2
 INSERT INTO chore (name, description, household_id, is_active, frequency, is_archived, weight) VALUES
-('Vacuum Living Room', 'Vacuum the entire living room', 2, TRUE, 7, FALSE, 4), -- weekly
+('Vacuum Room', 'Vacuum the entire living room', 2, TRUE, 7, FALSE, 4), -- weekly
 ('Wash Dishes', 'Wash all the dirty dishes', 2, TRUE, 1, FALSE, 2), -- daily
 ('Mow Lawn', 'Mow the front and back lawn', 2, TRUE, 14, FALSE, 6), -- bi-weekly
 ('Laundry', 'Wash and fold all dirty clothes', 2, TRUE, 7, FALSE, 4), -- weekly
-('Clean Bathroom', 'Clean the sink, toilet, and shower', 2, TRUE, 7, FALSE, 4), -- weekly
-('Take Out Trash', 'Take out the trash and replace the bag', 2, TRUE, 1, FALSE, 2), -- daily
-('Dust Furniture', 'Dust all the furniture in the house', 2, TRUE, 14, FALSE, 4), -- bi-weekly
-('Clean Windows', 'Clean all the windows inside and out', 2, TRUE, 30, FALSE, 6), -- monthly
+('Clean Bathrm', 'Clean the sink, toilet, and shower', 2, TRUE, 7, FALSE, 4), -- weekly
+('Take Trash', 'Take out the trash and replace the bag', 2, TRUE, 1, FALSE, 2), -- daily
+('Dust Furnitr', 'Dust all the furniture in the house', 2, TRUE, 14, FALSE, 4), -- bi-weekly
+('Clean Windws', 'Clean all the windows inside and out', 2, TRUE, 30, FALSE, 6), -- monthly
 ('Water Plants', 'Water all indoor and outdoor plants', 2, TRUE, 3, FALSE, 2), -- every 3 days
-('Grocery Shopping', 'Buy groceries for the week', 2, TRUE, 7, FALSE, 4), -- weekly
+('Grocery Shop', 'Buy groceries for the week', 2, TRUE, 7, FALSE, 4), -- weekly
 ('Cook Dinner', 'Prepare and cook dinner for the family', 2, TRUE, 1, FALSE, 4), -- daily
 ('Feed Pets', 'Feed the pets and refill their water', 2, TRUE, 1, FALSE, 2), -- daily
 ('Walk Dog', 'Take the dog for a walk', 2, TRUE, 1, FALSE, 4), -- daily
 ('Clean Fridge', 'Clean out the fridge and throw away old food', 2, TRUE, 30, FALSE, 4), -- monthly
-('Organize Garage', 'Organize and clean the garage', 2, TRUE, 90, FALSE, 8), -- quarterly
+('Organize Gar', 'Organize and clean the garage', 2, TRUE, 90, FALSE, 8), -- quarterly
 ('Clean Car', 'Wash and vacuum the car', 2, TRUE, 30, FALSE, 6), -- monthly
 ('Pay Bills', 'Pay all the household bills', 2, TRUE, 30, FALSE, 4), -- monthly
-('Change Bed Sheets', 'Change and wash all bed sheets', 2, TRUE, 14, FALSE, 4), -- bi-weekly
+('Change Sheets', 'Change and wash all bed sheets', 2, TRUE, 14, FALSE, 4), -- bi-weekly
 ('Clean Oven', 'Clean the inside of the oven', 2, TRUE, 90, FALSE, 6), -- quarterly
-('Clean Microwave', 'Clean the inside of the microwave', 2, TRUE, 30, FALSE, 4), -- monthly
+('Clean Micro', 'Clean the inside of the microwave', 2, TRUE, 30, FALSE, 4), -- monthly
 ('Sweep Porch', 'Sweep the front and back porch', 2, TRUE, 7, FALSE, 2), -- weekly
 ('Clean Gutters', 'Clean out the gutters', 2, TRUE, 180, FALSE, 8), -- semi-annually
 ('Rake Leaves', 'Rake leaves in the yard', 2, TRUE, 30, FALSE, 6), -- monthly
 ('Shovel Snow', 'Shovel snow from the driveway and walkways', 2, TRUE, 1, FALSE, 6), -- daily
-('Clean Basement', 'Clean and organize the basement', 2, TRUE, 90, FALSE, 8), -- quarterly
+('Clean Basemt', 'Clean and organize the basement', 2, TRUE, 90, FALSE, 8), -- quarterly
 ('Clean Attic', 'Clean and organize the attic', 2, TRUE, 180, FALSE, 8), -- semi-annually
 ('Wash Windows', 'Wash all windows inside and out', 2, TRUE, 60, FALSE, 6), -- bi-monthly
 ('Clean Deck', 'Clean and organize the deck', 2, TRUE, 30, FALSE, 6), -- monthly
 ('Clean Pool', 'Clean and maintain the pool', 2, TRUE, 7, FALSE, 6), -- weekly
-('Clean BBQ Grill', 'Clean the BBQ grill', 2, TRUE, 30, FALSE, 4), -- monthly
-('Sweep Driveway', 'Sweep the driveway and remove debris', 2, FALSE, 14, FALSE, 4), -- bi-weekly, is_active set to FALSE
-('Organize Pantry', 'Organize and clean the pantry', 2, TRUE, 60, TRUE, 4), -- bi-monthly, is_archived set to TRUE
-('Clean Patio Furniture', 'Clean and maintain patio furniture', 2, TRUE, 30, TRUE, 4), -- monthly, is_archived set to TRUE
+('Clean Grill', 'Clean the BBQ grill', 2, TRUE, 30, FALSE, 4), -- monthly
+('Sweep Drive', 'Sweep the driveway and remove debris', 2, FALSE, 14, FALSE, 4), -- bi-weekly
+('Org. Pantry', 'Organize and clean the pantry', 2, TRUE, 60, TRUE, 4), -- bi-monthly, is_archived set to TRUE
+('Clean Patio', 'Clean and maintain patio furniture', 2, TRUE, 30, TRUE, 4), -- monthly, is_archived set to TRUE
 ('Wash Dog', 'Give the dog a bath', 2, TRUE, 30, FALSE, 4), -- monthly
-('Clean Fireplace', 'Clean out the fireplace and dispose of ashes', 2, TRUE, 90, TRUE, 6), -- quarterly, is_archived set to TRUE
+('Clean Firepl', 'Clean out the fireplace and dispose of ashes', 2, TRUE, 90, TRUE, 6), -- quarterly, is_archived set to TRUE
 ('Clean Garage', 'Clean and organize the garage', 2, FALSE, 90, FALSE, 8), -- quarterly, is_active set to FALSE
 ('Clean Attic', 'Clean and organize the attic', 2, TRUE, 180, TRUE, 8), -- semi-annually, is_archived set to TRUE
-('Clean Basement', 'Clean and organize the basement', 2, FALSE, 90, FALSE, 8); -- quarterly, is_active set to FALSE
+('Clean Basemt', 'Clean and organize the basement', 2, FALSE, 90, FALSE, 8); -- quarterly, is_active set to FALSE
 
 -- -- Insert data into user table
 INSERT INTO "user" (user_name, hashed_password) VALUES
