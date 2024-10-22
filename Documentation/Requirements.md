@@ -5,8 +5,8 @@
 ### General (3)
 
 - [ ] 1. A logo, splash screen, and app icon should be designed and used.
-- [ ] 2. The application should be built with RN, Expo & TS.
-- [ ] 3. The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented.
+- [x] 2. The application should be built with RN, Expo & TS.
+- [x] 3. The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented.
 
 ### Household (1)
 
@@ -14,7 +14,7 @@
 
 ### Account (3)
 
-- [ ] 5. A user should be able to register and log in.
+- [x] 5. A user should be able to register and log in.
 - [ ] 6. A user should be able to create a new household.
 - [ ] 7. A user should be able to join a household by entering the household’s code.
 
