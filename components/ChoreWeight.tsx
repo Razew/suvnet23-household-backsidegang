@@ -2,13 +2,20 @@ import * as React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-const initialValue: number = 2;
-
 const ChoreWeight = () => {
   const [isPressed, setIsPressed] = React.useState(false);
+  const [value, setValue] = React.useState(2);
+  const [backgroundColor, setBackgroundColor] =
+    React.useState('rgba(0, 0, 0, 0.2)');
 
   const handlePress = () => {
     setIsPressed(true);
+  };
+
+  const handleBackPress = (num: number, color: string) => {
+    setIsPressed(false);
+    setValue(num);
+    setBackgroundColor(color);
   };
 
   return (
@@ -16,17 +23,18 @@ const ChoreWeight = () => {
       <TouchableOpacity onPress={handlePress}>
         {isPressed ? (
           <View style={s.numberRow}>
-            {[1, 2, 4, 6, 8].map((num, index) => (
-              <View
-                key={num}
-                style={[
-                  s.circle,
-                  { backgroundColor: `rgba(0, 0, 0, ${0.1 + index * 0.1})` },
-                ]}
-              >
-                <Text style={s.circleText}>{num}</Text>
-              </View>
-            ))}
+            {[1, 2, 4, 6, 8].map((num, index) => {
+              const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
+              return (
+                <TouchableOpacity
+                  onPress={() => handleBackPress(num, color)}
+                  key={num}
+                  style={[s.circle, { backgroundColor: color }]}
+                >
+                  <Text style={s.circleText}>{num}</Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         ) : (
           <Card.Actions>
@@ -40,9 +48,9 @@ const ChoreWeight = () => {
               <View>
                 <Badge
                   size={30}
-                  style={s.badge}
+                  style={[s.badge, { backgroundColor }]}
                 >
-                  {initialValue}
+                  {value}
                 </Badge>
               </View>
             </View>
@@ -70,19 +78,18 @@ const s = StyleSheet.create({
     flex: 1,
   },
   badge: {
-    backgroundColor: 'gray',
     color: 'black',
   },
   numberRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    gap: 5,
   },
   circle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 5,
