@@ -1,33 +1,58 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Badge, Card, Text } from 'react-native-paper';
-import { rgbaColor } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 const ChoreFrequency = () => {
   const [value, setValue] = React.useState(7);
+  const [isPressed, setIsPressed] = React.useState(false);
+
+  const numbers = Array.from({ length: 31 }, (_, index) => index + 1);
+
+  const handlePress = () => {
+    setIsPressed(true);
+  };
+
+  const handleNumberPress = (number: number) => {
+    setValue(number);
+    setIsPressed(false);
+  };
 
   return (
-    <TouchableOpacity>
-      <Card style={s.container}>
-        <Card.Actions>
-          <View style={s.content}>
-            <View style={s.recur}>
-              <Text style={s.text}>Recur:</Text>
-            </View>
-            <View style={s.frequencyContainer}>
-              <Text style={s.textRight}>for every</Text>
-              <Badge
-                size={24}
-                style={s.badge}
+    <Card style={s.container}>
+      <TouchableOpacity onPress={handlePress}>
+        {isPressed ? (
+          <View style={s.numberContainer}>
+            {numbers.map((number) => (
+              <Text
+                onPress={() => handleNumberPress(number)}
+                key={number}
+                style={s.numberText}
               >
-                {value}
-              </Badge>
-              <Text style={s.textRight}>days</Text>
-            </View>
+                {number}
+              </Text>
+            ))}
           </View>
-        </Card.Actions>
-      </Card>
-    </TouchableOpacity>
+        ) : (
+          <Card.Actions>
+            <View style={s.content}>
+              <View style={s.recur}>
+                <Text style={s.text}>Recur:</Text>
+              </View>
+              <View style={s.frequencyContainer}>
+                <Text style={s.textRight}>for every</Text>
+                <Badge
+                  size={24}
+                  style={s.badge}
+                >
+                  {value}
+                </Badge>
+                <Text style={s.textRight}>days</Text>
+              </View>
+            </View>
+          </Card.Actions>
+        )}
+      </TouchableOpacity>
+    </Card>
   );
 };
 
@@ -65,6 +90,16 @@ const s = StyleSheet.create({
   textRight: {
     color: 'black',
     fontSize: 18,
+  },
+  numberText: {
+    marginHorizontal: 5,
+    fontSize: 16,
+    color: 'black',
+  },
+  numberContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10,
   },
 });
 
