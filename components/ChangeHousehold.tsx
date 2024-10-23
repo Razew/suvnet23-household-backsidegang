@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, List, Text } from 'react-native-paper';
+import { useHouseholdContext } from '../contexts/HouseholdContext';
 import { Household, User } from '../types/types';
 import { supabase } from '../utils/supabase';
 
@@ -31,6 +32,7 @@ const usersLastHousehold: Household = {
 
 export default function ChangeHousehold() {
   const [userHouseholds, setUserHouseholds] = useState<Household[]>([]);
+  const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
 
   useEffect(() => {
     const fetchUserHouseholds = async () => {
@@ -46,11 +48,10 @@ export default function ChangeHousehold() {
         `,
         )
         .eq('user_id', loggedInUser.id);
-
       if (error) {
         console.error('Error fetching user households:', error.message);
       } else {
-        // Map the data to extract the household objects
+        // flatMap the data to extract the household objects
         const households: Household[] = data.flatMap(
           (u: SupabaseHouseholdResponse) => u.household,
         );
@@ -61,18 +62,108 @@ export default function ChangeHousehold() {
     fetchUserHouseholds();
   }, []);
 
+  const fetchHouseholdById = async (id: number) => {
+    const { data, error } = await supabase
+      .from('household')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching household by id:', error.message);
+    } else {
+      return data;
+    }
+  };
+
+  const handlePress = async (id: number) => {
+    // Set the selected household as the current household
+    const newCurrentHH: Household = await fetchHouseholdById(id);
+    if (newCurrentHH) {
+      console.log(`Set ${newCurrentHH.name} as current household`);
+      setMostRecentHousehold(newCurrentHH);
+      console.log(newCurrentHH);
+    } else {
+      console.error('Failed to fetch the new household');
+    }
+  };
+
   return (
     <View style={style.container}>
       <Text>Change Household</Text>
       <Text>Last household: {usersLastHousehold?.name}</Text>
       <Text>Member of: </Text>
+
+      {/* <List.Section title="Households">
+        {userHouseholds.map((user_to_household, index) => (
+          <List.Accordion
+            key={index}
+            title={`${user_to_household.name}`}
+            description={`# ${user_to_household.code}`}
+            left={(props) => (
+              <List.Icon
+                {...props}
+                icon="folder"
+              />
+            )}
+          >
+            <List.Item title="First task" />
+            <List.Item title="Second task" />
+          </List.Accordion>
+        ))}
+      </List.Section> */}
+
       {userHouseholds.map((user_to_household, index) => (
-        <View key={index}>
-          <Text>Household ID: {user_to_household.id}</Text>
-          <Text>Nickname: {user_to_household.name}</Text>
-          <Text>Code: {user_to_household.code}</Text>
+        <View
+          key={index}
+          style={{ marginBottom: 10 }}
+        >
+          <List.Accordion
+            title={`${user_to_household.name}`}
+            description={`# ${user_to_household.code}`}
+            left={(props) => (
+              <List.Icon
+                {...props}
+                icon="home"
+              />
+            )}
+          >
+            {/* Get tasks for the household */}
+            <List.Item title="First task" />
+            <List.Item title="Second task" />
+            {user_to_household.id !== usersLastHousehold.id && (
+              <Button
+                mode="outlined"
+                onPress={() => {
+                  handlePress(user_to_household.id);
+                }}
+                style={{ marginTop: 10 }}
+              >
+                {`Set ${user_to_household.name} as current household`}
+              </Button>
+            )}
+          </List.Accordion>
         </View>
       ))}
+
+      <View style={style.buttonContainer}>
+        <Button
+          mode="contained"
+          // onPress={handleSubmit(onSubmit)}
+          style={style.button}
+          // disabled={AddedToDataBase}
+        >
+          Join household
+        </Button>
+        <Button
+          mode="contained"
+          // onPress={handleSubmit(onSubmit)}
+          style={style.button}
+          // disabled={AddedToDataBase}
+        >
+          Create household
+        </Button>
+      </View>
     </View>
   );
 }
@@ -82,7 +173,13 @@ const style = StyleSheet.create({
     marginTop: 50,
     flex: 1,
   },
-  button: {
+  buttonContainer: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
     marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 10,
   },
 });
