@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
 import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 import { authStyles } from '../themes/styles';
+import ChoreFrequency from '../components/ChoreFrequency';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -114,6 +115,7 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
               </View>
             </View>
+            <ChoreFrequency />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
