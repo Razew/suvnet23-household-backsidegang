@@ -12,25 +12,13 @@ import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { loginUser, resetState, selectLogInSuccess } from '../store/Auth/slice';
-import { fetchAvatars } from '../store/avatars/slice';
-import { fetchChoresToUsers } from '../store/choreToUser/slice';
-import { fetchHouseholds } from '../store/households/slice';
-import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
+import { loginUser, resetState, selectLogInSuccess } from '../store/auth/slice';
 import { authStyles } from '../themes/styles';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({ navigation }: Props) {
-  useEffect(() => {
-    //dispatch(fetchChores());
-    dispatch(fetchAvatars());
-    dispatch(fetchChoresToUsers());
-    dispatch(fetchHouseholds());
-    dispatch(fetchUsersToHouseholds());
-  }, []);
-
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: '', password: '' });

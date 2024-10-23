@@ -1,26 +1,26 @@
 import { TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
-import { selectLoggedInUser } from '../store/Auth/slice';
 import {
   fetchHouseholds,
-  selectAllHouseholds,
+  selectCurrentHousehold,
 } from '../store/households/slice';
 import { supabase } from '../utils/supabase';
+import { selectLoggedInUser } from '../store/auth/slice';
 
 export default function ProfileScreen() {
   const [nickname, setNickname] = useState('');
-  const [choosenAvatar, setChoosenAvatar] = useState('');
+  const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
-  const allHousehold = useAppSelector(selectAllHouseholds); //Household[]
+  const currentHousehold = useAppSelector(selectCurrentHousehold); //Household[]
 
   const dispatch = useAppDispatch();
 
@@ -29,23 +29,6 @@ export default function ProfileScreen() {
     dispatch(fetchUsersToHouseholds());
     dispatch(fetchHouseholds());
   }, []);
-
-  /*  const getUserNicknamesAndAvatarsByHouseholdId = async (
-    householdId: number,
-  ) => {
-    const { data, error } = await supabase
-      .from('user_to_household')
-      .select('nickname, avatar(emoji)')
-      .eq('household_id', householdId);
-  }; */
-
-  // const unavailableAvatars = allUsersToHouseholds
-  //   .filter((user) => user.household_id === loggedInUser?.id)
-  //   .map((user) => user.avatar_id)
-  //   .map((avatarId) => {
-  //     const avatar = allAvatars.find((avatar) => avatar.id === avatarId);
-  //     return avatar?.emoji;
-  //   });
 
   //******* FOR AVALIBALE AVATAR EMOJIS */
   const unavailableAvatarIds = allUsersToHouseholds
@@ -63,53 +46,83 @@ export default function ProfileScreen() {
   const getUserToHousehold = allUsersToHouseholds.find(
     (user) => user.user_id === loggedInUser?.id,
   );
-  const userToHousehold = allUsersToHouseholds.find(
-    (household) => household.id === getUserToHousehold?.household_id,
-  );
 
   const userAvatar = allAvatars.find(
     (avatar) => getUserToHousehold?.avatar_id === avatar.id,
   );
 
-  // const householdId = 1;
-  // const userHouseholds = allUsersToHouseholds.filter(
-  //   (uth) => uth.household_id === householdId,
-  // );
-
-  // const householdAvatars = userHouseholds.map((uh) =>
-  //   allAvatars.find((avatar) => avatar.id == uh.avatar_id),
-  // );
-
-  // const usedAvatars = householdAvatars.filter((avatar) => )
   const changeName = async () => {
-    const response = await supabase
-      .from('User_To_Households')
+    await supabase
+      .from('user_to_households')
       .update({ nickname: nickname })
-      .match({ id: loggedInUser?.id });
-    return response;
-  };
-  const chooseAvatar = async () => {
-    console.log('selected avatar');
-    setChoosenAvatar(choosenAvatar);
-    // Koppla till DB
+      .match({ user_id: loggedInUser?.id });
   };
 
+  const handleSelectAvatar = (avatarId: number) => {
+    setChoosenAvatar(avatarId);
+    console.log('avatarId', avatarId);
+  };
+
+  const currentNickname = allUsersToHouseholds.find(
+    (user) => loggedInUser?.id === user.user_id,
+  )?.nickname;
   return (
     <>
-      <View>
-        <Button onPress={() => console.log('DENNA', userAvatar)}>test</Button>
-        <Text style={{ fontSize: 30 }}>
-          {loggedInUser?.username}
-          {userAvatar?.emoji}
-        </Text>
+      <Text
+        style={{
+          fontSize: 20,
+          marginBottom: 50,
+          marginTop: 20,
+        }}
+      >
+        Household: {currentHousehold?.name} {currentHousehold?.code}
+      </Text>
+      <View style={{ justifyContent: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            justifyContent: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 20 }}>Current nickname: </Text>
+          <Text style={{ fontSize: 20, marginBottom: 20 }}>
+            {currentNickname}
+            {userAvatar?.emoji}
+          </Text>
+        </View>
         <TextInput
           label="Choose nickname"
           value={nickname}
           onChangeText={setNickname}
         />
-        <Button onPress={changeName}>Change name</Button>
+        <View
+          style={{
+            flexWrap: 'wrap',
+            flexDirection: 'row',
+            gap: 65,
+            justifyContent: 'center',
+            marginTop: 20,
+          }}
+        >
+          <Button
+            onPress={changeName}
+            mode="contained"
+          >
+            Change name
+          </Button>
+        </View>
       </View>
-      <Text style={{ fontSize: 30, marginBottom: 50 }}>change avatar</Text>
+      <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
+      <Text
+        style={{
+          fontSize: 20,
+          marginBottom: 50,
+          marginTop: 20,
+        }}
+      >
+        Change avatar:
+      </Text>
       <View
         style={{
           flexWrap: 'wrap',
@@ -121,17 +134,26 @@ export default function ProfileScreen() {
         {availableAvatars.map((avatar) => (
           <TouchableOpacity
             key={avatar.id}
-            onPress={chooseAvatar}
+            onPress={() => handleSelectAvatar(avatar.id)}
+            style={{
+              borderWidth: 1,
+              borderColor: avatar.colour_code,
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 60,
+              height: 60,
+              backgroundColor: avatar.colour_code,
+              borderRadius: 50,
+            }}
           >
-            <Text
-              key={avatar.id}
-              style={{ fontSize: 30 }}
-            >
+            <Text style={{ fontSize: choosenAvatar === avatar.id ? 60 : 30 }}>
               {avatar.emoji}
             </Text>
           </TouchableOpacity>
         ))}
+        <Button mode="contained">Change avatar</Button>
       </View>
+      <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
     </>
   );
 }
