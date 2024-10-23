@@ -4,14 +4,15 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
 import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
-import HouseholdTabNavigator from './HouseholdTabNavigator';
+import HouseholdScreen from '../screens/HouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+// import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
   Home: undefined;
   JoinHousehold: undefined;
   CreateHousehold: undefined;
-  HouseholdNavigator: undefined;
+  HouseholdScreen: undefined;
   Profile: undefined;
 };
 
@@ -73,24 +74,9 @@ export default function HomeStackNavigator() {
         options={{ title: 'Create Household' }}
       />
       <HomeStack.Screen
-        name="HouseholdNavigator"
-        component={HouseholdTabNavigator}
-        options={({ navigation }) => ({
-          title: 'Household',
-          headerRight: () => (
-            <Pressable
-              style={s.tempExit}
-              onPress={() => navigation.replace('Home')}
-            >
-              <Text style={s.tempText}>HomeScreen</Text>
-              <MaterialIcons
-                name="exit-to-app"
-                size={24}
-                color="#D32F2F"
-              />
-            </Pressable>
-          ),
-        })}
+        name="HouseholdScreen"
+        component={HouseholdScreen}
+        options={{ title: 'Household' }}
       />
     </HomeStack.Navigator>
   );

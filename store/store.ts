@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { avatarsReducer } from './avatars/slice';
 import { choresToUsersReducer } from './choreToUser/slice';
 import householdsReducer from './households/slice';
+import choresReducer from './chores/slice';
 import { usersToHouseholdsReducer } from './userToHousehold/slice';
 import authReducer from './Auth/slice';
 
 export const store = configureStore({
   reducer: {
     households: householdsReducer,
+    chores: choresReducer,
     auth: authReducer,
     choresToUsers: choresToUsersReducer,
     usersToHouseholds: usersToHouseholdsReducer,
