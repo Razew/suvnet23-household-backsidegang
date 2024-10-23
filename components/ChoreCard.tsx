@@ -22,21 +22,21 @@ export default function ChoreCard({ chore }: Props) {
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
 
-  const getDaysContainerStyle = () => ({
+  const daysContainerStyle = {
     ...s.daysContainer,
     backgroundColor:
       daysSinceLastCompleted > chore.frequency
         ? colors.tertiaryContainer
         : colors.surfaceVariant,
-  });
+  };
 
-  const getDaysTextStyle = () => ({
+  const daysTextStyle = {
     ...s.daysText,
     color:
       daysSinceLastCompleted > chore.frequency
         ? colors.onTertiaryContainer
         : colors.onSurfaceVariant,
-  });
+  };
 
   const ribbonContainerStyle = {
     ...s.ribbonContainer,
@@ -72,8 +72,8 @@ export default function ChoreCard({ chore }: Props) {
           ))
         ) : // <Text>🦉</Text>
         daysSinceLastCompleted > 0 ? (
-          <View style={getDaysContainerStyle()}>
-            <Text style={getDaysTextStyle()}>{daysSinceLastCompleted}</Text>
+          <View style={daysContainerStyle}>
+            <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
           </View>
         ) : (
           <View style={ribbonContainerStyle}>
