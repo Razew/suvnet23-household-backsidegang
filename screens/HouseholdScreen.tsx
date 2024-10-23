@@ -10,7 +10,11 @@ import {
 } from 'react-native-gesture-handler';
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
-import { getLastWeekDates, getMonthDates } from '../utils/statistics';
+import {
+  getLastMonthDates,
+  getLastWeekDates,
+  getThisWeekDates,
+} from '../utils/statistics';
 import { container } from '../themes/styles';
 import Animated, {
   useAnimatedStyle,
@@ -22,22 +26,6 @@ import Animated, {
 // type Props = MaterialTopTabScreenProps<HouseholdTabParamList, 'Household'>;
 
 export default function HouseholdScreen() {
-  // const currentHousehold = useAppSelector(selectCurrentHousehold());
-  // const chores = useAppSelector(selectChoresByHousehold());
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
@@ -46,6 +34,8 @@ export default function HouseholdScreen() {
     if (page === 0) {
       setTitle('Today');
     } else if (page === 1) {
+      setTitle('This week');
+    } else if (page === 2) {
       setTitle('Last week');
     } else {
       const now = new Date();
@@ -54,7 +44,7 @@ export default function HouseholdScreen() {
         now.getMonth() - (page - 2),
         1,
       );
-      setTitle(months[targetMonth.getMonth()]);
+      setTitle('Last month');
     }
   };
   const handleRightPress = () => {
@@ -103,9 +93,11 @@ export default function HouseholdScreen() {
     if (currentPage === 0) {
       return <DailyViewScreen />;
     } else if (currentPage === 1) {
+      return <StatisticsScreen timespan={getThisWeekDates()} />;
+    } else if (currentPage === 2) {
       return <StatisticsScreen timespan={getLastWeekDates()} />;
     } else {
-      return <StatisticsScreen timespan={getMonthDates(currentPage - 2)} />;
+      return <StatisticsScreen timespan={getLastMonthDates()} />;
     }
     // }
   };
@@ -136,6 +128,7 @@ export default function HouseholdScreen() {
             icon="arrow-right"
             size={30}
             onPress={handleRightPress}
+            disabled={currentPage === 3}
           />
         </Surface>
 

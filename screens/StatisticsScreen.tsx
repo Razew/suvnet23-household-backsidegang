@@ -23,11 +23,8 @@ import {
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
 import {
-  User,
   PieDataItem,
   Chore,
-  Household,
-  Avatar,
   User_To_Household,
   Chore_To_User,
 } from '../types/types';
@@ -38,6 +35,7 @@ interface StatisticsScreenProps {
 }
 
 const screenWidth = Dimensions.get('window').width;
+const bigChartRadius = screenWidth * 0.45;
 const smallChartRadius = screenWidth * 0.15;
 
 export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
@@ -86,7 +84,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
   useEffect(() => {
     const fetchData = async () => {
       household
-        ? console.log('household found for the user')
+        ? console.log('Household found for the user')
         : console.log('No household found for the user');
 
       setLoading(true);
@@ -208,7 +206,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
       <View style={styles.totalContainer}>
         <CustomPieChart
           data={chartData}
-          radius={150}
+          radius={bigChartRadius}
         />
       </View>
 
@@ -221,7 +219,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
           >
             <CustomPieChart
               data={chore.chartData}
-              radius={50}
+              radius={smallChartRadius}
             />
             <Text style={styles.choreText}>{chore.name}</Text>
           </View>
