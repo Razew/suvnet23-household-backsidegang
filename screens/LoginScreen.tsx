@@ -40,14 +40,15 @@ export default function LoginScreen({ navigation }: Props) {
   const loading = useAppSelector((state) => state.auth.loading);
   const success = useAppSelector(selectLogInSuccess);
 
-  const handleLogin = async () => {
-    await dispatch(
-      loginUser({ username: form.username, password: form.password }),
-    );
+  const handleLogin = () => {
+    dispatch(loginUser({ username: form.username, password: form.password }));
+  };
+
+  useEffect(() => {
     if (success) {
       navigation.replace('HomeNavigator');
     }
-  };
+  }, [success]);
 
   const handleNavigate = () => {
     dispatch(resetState());

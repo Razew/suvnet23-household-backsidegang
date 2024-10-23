@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -32,14 +32,15 @@ const RegisterScreen = ({ navigation }: Props) => {
   const loading = useAppSelector((state) => state.auth.loading);
   const success = useAppSelector(selectLogInSuccess);
 
-  const handleRegister = async () => {
-    await dispatch(
-      createUser({ username: form.username, password: form.password }),
-    );
+  const handleRegister = () => {
+    dispatch(createUser({ username: form.username, password: form.password }));
+  };
+
+  useEffect(() => {
     if (success) {
       navigation.replace('HomeNavigator');
     }
-  };
+  }, [success]);
 
   const handleNavigate = () => {
     dispatch(resetState());
