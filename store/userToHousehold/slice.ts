@@ -47,7 +47,10 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
   },
 );
 
-export const updateAvatarEmoji = createAppAsyncThunk<UserToHousehold, { avatarId: number, userId: number }>(
+export const updateAvatarEmoji = createAppAsyncThunk<
+  UserToHousehold,
+  { avatarId: number; userId: number }
+>(
   'usersToHouseholds/updateAvatarEmoji',
   async ({ avatarId, userId }, { rejectWithValue }) => {
     try {
@@ -74,7 +77,10 @@ export const updateAvatarEmoji = createAppAsyncThunk<UserToHousehold, { avatarId
   },
 );
 
-export const updateNickname = createAppAsyncThunk<UserToHousehold, { nickname: string, userId: number }>(
+export const updateNickname = createAppAsyncThunk<
+  UserToHousehold,
+  { nickname: string; userId: number }
+>(
   'usersToHouseholds/updateNickname',
   async ({ nickname, userId }, { rejectWithValue }) => {
     try {
@@ -98,7 +104,7 @@ export const updateNickname = createAppAsyncThunk<UserToHousehold, { nickname: s
       console.error(error);
       return rejectWithValue('Error while updating user to household');
     }
-  }
+  },
 );
 
 const usersToHouseholdsSlice = createSlice({
