@@ -72,10 +72,13 @@ export const choresToUsersReducer = choresToUsersSlice.reducer;
 // SELECTORS
 export const selectChoresToUsers = (state: RootState) =>
   state.choresToUsers.list;
-export const selectChoresToUserById = (id: number) => (state: RootState) =>
-  state.choresToUsers.list.find((choreRecord) => choreRecord.user_id === id);
+export const selectChoresToUserById = (userId: number) => (state: RootState) =>
+  state.choresToUsers.list.filter(
+    (choreRecord) => choreRecord.user_id === userId,
+  );
 export const selectCompletedChoreToUsersByChoreId =
-  (id: number) => (state: RootState) =>
-    state.choresToUsers.list.find(
-      (choreRecord) => choreRecord.chore_id === id && choreRecord.is_completed,
+  (choreId: number) => (state: RootState) =>
+    state.choresToUsers.list.filter(
+      (choreRecord) =>
+        choreRecord.chore_id === choreId && choreRecord.is_completed,
     );
