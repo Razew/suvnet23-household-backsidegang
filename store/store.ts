@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { authReducer } from './auth/slice';
+import { authReducer } from './authTemp/slice';
 import { avatarsReducer } from './avatars/slice';
 import { choresReducer } from './chores/slice';
 import { choresToUsersReducer } from './choreToUser/slice';

@@ -16,7 +16,7 @@ import {
   createUser,
   resetState,
   selectLogInSuccess,
-} from '../store/auth/slice';
+} from '../store/authTemp/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authStyles } from '../themes/styles';
 
