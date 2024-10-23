@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import CustomPieChart from '../components/CustomPieChart';
-import { selectLoggedInUser } from '../store/authTemp/slice';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import { fetchChores, selectChores } from '../store/chores/slice';
 import {
