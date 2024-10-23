@@ -47,6 +47,60 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
   },
 );
 
+export const updateAvatarEmoji = createAppAsyncThunk<UserToHousehold, { avatarId: number, userId: number }>(
+  'usersToHouseholds/updateAvatarEmoji',
+  async ({ avatarId, userId }, { rejectWithValue }) => {
+    try {
+      const { data: updatedUserToHousehold, error } = await supabase
+        .from('user_to_household')
+        .update({ avatar_id: avatarId })
+        .match({ user_id: userId });
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      if (updatedUserToHousehold === null) {
+        console.error('No user to household found');
+        return rejectWithValue('No user to household found');
+      }
+
+      return updatedUserToHousehold[0];
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
+    }
+  },
+);
+
+export const updateNickname = createAppAsyncThunk<UserToHousehold, { nickname: string, userId: number }>(
+  'usersToHouseholds/updateNickname',
+  async ({ nickname, userId }, { rejectWithValue }) => {
+    try {
+      const { data: updatedUserToHousehold, error } = await supabase
+        .from('user_to_household')
+        .update({ nickname: nickname })
+        .match({ user_id: userId });
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      if (updatedUserToHousehold === null) {
+        console.error('No user to household found');
+        return rejectWithValue('No user to household found');
+      }
+
+      return updatedUserToHousehold[0];
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
+    }
+  }
+);
+
 const usersToHouseholdsSlice = createSlice({
   name: 'usersToHouseholds',
   initialState: initialState,

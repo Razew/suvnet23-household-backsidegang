@@ -1,18 +1,31 @@
 import { TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Text, TextInput } from 'react-native-paper';
+import {
+  Button,
+  Divider,
+  PaperProvider,
+  Text,
+  TextInput,
+} from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
+  updateAvatarEmoji,
+  updateNickname,
 } from '../store/userToHousehold/slice';
 import {
   fetchHouseholds,
   selectCurrentHousehold,
 } from '../store/households/slice';
-import { supabase } from '../utils/supabase';
 import { selectLoggedInUser } from '../store/auth/slice';
+import DarkLightModeButton from '../components/DarkLightModeButton';
+import {
+  AppTheme,
+  combinedLightTheme,
+  combinedDarkTheme,
+} from '../themes/theme';
 
 export default function ProfileScreen() {
   const [nickname, setNickname] = useState('');
@@ -32,7 +45,7 @@ export default function ProfileScreen() {
 
   //******* FOR AVALIBALE AVATAR EMOJIS */
   const unavailableAvatarIds = allUsersToHouseholds
-    .filter((user) => user.household_id === 1)
+    .filter((user) => user.household_id === currentHousehold?.id)
     // .filter((user) => user.household_id === loggedInUser?.id)
     .map((user) => user.avatar_id);
 
@@ -44,7 +57,7 @@ export default function ProfileScreen() {
   //******************/
 
   const getUserToHousehold = allUsersToHouseholds.find(
-    (user) => user.user_id === loggedInUser?.id,
+    (UserToHousehold) => UserToHousehold.user_id === loggedInUser?.id,
   );
 
   const userAvatar = allAvatars.find(
@@ -52,31 +65,61 @@ export default function ProfileScreen() {
   );
 
   const changeName = async () => {
-    await supabase
-      .from('user_to_households')
-      .update({ nickname: nickname })
-      .match({ user_id: loggedInUser?.id });
+    if (loggedInUser?.id === undefined) {
+      return console.log('No logged in user');
+    }
+    if (nickname === '') {
+      return console.log('No nickname');
+    }
+    setNickname(nickname);
+    dispatch(updateNickname({ nickname, userId: loggedInUser.id }));
+    console.log('nickname', nickname);
   };
 
   const handleSelectAvatar = (avatarId: number) => {
     setChoosenAvatar(avatarId);
-    console.log('avatarId', avatarId);
+  };
+
+  const submitAvatar = async () => {
+    if (loggedInUser?.id === undefined) {
+      return console.log('No logged in user');
+    }
+    if (choosenAvatar === undefined) {
+      return console.log('No choosen avatar');
+    }
+    dispatch(
+      updateAvatarEmoji({
+        avatarId: choosenAvatar,
+        userId: loggedInUser.id,
+      }),
+    );
   };
 
   const currentNickname = allUsersToHouseholds.find(
     (user) => loggedInUser?.id === user.user_id,
   )?.nickname;
+
   return (
     <>
+      <DarkLightModeButton />
+      <Text
+        style={{
+          fontSize: 20,
+          marginTop: 20,
+        }}
+      >
+        Household: {currentHousehold?.name}
+      </Text>
       <Text
         style={{
           fontSize: 20,
           marginBottom: 50,
-          marginTop: 20,
+          marginTop: 5,
         }}
       >
-        Household: {currentHousehold?.name} {currentHousehold?.code}
+        Code: {currentHousehold?.code}
       </Text>
+      <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
       <View style={{ justifyContent: 'center' }}>
         <View
           style={{
@@ -86,8 +129,21 @@ export default function ProfileScreen() {
           }}
         >
           <Text style={{ fontSize: 20 }}>Current nickname: </Text>
-          <Text style={{ fontSize: 20, marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, marginBottom: 20, marginLeft: 10 }}>
             {currentNickname}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 10,
+              fontSize: 20,
+              borderWidth: 1,
+              borderColor: userAvatar?.colour_code,
+              width: 27,
+              height: 27,
+              backgroundColor: userAvatar?.colour_code,
+              borderRadius: 20,
+            }}
+          >
             {userAvatar?.emoji}
           </Text>
         </View>
@@ -151,7 +207,12 @@ export default function ProfileScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-        <Button mode="contained">Change avatar</Button>
+        <Button
+          mode="contained"
+          onPress={submitAvatar}
+        >
+          Change avatar
+        </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
     </>

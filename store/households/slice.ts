@@ -62,7 +62,7 @@ const householdsSlice = createSlice({
         (state, action: PayloadAction<Household[]>) => {
           state.list = action.payload;
           state.loading = 'succeeded';
-          // state.current = action.payload[0]; //FIXME: temporary
+          state.current = action.payload[0]; //FIXME: temporary
         },
       )
       .addCase(fetchHouseholds.rejected, (state, action) => {
