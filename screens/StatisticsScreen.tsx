@@ -9,7 +9,7 @@ import {
 import CustomPieChart from '../components/CustomPieChart';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
-import { fetchChores, selectChores } from '../store/chores/slice';
+import { fetchChores, selectAllChores } from '../store/chores/slice';
 import {
   fetchChoresToUsers,
   selectChoresToUsers,
@@ -31,6 +31,7 @@ import {
   User_To_Household,
   Chore_To_User,
 } from '../types/types';
+import { selectLoggedInUser } from '../store/Auth/slice';
 
 interface StatisticsScreenProps {
   timespan: string[];
@@ -52,18 +53,27 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
   }, [dispatch]);
 
   const allHouseholds = useAppSelector(selectAllHouseholds);
-  const allChores = useAppSelector(selectChores);
+  const allChores = useAppSelector(selectAllChores);
   const allAvatars = useAppSelector(selectAvatars);
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  // const loggedInUser: User = { id: 53, username: 'Anna', password: '1234' };
 
-  const loggedInUser: User = { id: 53, username: 'Anna', password: '1234' };
+  if (!loggedInUser) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>User not found</Text>
+      </View>
+    );
+  }
 
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<PieDataItem[]>([]);
   const [topChoresData, setTopChoresData] = useState<
     { name: string; chartData: PieDataItem[] }[]
   >([]);
+
   const userHouseholds = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser.id,
   );
