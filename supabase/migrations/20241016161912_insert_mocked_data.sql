@@ -87,26 +87,26 @@ INSERT INTO chore (name, description, household_id, is_active, frequency, is_arc
 
 -- -- Insert data into user table
 INSERT INTO "user" (user_name, hashed_password) VALUES
-('anna', 'hashed_password_1'),
-('johan', 'hashed_password_2'),
-('lisa', 'hashed_password_3'),
-('peter', 'hashed_password_4'),
-('sara', 'hashed_password_5'),
-('erik', 'hashed_password_6'),
-('maria', 'hashed_password_7'),
-('karl', 'hashed_password_8'),
-('olivia', 'hashed_password_9'),
-('oscar', 'hashed_password_10'),
-('emma', 'hashed_password_11'),
-('lucas', 'hashed_password_12'),
-('ella', 'hashed_password_13'),
-('william', 'hashed_password_14'),
-('alice', 'hashed_password_15'),
-('alexander', 'hashed_password_16'),
-('freja', 'hashed_password_17'),
-('gustav', 'hashed_password_18'),
-('elin', 'hashed_password_19'),
-('henrik', 'hashed_password_20');
+('anna', '12345678'),
+('johan', '12345678'),
+('lisa', '12345678'),
+('peter', '12345678'),
+('sara', '12345678'),
+('erik', '12345678'),
+('maria', '12345678'),
+('karl', '12345678'),
+('olivia', '12345678'),
+('oscar', '12345678'),
+('emma', '12345678'),
+('lucas', '12345678'),
+('ella', '12345678'),
+('william', '12345678'),
+('alice', '12345678'),
+('alexander', '12345678'),
+('freja', '12345678'),
+('gustav', '12345678'),
+('elin', '12345678'),
+('henrik', '12345678');
 
 -- Insert data into avatar table
 INSERT INTO avatar (name, emoji, colour_code) VALUES
@@ -122,35 +122,34 @@ INSERT INTO avatar (name, emoji, colour_code) VALUES
 -- Insert data into user_to_household table
 INSERT INTO user_to_household (nickname, household_id, avatar_id, user_id, is_active, is_admin) VALUES
 -- Household 1
-('anna', 1, 1, 1, TRUE, TRUE), -- is_admin set to TRUE
-('johan', 1, 2, 2, TRUE, FALSE),
-('lisa', 1, 3, 3, TRUE, FALSE),
-('peter', 1, 4, 4, TRUE, FALSE),
-('sara', 1, 5, 5, FALSE, FALSE), -- is_active set to FALSE
-('erik', 1, 6, 6, TRUE, FALSE),
-('maria', 1, 7, 7, FALSE, FALSE), -- is_active set to FALSE
-('alexander', 1, 8, 16, TRUE, TRUE), -- is_admin set to TRUE
+('anna_banana', 1, 1, 1, TRUE, TRUE), -- is_admin set to TRUE
+('jojo', 1, 2, 2, TRUE, FALSE),
+('lil_lisa', 1, 3, 3, TRUE, FALSE),
+('pete', 1, 4, 4, TRUE, FALSE),
+('sassy_sara', 1, 5, 5, FALSE, FALSE), -- is_active set to FALSE
+('erik_the_red', 1, 6, 6, TRUE, FALSE),
+('mighty_maria', 1, 7, 7, FALSE, FALSE), -- is_active set to FALSE
+('alex_the_great', 1, 8, 16, TRUE, TRUE), -- is_admin set to TRUE
 
 -- Household 2
-('karl', 2, 1, 8, TRUE, TRUE), -- is_admin set to TRUE
-('olivia', 2, 2, 9, TRUE, FALSE),
-('oscar', 2, 3, 10, TRUE, FALSE),
-('emma', 2, 4, 11, TRUE, FALSE),
-('lucas', 2, 5, 12, TRUE, FALSE),
-('ella', 2, 6, 13, TRUE, FALSE),
-('william', 2, 7, 14, FALSE, FALSE), -- is_active set to FALSE
-('alice', 2, 8, 15, TRUE, FALSE),
+('king_karl', 2, 1, 8, TRUE, TRUE), -- is_admin set to TRUE
+('livvy', 2, 2, 9, TRUE, FALSE),
+('oscar_the_grouch', 2, 3, 10, TRUE, FALSE),
+('emma_gemma', 2, 4, 11, TRUE, FALSE),
+('lucky_lucas', 2, 5, 12, TRUE, FALSE),
+('ella_bella', 2, 6, 13, TRUE, FALSE),
+('will_will', 2, 7, 14, FALSE, FALSE), -- is_active set to FALSE
+('ally_cat', 2, 8, 15, TRUE, FALSE),
 
 -- Users in both households
-('freja', 1, 1, 17, TRUE, FALSE),
-('freja', 2, 1, 17, TRUE, TRUE), -- is_admin set to TRUE for Household 2
-('gustav', 1, 2, 18, TRUE, FALSE),
-('gustav', 2, 2, 18, TRUE, FALSE),
-('elin', 1, 3, 19, TRUE, FALSE),
-('elin', 2, 3, 19, TRUE, FALSE),
-('henrik', 1, 4, 20, TRUE, FALSE),
-('henrik', 2, 4, 20, FALSE, FALSE); -- is_active set to FALSE for Household 2
-
+('freja_fly', 1, 1, 17, TRUE, FALSE),
+('freja_fly', 2, 1, 17, TRUE, TRUE), -- is_admin set to TRUE for Household 2
+('gusty_gustav', 1, 2, 18, TRUE, FALSE),
+('gusty_gustav', 2, 2, 18, TRUE, FALSE),
+('ellie', 1, 3, 19, TRUE, FALSE),
+('ellie', 2, 3, 19, TRUE, FALSE),
+('hank', 1, 4, 20, TRUE, FALSE),
+('hank', 2, 4, 20, FALSE, FALSE); -- is_active set to FALSE for Household 2
 
 -- Insert data into chore_to_user table
 -- Insert data into chore_to_user table
