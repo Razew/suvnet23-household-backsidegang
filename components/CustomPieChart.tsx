@@ -99,18 +99,18 @@ interface CustomPieChartProps {
   radius: number;
 }
 
-const CustomPieChart: React.FC<CustomPieChartProps> = ({
+export default function CustomPieChart({
   data = [],
   radius,
-}) => {
+}: CustomPieChartProps) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
   let startAngle = -Math.PI / 2;
   const isSingleSlice = data.length === 1;
-
+  console.log(`data for current slice with radius: ${radius}`, data);
   return (
     <Surface
-      elevation={2}
-      style={{ borderRadius: 200 }}
+      elevation={3}
+      style={{ borderRadius: radius, width: radius * 2, height: radius * 2 }}
     >
       <Svg
         width={radius * 2}
@@ -137,6 +137,4 @@ const CustomPieChart: React.FC<CustomPieChartProps> = ({
       </Svg>
     </Surface>
   );
-};
-
-export default CustomPieChart;
+}
