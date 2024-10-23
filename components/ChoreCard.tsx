@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text, useTheme } from 'react-native-paper';
 import {
@@ -21,6 +22,11 @@ export default function ChoreCard({ chore }: Props) {
   );
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
+
+  useEffect(() => {
+    console.log('Days since last completed: ', daysSinceLastCompleted);
+    console.log('Profiles: ', profiles);
+  });
 
   const daysContainerStyle = {
     ...s.daysContainer,
@@ -70,8 +76,7 @@ export default function ChoreCard({ chore }: Props) {
               {profile.avatar?.emoji}
             </Text>
           ))
-        ) : // <Text>🦉</Text>
-        daysSinceLastCompleted > 0 ? (
+        ) : daysSinceLastCompleted > 0 ? (
           <View style={daysContainerStyle}>
             <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
           </View>
