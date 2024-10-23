@@ -38,7 +38,7 @@ export default function HouseholdScreen() {
     'November',
     'December',
   ];
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
 
@@ -68,6 +68,7 @@ export default function HouseholdScreen() {
   };
 
   const handleLeftPress = () => {
+    if (currentPage === 0) return;
     const newPage = currentPage - 1;
     setCurrentPage(newPage);
     updateTitle(newPage);
