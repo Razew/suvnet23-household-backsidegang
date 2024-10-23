@@ -115,7 +115,6 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
               </View>
             </View>
-            <ChoreFrequency />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+
 import { Badge, Card, Text } from 'react-native-paper';
 
 const ChoreFrequency = () => {
@@ -21,17 +22,22 @@ const ChoreFrequency = () => {
     <Card style={s.container}>
       <TouchableOpacity onPress={handlePress}>
         {isPressed ? (
-          <View style={s.numberContainer}>
-            {numbers.map((number) => (
-              <Text
-                onPress={() => handleNumberPress(number)}
-                key={number}
-                style={s.numberText}
-              >
-                {number}
-              </Text>
-            ))}
-          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            <View style={s.numberContainer}>
+              {numbers.map((number) => (
+                <TouchableOpacity
+                  onPress={() => handleNumberPress(number)}
+                  key={number}
+                  style={s.numberTouchable}
+                >
+                  <Text style={s.numberText}>{number}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         ) : (
           <Card.Actions>
             <View style={s.content}>
@@ -83,7 +89,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   badge: {
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     backgroundColor: 'rgb(191, 99, 112)',
     color: 'white',
   },
@@ -100,6 +106,9 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 10,
+  },
+  numberTouchable: {
+    marginHorizontal: 5,
   },
 });
 
