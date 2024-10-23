@@ -80,7 +80,7 @@ export const householdsReducer = householdsSlice.reducer;
 
 // Selector function
 export const selectHouseholds = (state: RootState) => state.households.list;
-export const selectSelectedHousehold = (state: RootState) =>
+export const selectCurrentHousehold = (state: RootState) =>
   state.households.current;
 
 export const { setCurrentHousehold } = householdsSlice.actions;
