@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { Image, View } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
-import hushalletLogo from '../assets/image/icon_2.png';
+import hushalletLogo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { fetchAvatars } from '../store/avatars/slice';
 import { fetchChores } from '../store/chores/slice';
