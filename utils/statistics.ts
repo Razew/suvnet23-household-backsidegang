@@ -1,11 +1,18 @@
 export const getLastWeekDates = (): string[] => {
   const dates = [];
   const today = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
+  const currentDayOfWeek = today.getDay();
+  const daysSinceLastMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+
+  const lastMonday = new Date(today);
+  lastMonday.setDate(today.getDate() - daysSinceLastMonday - 7);
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(lastMonday);
+    date.setDate(lastMonday.getDate() + i);
     dates.push(date.toISOString().split('T')[0]);
   }
+
   return dates;
 };
 
