@@ -22,12 +22,12 @@ const initialState: HouseholdState = {
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching households...');
+    // console.log('Fetching households...');
     try {
       const { data: fetchedHouseholds, error } = await supabase
         .from('household')
         .select('*');
-      console.log('Fetched Households:', fetchedHouseholds);
+      // console.log('Fetched Households:', fetchedHouseholds);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -62,6 +62,7 @@ const householdsSlice = createSlice({
         (state, action: PayloadAction<Household[]>) => {
           state.list = action.payload;
           state.loading = 'succeeded';
+          // state.current = action.payload[0]; //FIXME: temporary
         },
       )
       .addCase(fetchHouseholds.rejected, (state, action) => {
