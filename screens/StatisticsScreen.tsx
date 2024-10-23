@@ -14,10 +14,7 @@ import {
   fetchChoresToUsers,
   selectChoresToUsers,
 } from '../store/choreToUser/slice';
-import {
-  fetchHouseholds,
-  selectAllHouseholds,
-} from '../store/households/slice';
+import { fetchHouseholds } from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
@@ -50,7 +47,6 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
     dispatch(fetchUsersToHouseholds());
   }, [dispatch]);
 
-  const allHouseholds = useAppSelector(selectAllHouseholds);
   const allChores = useAppSelector(selectAllChores);
   const allAvatars = useAppSelector(selectAvatars);
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
@@ -83,9 +79,9 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      household
-        ? console.log('Household found for the user')
-        : console.log('No household found for the user');
+      // household
+      //   ? console.log('Household found for the user')
+      //   : console.log('No household found for the user');
 
       setLoading(true);
 

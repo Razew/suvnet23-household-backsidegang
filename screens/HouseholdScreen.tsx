@@ -19,11 +19,8 @@ import { container } from '../themes/styles';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-
-// type Props = MaterialTopTabScreenProps<HouseholdTabParamList, 'Household'>;
 
 export default function HouseholdScreen() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -38,12 +35,6 @@ export default function HouseholdScreen() {
     } else if (page === 2) {
       setTitle('Last week');
     } else {
-      const now = new Date();
-      const targetMonth = new Date(
-        now.getFullYear(),
-        now.getMonth() - (page - 2),
-        1,
-      );
       setTitle('Last month');
     }
   };
