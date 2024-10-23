@@ -14,15 +14,15 @@
 
 ### Account (3)
 
-- [ ] 5. A user should be able to register and log in.
+- [x] 5. A user should be able to register and log in.
 - [ ] 6. A user should be able to create a new household.
 - [ ] 7. A user should be able to join a household by entering the household’s code.
 
 ### Profile (4)
 
 - [ ] 8. A user should be able to enter their name.
-- [ ] 9. A user should be able to choose an avatar (emoji animal + color) from a predefined list.
-- [ ] 10. Chosen avatars should not be selectable by other users in the household.
+- [x] 9. A user should be able to choose an avatar (emoji animal + color) from a predefined list.
+- [x] 10. Chosen avatars should not be selectable by other users in the household.
 - [ ] 11. The avatar should be used in the app to show what the user has done.
 
 ### Chores (3)
@@ -49,7 +49,7 @@
 
 ### General (1)
 
-- [ ] 1. Information should be communicated to and from a server.
+- [x] 1. Information should be communicated to and from a server.
 
 ### Household (6)
 
@@ -82,8 +82,8 @@
 
 ### Statistics (3)
 
-- [ ] 15. There should be a statistics view for the “previous week.”
-- [ ] 16. There should be a statistics view for the “previous month.”
+- [x] 15. There should be a statistics view for the “previous week.”
+- [x] 16. There should be a statistics view for the “previous month.”
 - [ ] 17. If there are no statistics for one of the views, that view should not be displayed.
 
 ### Scheduling (3)
