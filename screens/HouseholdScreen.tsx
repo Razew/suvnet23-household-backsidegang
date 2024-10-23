@@ -1,28 +1,35 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 // import { container } from '../themes/styles';
-import { Appbar, IconButton, Surface } from 'react-native-paper';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   State,
 } from 'react-native-gesture-handler';
-import DailyViewScreen from './DailyViewScreen';
-import StatisticsScreen from './StatisticsScreen';
-import {
-  getLastMonthDates,
-  getLastWeekDates,
-  getThisWeekDates,
-} from '../utils/statistics';
-import { container } from '../themes/styles';
+import { Appbar, IconButton, Surface } from 'react-native-paper';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { container } from '../themes/styles';
+import {
+  getLastMonthDates,
+  getLastWeekDates,
+  getThisWeekDates,
+} from '../utils/statistics';
+import DailyViewScreen from './DailyViewScreen';
+import StatisticsScreen from './StatisticsScreen';
 
 export default function HouseholdScreen() {
+  // const chores = useAppSelector(selectActiveChoresCurrentHousehold);
+  // const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchChores());
+  // }, []);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
@@ -132,8 +139,26 @@ export default function HouseholdScreen() {
         </PanGestureHandler>
       </Surface>
     </GestureHandlerRootView>
+    //   <ScrollView contentContainerStyle={s.root}>
+    //   {chores.length === 0 ? (
+    //     <Text style={large}>Household screen</Text>
+    //   ) : (
+    //     chores.map((chore) => (
+    //       <ChoreCard
+    //         key={chore.id}
+    //         chore={chore}
+    //       />
+    //     ))
+    //   )}
+    // </ScrollView>
   );
 }
+
+// const s = StyleSheet.create({
+//   root: {
+//     padding: 15,
+//   },
+// });
 
 const styles = StyleSheet.create({
   header: {

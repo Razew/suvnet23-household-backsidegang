@@ -1,30 +1,33 @@
 // store/households/slice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { supabase } from '../../utils/supabase';
-import { RootState } from '../store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Household } from '../../types/types';
+import { supabase } from '../../utils/supabase';
+import { createAppAsyncThunk } from '../hooks';
+import { RootState } from '../store';
 
 interface HouseholdState {
-  allHouseholds: Household[];
+  list: Household[];
+  current?: Household;
+  errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
-  errorMessage: string | null;
 }
 
 const initialState: HouseholdState = {
-  allHouseholds: [],
+  list: [],
+  current: undefined,
   loading: 'idle',
-  errorMessage: null,
+  errorMessage: undefined,
 };
 
-export const fetchHouseholds = createAsyncThunk(
+export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching households...');
+    // console.log('Fetching households...');
     try {
       const { data: fetchedHouseholds, error } = await supabase
         .from('household')
         .select('*');
-      console.log('Fetched Households:', fetchedHouseholds);
+      // console.log('Fetched Households:', fetchedHouseholds);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -39,7 +42,7 @@ export const fetchHouseholds = createAsyncThunk(
       return fetchedHouseholds;
     } catch (error) {
       console.error('Error while fetching households:', error);
-      return rejectWithValue(error);
+      return rejectWithValue('Error while fetching households');
     }
   },
 );
@@ -47,16 +50,25 @@ export const fetchHouseholds = createAsyncThunk(
 const householdsSlice = createSlice({
   name: 'households',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentHousehold(state, action) {
+      state.current = action.payload;
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchHouseholds.pending, (state) => {
         state.loading = 'pending';
+        state.errorMessage = undefined;
       })
-      .addCase(fetchHouseholds.fulfilled, (state, action) => {
-        state.loading = 'succeeded';
-        state.allHouseholds = action.payload;
-      })
+      .addCase(
+        fetchHouseholds.fulfilled,
+        (state, action: PayloadAction<Household[]>) => {
+          state.list = action.payload;
+          state.loading = 'succeeded';
+        },
+      )
       .addCase(fetchHouseholds.rejected, (state, action) => {
         state.loading = 'failed';
         state.errorMessage = action.payload as string;
@@ -64,8 +76,11 @@ const householdsSlice = createSlice({
   },
 });
 
-// Selector function
-export const selectAllHouseholds = (state: RootState) =>
-  state.households.allHouseholds;
+export const householdsReducer = householdsSlice.reducer;
 
-export default householdsSlice.reducer;
+// Selector function
+export const selectHouseholds = (state: RootState) => state.households.list;
+export const selectCurrentHousehold = (state: RootState) =>
+  state.households.current;
+
+export const { setCurrentHousehold } = householdsSlice.actions;
