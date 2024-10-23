@@ -1,31 +1,34 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  ActivityIndicator,
-  Dimensions,
-  StyleSheet,
-  Text,
   View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import CustomPieChart from '../components/CustomPieChart';
-import { selectLoggedInUser } from '../store/auth/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import { fetchChores, selectChores } from '../store/chores/slice';
 import {
   fetchChoresToUsers,
   selectChoresToUsers,
 } from '../store/choreToUser/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchHouseholds } from '../store/households/slice';
+import {
+  fetchHouseholds,
+  selectCurrentHousehold,
+} from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
 import {
-  Chore,
-  Chore_To_User,
   PieDataItem,
+  Chore,
   User_To_Household,
+  Chore_To_User,
 } from '../types/types';
+import { selectLoggedInUser } from '../store/auth/slice';
 
 interface StatisticsScreenProps {
   timespan: string[];
@@ -33,21 +36,21 @@ interface StatisticsScreenProps {
 
 const screenWidth = Dimensions.get('window').width;
 const bigChartRadius = screenWidth * 0.45;
-const smallChartRadius = screenWidth * 0.15;
+const smallChartRadius = screenWidth * 0.13;
 
 export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
   const dispatch = useAppDispatch();
-
-  // Fetch all necessary data
-  useEffect(() => {
-    dispatch(fetchHouseholds());
-    dispatch(fetchChores());
-    dispatch(fetchAvatars());
-    dispatch(fetchChoresToUsers());
-    dispatch(fetchUsersToHouseholds());
-  }, [dispatch]);
-
+  // useEffect(() => {
+  //   dispatch(fetchChores());
+  //   dispatch(fetchAvatars());
+  //   dispatch(fetchChoresToUsers());
+  //   dispatch(fetchHouseholds());
+  //   dispatch(fetchUsersToHouseholds());
+  // }, []);
+  const storedHousehold = useAppSelector(selectCurrentHousehold);
+  console.log('stored household', storedHousehold);
   const allChores = useAppSelector(selectChores);
+  console.log('all chores', allChores);
   const allAvatars = useAppSelector(selectAvatars);
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
@@ -62,21 +65,39 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
     );
   }
 
+  if (!storedHousehold) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>No household selected</Text>
+      </View>
+    );
+  }
+
+  const selectedHousehold = allUserToHouseholds.find(
+    (userToHousehold) =>
+      userToHousehold.user_id === loggedInUser.id &&
+      userToHousehold.household_id === storedHousehold.id,
+  );
+
+  if (!selectedHousehold) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>No household found for the user</Text>
+      </View>
+    );
+  }
+
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<PieDataItem[]>([]);
   const [topChoresData, setTopChoresData] = useState<
     { name: string; chartData: PieDataItem[] }[]
   >([]);
 
-  const userHouseholds = allUserToHouseholds.filter(
-    (userToHousehold) => userToHousehold.user_id === loggedInUser.id,
-  );
   let householdChores: Chore[] = [];
   let currentHouseholdUsers: User_To_Household[] = [];
   let completedChores: Chore_To_User[] = [];
 
-  const household = userHouseholds[0];
-
+  console.log('selected household', selectedHousehold);
   useEffect(() => {
     const fetchData = async () => {
       // household
@@ -84,14 +105,14 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
       //   : console.log('No household found for the user');
 
       setLoading(true);
-
+      console.log('all chores', allChores);
       // Filter household-specific chores and users
       if (allChores.length < 1) {
         console.log('No chores found');
       } else {
         householdChores = allChores.filter((chore) => {
-          return household
-            ? chore.household_id === household.household_id
+          return selectedHousehold
+            ? chore.household_id === selectedHousehold.household_id
             : false;
         });
       }
@@ -100,7 +121,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
       } else {
         currentHouseholdUsers = allUserToHouseholds.filter(
           (userToHousehold) =>
-            userToHousehold.household_id === household.household_id,
+            userToHousehold.household_id === selectedHousehold.household_id,
         );
       }
 
@@ -113,8 +134,11 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
             householdChores.some(
               (chore) => chore.id === choreToUser.chore_id,
             ) &&
-            timespan.includes(choreToUser.done_date.slice(0, 10)),
+            timespan.includes(
+              new Date(choreToUser.done_date).toISOString().slice(0, 10),
+            ),
         );
+        console.log('Completed chores:', completedChores);
       }
       // Aggregated data for all chores
       const aggregatedChartData: PieDataItem[] = currentHouseholdUsers
