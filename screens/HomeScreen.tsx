@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
+import { useEffect } from 'react';
 // import { useAppDispatch, useAppSelector } from '../store/store';
 // import {
 //   fetchHouseholds,
@@ -23,7 +24,9 @@ export default function HomeScreen({ navigation }: Props) {
   //     dispatch(fetchHouseholds());
   //   }
   // }, [householdsStatus, dispatch]);
-
+  // useEffect(() => {
+  //   navigation.replace('HouseholdScreen');
+  // });
   return (
     <View style={container}>
       {/* {householdsStatus === 'pending' && <Text>Loading...</Text>}
