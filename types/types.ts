@@ -10,6 +10,8 @@ export type Household = {
   code: string;
 };
 
+export type NewHousehold = Omit<Household, 'id'>;
+
 export type Chore = {
   id: number;
   name: string;

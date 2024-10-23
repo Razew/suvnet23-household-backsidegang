@@ -19,6 +19,12 @@ export default function HomeScreen({ navigation }: Props) {
         </Button>
       </View>
       <Button mode="elevated">Another Button</Button>
+      <Button
+        mode="elevated"
+        onPress={() => navigation.replace('CreateHousehold')}
+      >
+        Create Household
+      </Button>
     </View>
   );
 }
