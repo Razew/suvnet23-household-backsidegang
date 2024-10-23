@@ -12,11 +12,11 @@ import {
   fetchHouseholds,
   selectAllHouseholds,
 } from '../store/households/slice';
+import { supabase } from '../utils/supabase';
 
 export default function ProfileScreen() {
   const [nickname, setNickname] = useState('');
-  const [avatar, setAvatar] = useState('');
-  // const [allAvatars, setAllAvatars] = useState(allAvatars);
+  const [choosenAvatar, setChoosenAvatar] = useState('');
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
@@ -82,15 +82,15 @@ export default function ProfileScreen() {
 
   // const usedAvatars = householdAvatars.filter((avatar) => )
   const changeName = async () => {
-    // const response = await supabase
-    //   .from('users')
-    //   .update({ nickname: nickname })
-    //   .match({ id: loggedInUser?.id });
-    // return response;
+    const response = await supabase
+      .from('User_To_Households')
+      .update({ nickname: nickname })
+      .match({ id: loggedInUser?.id });
+    return response;
   };
   const chooseAvatar = async () => {
     console.log('selected avatar');
-    setAvatar(avatar);
+    setChoosenAvatar(choosenAvatar);
     // Koppla till DB
   };
 
