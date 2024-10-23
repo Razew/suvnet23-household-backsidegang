@@ -6,6 +6,8 @@ import HomeScreen from '../screens/HomeScreen';
 import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import HouseholdScreen from '../screens/HouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { useAppSelector } from '../store/hooks';
+import { selectCurrentHousehold } from '../store/households/slice';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
@@ -21,6 +23,8 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 // both headerRight pressables are just there to make
 // navigating back easier during development
 export default function HomeStackNavigator() {
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
+
   return (
     <HomeStack.Navigator
       initialRouteName="Home"
@@ -76,7 +80,7 @@ export default function HomeStackNavigator() {
       <HomeStack.Screen
         name="HouseholdScreen"
         component={HouseholdScreen}
-        options={{ title: 'Household' }}
+        options={{ title: currentHousehold?.name ?? 'Household' }}
       />
     </HomeStack.Navigator>
   );

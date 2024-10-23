@@ -4,10 +4,10 @@
     "slug": "suvnet23-household-backsidegang",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/image/icon.png",
+    "icon": "./assets/logo/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/image/splash.png",
+      "image": "./assets/logo/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,7 +16,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/image/adaptive_icon.png",
+        "foregroundImage": "./assets/logo/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },

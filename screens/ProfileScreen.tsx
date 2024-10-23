@@ -1,12 +1,6 @@
 import { TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Divider,
-  PaperProvider,
-  Text,
-  TextInput,
-} from 'react-native-paper';
+import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import {
@@ -21,11 +15,6 @@ import {
 } from '../store/households/slice';
 import { selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
-import {
-  AppTheme,
-  combinedLightTheme,
-  combinedDarkTheme,
-} from '../themes/theme';
 
 export default function ProfileScreen() {
   const [nickname, setNickname] = useState('');
