@@ -30,7 +30,7 @@ export default function HouseholdScreen() {
   //   dispatch(fetchChores());
   // }, []);
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
 
