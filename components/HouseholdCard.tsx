@@ -1,30 +1,23 @@
-import { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Surface, Text, useTheme } from 'react-native-paper';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { StyleSheet } from 'react-native';
+import { Surface, Text } from 'react-native-paper';
+import { useAppSelector } from '../store/hooks';
 import { Household, User_To_Household } from '../types/types';
-import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { setSelectedHousehold } from '../store/households/slice';
+// import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
+// import { setCurrentHousehold } from '../store/households/slice';
 import { selectAvatars } from '../store/avatars/slice';
 
 type Props = {
   household: Household;
   profile: User_To_Household;
-  navigation: any;
 };
 
-export default function HouseholdCard({
-  household,
-  profile,
-  navigation,
-}: Props) {
+export default function HouseholdCard({ household, profile }: Props) {
   console.log(household);
 
-  const dispatch = useAppDispatch();
   const allAvatars = useAppSelector(selectAvatars);
   const avatar = allAvatars.find((avatar) => avatar.id === profile.avatar_id);
 
-  const { colors } = useTheme();
+  // const { colors } = useTheme();
   // const userProfile = useAppSelector(selectUsersToHouseholds).filter((usersToHousehold: User_To_Household) => usersToHousehold.household_id === household.id);
 
   //   const daysContainerStyle = {
@@ -58,22 +51,15 @@ export default function HouseholdCard({
   //   };
 
   return (
-    <Pressable
-      style={s.pressableContainer}
-      onPress={() => {
-        navigation.navigate('HouseholdScreen');
-        dispatch(setSelectedHousehold(household));
-      }}
-    >
-      <Surface style={s.cardSurface}>
-        <Text
-          style={s.householdTitle}
-          //   numberOfLines={1}
-        >
-          {household.name}
-        </Text>
-        <Text style={s.avatar}>{avatar?.emoji}</Text>
-        {/* {daysSinceLastCompleted === 0 ? (
+    <Surface style={s.cardSurface}>
+      <Text
+        style={s.householdTitle}
+        //   numberOfLines={1}
+      >
+        {household.name}
+      </Text>
+      <Text style={s.avatar}>{avatar?.emoji}</Text>
+      {/* {daysSinceLastCompleted === 0 ? (
           profiles.slice(0, 3).map((profile, index) => (
             <Text
               key={index}
@@ -93,7 +79,7 @@ export default function HouseholdCard({
             </View>
           </View>
         )} */}
-        {/* {daysSinceLastCompleted > 0 ? (
+      {/* {daysSinceLastCompleted > 0 ? (
           <View style={getDaysContainerStyle()}>
             <Text style={getDaysTextStyle()}>{daysSinceLastCompleted}</Text>
           </View>
@@ -108,8 +94,7 @@ export default function HouseholdCard({
           //   </Text>
           // ))
         )} */}
-      </Surface>
-    </Pressable>
+    </Surface>
   );
 }
 

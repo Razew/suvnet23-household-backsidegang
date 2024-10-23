@@ -1,17 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
-import { selectAllHouseholds } from '../store/households/slice';
+import {
+  selectHouseholds,
+  setCurrentHousehold,
+} from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { User_To_Household } from '../types/types';
-import { selectLoggedInUser } from '../store/Auth/slice';
+import { selectLoggedInUser } from '../store/auth/slice';
 import HouseholdCard from '../components/HouseholdCard';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
+  const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (!loggedInUser) {
     <View style={container}>
@@ -19,7 +23,7 @@ export default function HomeScreen({ navigation }: Props) {
     </View>;
   }
 
-  const allHouseholds = useAppSelector(selectAllHouseholds);
+  const allHouseholds = useAppSelector(selectHouseholds);
   const allUserToHouseholds: User_To_Household[] = useAppSelector(
     selectUsersToHouseholds,
   );
@@ -42,12 +46,19 @@ export default function HomeScreen({ navigation }: Props) {
       >
         {userHouseholds.length > 0 ? (
           profileAndHouseholds.map((profileAndHousehold) => (
-            <HouseholdCard
+            <Pressable
               key={profileAndHousehold.household.id}
-              household={profileAndHousehold.household}
-              profile={profileAndHousehold.profile}
-              navigation={navigation}
-            />
+              style={s.pressableContainer}
+              onPress={() => {
+                navigation.navigate('HouseholdScreen');
+                dispatch(setCurrentHousehold(profileAndHousehold.household));
+              }}
+            >
+              <HouseholdCard
+                household={profileAndHousehold.household}
+                profile={profileAndHousehold.profile}
+              />
+            </Pressable>
           ))
         ) : (
           <Text>No households found</Text>
@@ -77,5 +88,12 @@ const s = StyleSheet.create({
     alignContent: 'center',
     width: '100%',
     padding: 10,
+  },
+  pressableContainer: {
+    marginBottom: 13,
+    height: 65,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
