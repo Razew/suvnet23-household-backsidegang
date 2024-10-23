@@ -14,6 +14,7 @@ import hushallet_logo from '../assets/image/icon_2.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/auth/slice';
 import { fetchAvatars } from '../store/avatars/slice';
+import { fetchChores } from '../store/chores/slice';
 import { fetchChoresToUsers } from '../store/choreToUser/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
@@ -24,7 +25,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({ navigation }: Props) {
   useEffect(() => {
-    // dispatch(fetchChores());
+    dispatch(fetchChores());
     dispatch(fetchAvatars());
     dispatch(fetchChoresToUsers());
     dispatch(fetchHouseholds());
