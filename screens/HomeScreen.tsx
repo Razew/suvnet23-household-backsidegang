@@ -5,7 +5,7 @@ import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
 import { selectAllHouseholds } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store/hooks';
 import { User_To_Household } from '../types/types';
 import { selectLoggedInUser } from '../store/Auth/slice';
 import HouseholdCard from '../components/HouseholdCard';
