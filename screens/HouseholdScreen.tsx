@@ -7,7 +7,6 @@ import { large } from '../themes/styles';
 
 export default function HouseholdScreen() {
   const chores = useAppSelector(selectActiveChoresCurrentHousehold);
-  // const chores = useAppSelector(selectChores);
   // const dispatch = useAppDispatch();
 
   // useEffect(() => {
