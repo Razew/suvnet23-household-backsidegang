@@ -1,27 +1,26 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 // import { container } from '../themes/styles';
-import { Appbar, IconButton, Surface } from 'react-native-paper';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   State,
 } from 'react-native-gesture-handler';
-import DailyViewScreen from './DailyViewScreen';
-import StatisticsScreen from './StatisticsScreen';
-import {
-  getLastMonthDates,
-  getLastWeekDates,
-  getThisWeekDates,
-} from '../utils/statistics';
-import { container } from '../themes/styles';
+import { Appbar, IconButton, Surface } from 'react-native-paper';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { ScrollView, StyleSheet } from 'react-native';
+import { container } from '../themes/styles';
+import {
+  getLastMonthDates,
+  getLastWeekDates,
+  getThisWeekDates,
+} from '../utils/statistics';
+import DailyViewScreen from './DailyViewScreen';
+import StatisticsScreen from './StatisticsScreen';
 
 export default function HouseholdScreen() {
   // const chores = useAppSelector(selectActiveChoresCurrentHousehold);
@@ -155,11 +154,11 @@ export default function HouseholdScreen() {
   );
 }
 
-const s = StyleSheet.create({
-  root: {
-    padding: 15,
-  },
-});
+// const s = StyleSheet.create({
+//   root: {
+//     padding: 15,
+//   },
+// });
 
 const styles = StyleSheet.create({
   header: {
