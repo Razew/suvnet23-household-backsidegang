@@ -1,7 +1,7 @@
 export type User = {
   id: number;
   username: string;
-  password: string;
+  password?: string | null;
 };
 
 export type Household = {
@@ -47,4 +47,10 @@ export type Chore_To_User = {
   is_completed: boolean;
   due_date: string;
   done_date: string;
+};
+
+export type PieDataItem = {
+  value: number;
+  color: string;
+  emoji: string;
 };

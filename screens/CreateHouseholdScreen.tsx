@@ -179,7 +179,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
           action={{
             label: 'Continue',
             onPress: () => {
-              navigation.replace('HouseholdNavigator');
+              navigation.replace('HouseholdScreen');
             },
           }}
         >
