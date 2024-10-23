@@ -42,10 +42,10 @@ const ChoreFrequency = () => {
           <Card.Actions>
             <View style={s.content}>
               <View style={s.recur}>
-                <Text style={s.text}>Recur:</Text>
+                <Text style={s.text}>Repeat:</Text>
               </View>
               <View style={s.frequencyContainer}>
-                <Text style={s.textRight}>for every</Text>
+                <Text style={s.textRight}>every</Text>
                 <Badge
                   size={24}
                   style={s.badge}
