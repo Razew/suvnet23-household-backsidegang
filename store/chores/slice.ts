@@ -1,30 +1,28 @@
-// store/chores/slice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { supabase } from '../../utils/supabase';
-import { RootState } from '../store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Chore } from '../../types/types';
+import { supabase } from '../../utils/supabase';
+import { createAppAsyncThunk } from '../hooks';
+import { RootState } from '../store';
 
-interface ChoreState {
-  allChores: Chore[];
+interface ChoresState {
+  list: Chore[];
+  errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
-  errorMessage: string | null;
 }
 
-const initialState: ChoreState = {
-  allChores: [],
+const initialState: ChoresState = {
+  list: [],
+  errorMessage: undefined,
   loading: 'idle',
-  errorMessage: null,
 };
 
-export const fetchChores = createAsyncThunk(
+export const fetchChores = createAppAsyncThunk<Chore[], void>(
   'chores/fetchChores',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching chores...');
     try {
       const { data: fetchedChores, error } = await supabase
         .from('chore')
         .select('*');
-      console.log('Fetched Chores:', fetchedChores);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -38,33 +36,40 @@ export const fetchChores = createAsyncThunk(
 
       return fetchedChores;
     } catch (error) {
-      console.error('Error while fetching chores:', error);
-      return rejectWithValue(error);
+      console.error(error);
+      return rejectWithValue('Error while fetching chores');
     }
   },
 );
 
 const choresSlice = createSlice({
   name: 'chores',
-  initialState,
+  initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchChores.pending, (state) => {
-        state.loading = 'pending';
-      })
-      .addCase(fetchChores.fulfilled, (state, action) => {
+    builder.addCase(fetchChores.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      fetchChores.fulfilled,
+      (state, action: PayloadAction<Chore[]>) => {
+        state.list = action.payload;
         state.loading = 'succeeded';
-        state.allChores = action.payload;
-      })
-      .addCase(fetchChores.rejected, (state, action) => {
-        state.loading = 'failed';
-        state.errorMessage = action.payload as string;
-      });
+      },
+    );
+    builder.addCase(fetchChores.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
   },
 });
 
-// Selector function
-export const selectAllChores = (state: RootState) => state.chores.allChores;
+export const choresReducer = choresSlice.reducer;
 
-export default choresSlice.reducer;
+// SELECTORS
+export const selectChores = (state: RootState) => state.chores.list;
+export const selectChoreById = (id: number) => (state: RootState) =>
+  state.chores.list.find((chore) => chore.id === id);
+export const selectActiveChores = (state: RootState) =>
+  state.chores.list.filter((chore) => chore.is_active && !chore.is_archived);

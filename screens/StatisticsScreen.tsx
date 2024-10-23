@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
   ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import CustomPieChart from '../components/CustomPieChart';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
-import { fetchChores, selectAllChores } from '../store/chores/slice';
+import { fetchChores, selectChores } from '../store/chores/slice';
 import {
   fetchChoresToUsers,
   selectChoresToUsers,
 } from '../store/choreToUser/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
 import {
-  PieDataItem,
   Chore,
-  User_To_Household,
   Chore_To_User,
+  PieDataItem,
+  User_To_Household,
 } from '../types/types';
-import { selectLoggedInUser } from '../store/Auth/slice';
 
 interface StatisticsScreenProps {
   timespan: string[];
@@ -47,7 +47,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
     dispatch(fetchUsersToHouseholds());
   }, [dispatch]);
 
-  const allChores = useAppSelector(selectAllChores);
+  const allChores = useAppSelector(selectChores);
   const allAvatars = useAppSelector(selectAvatars);
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
