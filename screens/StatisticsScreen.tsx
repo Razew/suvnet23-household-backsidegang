@@ -7,21 +7,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import CustomPieChart from '../components/CustomPieChart';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
-import { fetchChores, selectChores } from '../store/chores/slice';
-import {
-  fetchChoresToUsers,
-  selectChoresToUsers,
-} from '../store/choreToUser/slice';
-import {
-  fetchHouseholds,
-  selectCurrentHousehold,
-} from '../store/households/slice';
-import {
-  fetchUsersToHouseholds,
-  selectUsersToHouseholds,
-} from '../store/userToHousehold/slice';
+import { useAppSelector } from '../store/hooks';
+import { selectAvatars } from '../store/avatars/slice';
+import { selectChores } from '../store/chores/slice';
+import { selectChoresToUsers } from '../store/choreToUser/slice';
+import { selectCurrentHousehold } from '../store/households/slice';
+import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import {
   PieDataItem,
   Chore,
@@ -39,7 +30,6 @@ const bigChartRadius = screenWidth * 0.45;
 const smallChartRadius = screenWidth * 0.13;
 
 export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
-  const dispatch = useAppDispatch();
   // useEffect(() => {
   //   dispatch(fetchChores());
   //   dispatch(fetchAvatars());
