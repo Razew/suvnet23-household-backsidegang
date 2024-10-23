@@ -102,8 +102,8 @@ export default function LoginScreen({ navigation }: Props) {
                   icon="login"
                   mode="contained"
                   onPress={handleLogin}
+                  disabled={loading}
                 >
-                  {/* Log In */}
                   {loading ? 'Logging in...' : 'Log In'}
                 </Button>
                 <View style={authStyles.linkTextContainer}>

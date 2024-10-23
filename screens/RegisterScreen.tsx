@@ -92,6 +92,7 @@ const RegisterScreen = ({ navigation }: Props) => {
                 icon="login"
                 mode="contained"
                 onPress={handleRegister}
+                disabled={loading}
               >
                 {loading ? 'Trying to Register..' : 'Register'}
               </Button>
