@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
 export default function ChoreWeight() {

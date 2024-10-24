@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import hushallet_logo from '../assets/image/icon_2.png';
+import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -104,8 +104,6 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
               </View>
             </View>
-            <ChoreFrequency />
-            <ChoreWeight />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

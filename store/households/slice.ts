@@ -50,7 +50,12 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
 const householdsSlice = createSlice({
   name: 'households',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentHousehold(state, action) {
+      state.current = action.payload;
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchHouseholds.pending, (state) => {
@@ -62,7 +67,6 @@ const householdsSlice = createSlice({
         (state, action: PayloadAction<Household[]>) => {
           state.list = action.payload;
           state.loading = 'succeeded';
-          // state.current = action.payload[0]; //FIXME: temporary
         },
       )
       .addCase(fetchHouseholds.rejected, (state, action) => {
@@ -78,3 +82,5 @@ export const householdsReducer = householdsSlice.reducer;
 export const selectHouseholds = (state: RootState) => state.households.list;
 export const selectCurrentHousehold = (state: RootState) =>
   state.households.current;
+
+export const { setCurrentHousehold } = householdsSlice.actions;
