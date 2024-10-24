@@ -46,7 +46,7 @@ export default function ChoreWeight() {
               </View>
               <View>
                 <Badge
-                  size={30}
+                  size={24}
                   style={[s.badge, { backgroundColor }]}
                 >
                   {value}
