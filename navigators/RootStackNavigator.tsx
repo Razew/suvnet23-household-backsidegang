@@ -3,12 +3,14 @@ import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeStackNavigator from './HomeStackNavigator';
+import CreateChoreScreen from '../screens/CreateChoreScreen';
 
 export type RootStackParamList = {
   Loading: undefined;
   Login: undefined;
   Register: undefined;
   HomeNavigator: undefined;
+  CreateChore: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -35,6 +37,15 @@ export default function RootStackNavigator() {
         name="HomeNavigator"
         component={HomeStackNavigator}
         options={{ headerShown: false }}
+      />
+      <RootStack.Screen
+        name="CreateChore"
+        component={CreateChoreScreen}
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
       />
     </RootStack.Navigator>
   );

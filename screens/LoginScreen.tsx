@@ -94,6 +94,10 @@ export default function LoginScreen({ navigation }: Props) {
                 >
                   {loading ? 'Logging in...' : 'Log In'}
                 </Button>
+                {/* <Button
+                  mode="contained"
+                  onPress={() => navigation.navigate('CreateChore')}
+                ></Button> */}
                 <View style={authStyles.linkTextContainer}>
                   <Text>Dont have an account? </Text>
                   <TouchableOpacity onPress={handleNavigate}>
