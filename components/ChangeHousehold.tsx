@@ -5,11 +5,23 @@ import { useHouseholdContext } from '../contexts/HouseholdContext';
 import { Household, User } from '../types/types';
 import { supabase } from '../utils/supabase';
 
-// Need current logged in user
-// Need last selected household
-// To list all available households
-// select households from
+// Need a button to set a household as the current household. Uses context now. Does it Use redux?
 
+// Need current logged in user. Mocked for now
+const loggedInUser: User = {
+  id: 5,
+  username: 'sara',
+  password: '12346578',
+};
+
+// Need last selected household to list all available households. Mocked for now
+const currentHousehold: Household = {
+  id: 1,
+  name: 'Svensson Family',
+  code: 'SVNS',
+};
+
+// Custom data type to handle DB response
 type SupabaseHouseholdResponse = {
   household: {
     id: number;
@@ -18,24 +30,20 @@ type SupabaseHouseholdResponse = {
   }[];
 };
 
-const loggedInUser: User = {
-  id: 5,
-  username: 'sara',
-  password: '12346578',
-};
-
-const usersLastHousehold: Household = {
-  id: 1,
-  name: 'Svensson Family',
-  code: 'SVNS',
-};
-
 export default function ChangeHousehold() {
   const [userHouseholds, setUserHouseholds] = useState<Household[]>([]);
   const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
 
+  // Using store instead of context
+  // const loggedInUser = useAppSelector(selectLoggedInUser);
+  // const usersLastHousehold = useAppSelector(selectCurrentHousehold);
+
   useEffect(() => {
     const fetchUserHouseholds = async () => {
+      if (loggedInUser === undefined || loggedInUser === null) {
+        return;
+      }
+
       const { data, error } = await supabase
         .from('user_to_household')
         .select(
@@ -91,7 +99,7 @@ export default function ChangeHousehold() {
   return (
     <View style={style.container}>
       <Text>Change Household</Text>
-      <Text>Last household: {usersLastHousehold?.name}</Text>
+      <Text>Last household: {currentHousehold?.name}</Text>
       <Text>Member of: </Text>
 
       {/* <List.Section title="Households">
@@ -131,7 +139,7 @@ export default function ChangeHousehold() {
             {/* Get tasks for the household */}
             <List.Item title="First task" />
             <List.Item title="Second task" />
-            {user_to_household.id !== usersLastHousehold.id && (
+            {user_to_household.id !== currentHousehold.id && (
               <Button
                 mode="outlined"
                 onPress={() => {
