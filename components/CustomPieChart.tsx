@@ -166,14 +166,14 @@ function PieSlice({
         animatedProps={animatedProps}
         fill={color}
       />
-      {showBorder && !isLastSlice && (
+      {/* {showBorder && !isLastSlice && (
         <AnimatedPath
           animatedProps={animatedBorderProps}
           stroke={borderColor}
           strokeWidth="2"
           fill="none"
         />
-      )}
+      )} */}
       <AnimatedText
         animatedProps={animatedEmojiProps}
         fontSize={radius / 4}

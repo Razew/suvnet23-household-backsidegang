@@ -169,13 +169,12 @@ export default function StatisticsScreen({
         })
         .filter((chore) => chore.chartData.length > 0); // Remove chores with no data
 
-      // Sort chores by total weighted completions and take top 5
       newSingleChoreData.sort(
         (a, b) =>
           b.chartData.reduce((sum, item) => sum + item.value, 0) -
           a.chartData.reduce((sum, item) => sum + item.value, 0),
       );
-      setSingleChoreData(newSingleChoreData.slice(0, 5));
+      setSingleChoreData(newSingleChoreData);
 
       setLoading(false);
     };
