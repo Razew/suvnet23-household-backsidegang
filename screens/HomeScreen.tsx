@@ -113,7 +113,7 @@ export default function HomeScreen({ navigation }: Props) {
                 (userToHousehold) =>
                   userToHousehold.household_id ===
                     profileAndHousehold.household.id && (
-                    <View key={Date.now().toString()}>
+                    <View key={userToHousehold.nickname}>
                       <List.Item
                         title={userToHousehold.nickname}
                         description={
@@ -124,7 +124,7 @@ export default function HomeScreen({ navigation }: Props) {
                         //     <List.Icon
                         //       {...props}
                         //       icon="home"
-                        //     />
+                        //     />ss
                         // ) : null
                         // }
                         right={(props) =>
