@@ -19,7 +19,7 @@ const initialState: HouseholdState = {
   errorMessage: undefined,
 };
 
-export type HouseholdNameAndId = { name: string; id: number }
+export type HouseholdNameAndId = { name: string; id: number };
 // export type changeHouseholdName =  {name: string; id: string };
 
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
@@ -50,7 +50,6 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
-
 // export const updateHouseholdName = createAppAsyncThunk(
 //     'households/updateHouseholdName',
 //     async ({ name, id }: changeHouseholdName, { rejectWithValue }) => {
@@ -71,7 +70,7 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
 //       }
 //     },
 // );
-  
+
 export const updateHouseholdName = createAppAsyncThunk(
   'usersToHouseholds/updateHouseholdName',
   async ({ name, id }: HouseholdNameAndId, { rejectWithValue }) => {

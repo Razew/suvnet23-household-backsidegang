@@ -16,8 +16,16 @@ export const initialState: UsersToHouseholdsState = {
   loading: 'idle',
 };
 
-export type TableId = { avatarId: number; userId: number; currentHouseholdId: number }
-export type NicknameAndIds = { nickname: string; userId: number; currentHouseholdId: number }
+export type TableId = {
+  avatarId: number;
+  userId: number;
+  currentHouseholdId: number;
+};
+export type NicknameAndIds = {
+  nickname: string;
+  userId: number;
+  currentHouseholdId: number;
+};
 
 export const fetchUsersToHouseholds = createAppAsyncThunk<
   UserToHousehold[],
@@ -52,7 +60,10 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
 
 export const updateAvatarEmoji = createAppAsyncThunk(
   'usersToHouseholds/updateAvatarEmoji',
-  async ({ avatarId, userId, currentHouseholdId }: TableId, { rejectWithValue }) => {
+  async (
+    { avatarId, userId, currentHouseholdId }: TableId,
+    { rejectWithValue },
+  ) => {
     try {
       const { error } = await supabase
         .from('user_to_household')
@@ -63,9 +74,8 @@ export const updateAvatarEmoji = createAppAsyncThunk(
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
-      
-      return console.log("Avatar updated");
 
+      return console.log('Avatar updated');
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while updating user to household');
@@ -75,7 +85,10 @@ export const updateAvatarEmoji = createAppAsyncThunk(
 
 export const updateNickname = createAppAsyncThunk(
   'usersToHouseholds/updateNickname',
-  async ({ nickname, userId, currentHouseholdId }: NicknameAndIds, { rejectWithValue }) => {
+  async (
+    { nickname, userId, currentHouseholdId }: NicknameAndIds,
+    { rejectWithValue },
+  ) => {
     try {
       const { error } = await supabase
         .from('user_to_household')
