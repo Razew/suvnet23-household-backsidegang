@@ -46,7 +46,7 @@ export default function ChoreFrequency({ setFrequency }: ChoreFrequencyProps) {
         ) : (
           <Card.Actions>
             <View style={s.content}>
-              <View style={s.recur}>
+              <View style={s.repeat}>
                 <Text style={s.text}>Repeat:</Text>
               </View>
               <View style={s.frequencyContainer}>
@@ -72,6 +72,7 @@ const s = StyleSheet.create({
     flex: 1,
     height: 60,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
     backgroundColor: 'white',
   },
@@ -86,7 +87,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  recur: {
+  repeat: {
     flex: 1,
   },
   frequencyContainer: {

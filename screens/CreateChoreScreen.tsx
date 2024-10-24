@@ -38,7 +38,6 @@ export default function CreateChoreScreen({ navigation }: Props) {
 
       navigation.goBack();
     } catch (error) {
-      console.error(error.message);
       alert(error.message);
     }
   };

@@ -70,7 +70,8 @@ const s = StyleSheet.create({
     flex: 1,
     height: 80,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    padding: 5,
     backgroundColor: 'white',
   },
   content: {
