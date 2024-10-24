@@ -21,6 +21,10 @@ type NewChorePayload = Omit<
   'id' | 'voice_recording' | 'image' | 'is_active' | 'is_archived'
 >;
 
+type UpdateChorePayload = Partial<
+  Omit<Chore, 'household_id' | 'voice_recording' | 'image'>
+> & { id: number };
+
 export const fetchChores = createAppAsyncThunk<Chore[], void>(
   'chores/fetchChores',
   async (_, { rejectWithValue }) => {
