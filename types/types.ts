@@ -50,6 +50,7 @@ export type Chore_To_User = {
 };
 
 export type PieDataItem = {
+  id: number;
   value: number;
   color: string;
   emoji: string;
