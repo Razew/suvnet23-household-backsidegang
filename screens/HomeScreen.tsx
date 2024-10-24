@@ -38,62 +38,9 @@ export default function HomeScreen({ navigation }: Props) {
     return { household, profile: userHousehold };
   });
 
-  console.log(JSON.stringify(allUserToHouseholds, null, 2));
+  // console.log(JSON.stringify(allUserToHouseholds, null, 2));
   // console.log(JSON.stringify(allNicknames, null, 2));
 
-  // return (
-  //   <>
-  //     <View>
-  //       {profileAndHouseholds.map((profileAndHousehold) => (
-  //         <View key={profileAndHousehold.household.id}>
-  //           <List.Accordion
-  //             title={profileAndHousehold.household.name}
-  //             description={profileAndHousehold.household.code}
-  //             left={(props) => (
-  //               <List.Icon
-  //                 {...props}
-  //                 icon="home"
-  //               />
-  //             )}
-  //           >
-  //             <List.Item title={profileAndHousehold.household.name} />
-
-  //             {profileAndHousehold.household.id !== usersLastHousehold?.id && (
-  //               <Button
-  //                 mode="outlined"
-  //                 onPress={() => {
-  //                   dispatch(
-  //                     setCurrentHousehold(profileAndHousehold.household),
-  //                   );
-  //                 }}
-  //                 style={{ marginTop: 10 }}
-  //               >
-  //                 {`Set ${profileAndHousehold.household.name} as current household`}
-  //               </Button>
-  //             )}
-  //           </List.Accordion>
-  //         </View>
-  //       ))}
-
-  //       <View style={s.buttonContainer}>
-  //         <Button
-  //           mode="contained"
-  //           onPress={() => navigation.navigate('JoinHousehold')}
-  //           style={s.button}
-  //         >
-  //           Join household
-  //         </Button>
-  //         <Button
-  //           mode="contained"
-  //           style={s.button}
-  //           onPress={() => navigation.navigate('CreateHousehold')}
-  //         >
-  //           Create household
-  //         </Button>
-  //       </View>
-  //     </View>
-  //   </>
-  // );
   return (
     <>
       <View>
@@ -101,7 +48,11 @@ export default function HomeScreen({ navigation }: Props) {
           <View key={profileAndHousehold.household.id}>
             <List.Accordion
               title={profileAndHousehold.household.name}
-              description={profileAndHousehold.household.code}
+              description={
+                profileAndHousehold.household.id === usersLastHousehold?.id
+                  ? `${profileAndHousehold.household.code} (Current household)`
+                  : profileAndHousehold.household.code
+              }
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -119,14 +70,6 @@ export default function HomeScreen({ navigation }: Props) {
                         description={
                           userToHousehold.is_active ? '' : 'Not active'
                         }
-                        // left={(props) =>
-                        //   !userToHousehold.is_active ? (
-                        //     <List.Icon
-                        //       {...props}
-                        //       icon="home"
-                        //     />ss
-                        // ) : null
-                        // }
                         right={(props) =>
                           userToHousehold.is_admin ? (
                             <List.Icon
@@ -139,19 +82,20 @@ export default function HomeScreen({ navigation }: Props) {
                     </View>
                   ),
               )}
+              {profileAndHousehold.household.id !== usersLastHousehold?.id && (
+                <Button
+                  mode="outlined"
+                  onPress={() => {
+                    dispatch(
+                      setCurrentHousehold(profileAndHousehold.household),
+                    );
+                  }}
+                  style={{ marginTop: 10 }}
+                >
+                  {`Set ${profileAndHousehold.household.name} as current household`}
+                </Button>
+              )}
             </List.Accordion>
-
-            {profileAndHousehold.household.id !== usersLastHousehold?.id && (
-              <Button
-                mode="outlined"
-                onPress={() => {
-                  dispatch(setCurrentHousehold(profileAndHousehold.household));
-                }}
-                style={{ marginTop: 10 }}
-              >
-                {`Set ${profileAndHousehold.household.name} as current household`}
-              </Button>
-            )}
           </View>
         ))}
 
