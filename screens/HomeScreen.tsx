@@ -23,10 +23,10 @@ export default function HomeScreen({ navigation }: Props) {
     </View>;
   }
 
+  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   const allHouseholds = useAppSelector(selectHouseholds);
-  const allUserToHouseholds: User_To_Household[] = useAppSelector(
-    selectUsersToHouseholds,
-  );
+  const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
+
   const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
   );
@@ -38,45 +38,64 @@ export default function HomeScreen({ navigation }: Props) {
     return { household, profile: userHousehold };
   });
 
-  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
+  console.log(JSON.stringify(allUserToHouseholds, null, 2));
+  // console.log(JSON.stringify(allNicknames, null, 2));
 
+  // return (
+  //   <>
+  //     <View>
+  //       {profileAndHouseholds.map((profileAndHousehold) => (
+  //         <View key={profileAndHousehold.household.id}>
+  //           <List.Accordion
+  //             title={profileAndHousehold.household.name}
+  //             description={profileAndHousehold.household.code}
+  //             left={(props) => (
+  //               <List.Icon
+  //                 {...props}
+  //                 icon="home"
+  //               />
+  //             )}
+  //           >
+  //             <List.Item title={profileAndHousehold.household.name} />
+
+  //             {profileAndHousehold.household.id !== usersLastHousehold?.id && (
+  //               <Button
+  //                 mode="outlined"
+  //                 onPress={() => {
+  //                   dispatch(
+  //                     setCurrentHousehold(profileAndHousehold.household),
+  //                   );
+  //                 }}
+  //                 style={{ marginTop: 10 }}
+  //               >
+  //                 {`Set ${profileAndHousehold.household.name} as current household`}
+  //               </Button>
+  //             )}
+  //           </List.Accordion>
+  //         </View>
+  //       ))}
+
+  //       <View style={s.buttonContainer}>
+  //         <Button
+  //           mode="contained"
+  //           onPress={() => navigation.navigate('JoinHousehold')}
+  //           style={s.button}
+  //         >
+  //           Join household
+  //         </Button>
+  //         <Button
+  //           mode="contained"
+  //           style={s.button}
+  //           onPress={() => navigation.navigate('CreateHousehold')}
+  //         >
+  //           Create household
+  //         </Button>
+  //       </View>
+  //     </View>
+  //   </>
+  // );
   return (
     <>
-      {/* <Surface style={container}>
-        <Surface
-          style={s.cardContainer}
-          elevation={0}
-        >
-          {userHouseholds.length > 0 ? (
-            profileAndHouseholds.map((profileAndHousehold) => (
-              <Pressable
-                key={profileAndHousehold.household.id}
-                style={s.pressableContainer}
-                onPress={() => {
-                  navigation.navigate('HouseholdScreen');
-                  dispatch(setCurrentHousehold(profileAndHousehold.household));
-                }}
-              >
-                <HouseholdCard
-                  household={profileAndHousehold.household}
-                  profile={profileAndHousehold.profile}
-                />
-              </Pressable>
-            ))
-          ) : (
-            <Text>No households found</Text>
-          )}
-        </Surface>
-        <Surface elevation={0}>
-          <Button
-            mode="elevated"
-            onPress={() => navigation.replace('CreateHousehold')}
-          >
-            Create Household
-          </Button>
-        </Surface>
-      </Surface> */}
-
       <View>
         {profileAndHouseholds.map((profileAndHousehold) => (
           <View key={profileAndHousehold.household.id}>
@@ -90,25 +109,52 @@ export default function HomeScreen({ navigation }: Props) {
                 />
               )}
             >
-              <List.Item title="What's supposed to be here?" />
-              <List.Item title="First task?" />
-              <List.Item title="Second task?" />
-              {profileAndHousehold.household.id !== usersLastHousehold?.id && (
-                <Button
-                  mode="outlined"
-                  onPress={() => {
-                    dispatch(
-                      setCurrentHousehold(profileAndHousehold.household),
-                    );
-                  }}
-                  style={{ marginTop: 10 }}
-                >
-                  {`Set ${profileAndHousehold.household.name} as current household`}
-                </Button>
+              {allUserToHouseholds.map(
+                (userToHousehold) =>
+                  userToHousehold.household_id ===
+                    profileAndHousehold.household.id && (
+                    <View key={Date.now().toString()}>
+                      <List.Item
+                        title={userToHousehold.nickname}
+                        description={
+                          userToHousehold.is_active ? '' : 'Not active'
+                        }
+                        // left={(props) =>
+                        //   !userToHousehold.is_active ? (
+                        //     <List.Icon
+                        //       {...props}
+                        //       icon="home"
+                        //     />
+                        // ) : null
+                        // }
+                        right={(props) =>
+                          userToHousehold.is_admin ? (
+                            <List.Icon
+                              {...props}
+                              icon="crown"
+                            />
+                          ) : null
+                        }
+                      />
+                    </View>
+                  ),
               )}
             </List.Accordion>
+
+            {profileAndHousehold.household.id !== usersLastHousehold?.id && (
+              <Button
+                mode="outlined"
+                onPress={() => {
+                  dispatch(setCurrentHousehold(profileAndHousehold.household));
+                }}
+                style={{ marginTop: 10 }}
+              >
+                {`Set ${profileAndHousehold.household.name} as current household`}
+              </Button>
+            )}
           </View>
         ))}
+
         <View style={s.buttonContainer}>
           <Button
             mode="contained"
