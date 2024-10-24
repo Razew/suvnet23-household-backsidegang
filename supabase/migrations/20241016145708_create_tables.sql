@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS chore_to_user (
     is_completed BOOLEAN NOT NULL DEFAULT FALSE, -- Indicates if the chore is completed
     due_date DATE, -- The date the chore is due
     done_date DATE, -- The date the chore was completed
-    PRIMARY KEY (user_id, chore_id) -- Composite primary key to ensure uniqueness of the combination of user_id and chore_id
+    -- PRIMARY KEY (user_id, chore_id) -- Composite primary key to ensure uniqueness of the combination of user_id and chore_id
 );
 
 CREATE TABLE IF NOT EXISTS user_to_household (
