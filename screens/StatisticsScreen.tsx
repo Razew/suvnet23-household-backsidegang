@@ -10,7 +10,6 @@ import CustomPieChart from '../components/CustomPieChart';
 import { useAppSelector } from '../store/hooks';
 import { selectAvatars } from '../store/avatars/slice';
 import { selectChores } from '../store/chores/slice';
-import { selectChoresToUsers } from '../store/choreToUser/slice';
 import { selectCurrentHousehold } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import {
@@ -20,7 +19,6 @@ import {
   Chore_To_User,
 } from '../types/types';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { set } from 'react-hook-form';
 
 const screenWidth = Dimensions.get('window').width;
 const bigChartRadius = screenWidth * 0.45;
@@ -36,7 +34,6 @@ export default function StatisticsScreen({
   const allChores = useAppSelector(selectChores);
   console.log('all chores', allChores);
   const allAvatars = useAppSelector(selectAvatars);
-  const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   // const loggedInUser: User = { id: 53, username: 'Anna', password: '1234' };

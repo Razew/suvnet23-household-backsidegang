@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Svg, { Circle, G, Path, Text as SvgText } from 'react-native-svg';
+import Svg, { G, Path, Text as SvgText } from 'react-native-svg';
 import Animated, {
   Easing,
   useSharedValue,
   useAnimatedProps,
   withTiming,
-  SharedValue,
-  useDerivedValue,
   interpolate,
 } from 'react-native-reanimated';
 import { Surface } from 'react-native-paper';
@@ -41,10 +39,6 @@ function PieSlice({
   startAngle,
   endAngle,
   radius,
-  borderColor,
-  showBorder,
-  isFirstSlice,
-  isLastSlice,
   isNewSlice,
   isRemovedSlice,
   prevStartAngle,
@@ -135,23 +129,23 @@ function PieSlice({
     return { d: pathData };
   });
 
-  const animatedBorderProps = useAnimatedProps(() => {
-    if (!showBorder || isLastSlice) return { d: '' };
+  // const animatedBorderProps = useAnimatedProps(() => {
+  //   if (!showBorder || isLastSlice) return { d: '' };
 
-    const currentStartAngle = animatedStartAngle.value;
-    const currentEndAngle = animatedEndAngle.value;
+  //   const currentStartAngle = animatedStartAngle.value;
+  //   const currentEndAngle = animatedEndAngle.value;
 
-    const x1 = Math.round(radius * Math.cos(currentStartAngle) * 1000) / 1000;
-    const y1 = Math.round(radius * Math.sin(currentStartAngle) * 1000) / 1000;
-    const x2 = Math.round(radius * Math.cos(currentEndAngle) * 1000) / 1000;
-    const y2 = Math.round(radius * Math.sin(currentEndAngle) * 1000) / 1000;
+  //   const x1 = Math.round(radius * Math.cos(currentStartAngle) * 1000) / 1000;
+  //   const y1 = Math.round(radius * Math.sin(currentStartAngle) * 1000) / 1000;
+  //   const x2 = Math.round(radius * Math.cos(currentEndAngle) * 1000) / 1000;
+  //   const y2 = Math.round(radius * Math.sin(currentEndAngle) * 1000) / 1000;
 
-    if (isFirstSlice) {
-      return { d: `M0,0 L${x1},${y1} M0,0 L${x2},${y2}` };
-    } else {
-      return { d: `M0,0 L${x2},${y2}` };
-    }
-  });
+  //   if (isFirstSlice) {
+  //     return { d: `M0,0 L${x1},${y1} M0,0 L${x2},${y2}` };
+  //   } else {
+  //     return { d: `M0,0 L${x2},${y2}` };
+  //   }
+  // });
 
   const animatedEmojiProps = useAnimatedProps(() => {
     const midAngle = (animatedStartAngle.value + animatedEndAngle.value) / 2;
