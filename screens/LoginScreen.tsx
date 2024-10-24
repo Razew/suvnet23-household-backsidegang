@@ -15,6 +15,7 @@ import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { loginUser, resetState, selectLogInSuccess } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authStyles } from '../themes/styles';
+import ChoreFrequency from '../components/ChoreFrequency';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -102,6 +103,7 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
               </View>
             </View>
+            <ChoreFrequency />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Badge, Card, Text } from 'react-native-paper';
 
-const ChoreFrequency = () => {
-  const [value, setValue] = React.useState(7);
-  const [isPressed, setIsPressed] = React.useState(false);
+export default function ChoreFrequency() {
+  const [value, setValue] = useState(7);
+  const [isPressed, setIsPressed] = useState(false);
 
   const numbers = Array.from({ length: 31 }, (_, index) => index + 1);
 
@@ -60,7 +60,7 @@ const ChoreFrequency = () => {
       </TouchableOpacity>
     </Card>
   );
-};
+}
 
 const s = StyleSheet.create({
   container: {
@@ -68,11 +68,9 @@ const s = StyleSheet.create({
     height: 60,
     alignItems: 'center',
     padding: 10,
-    backgroundColor: 'white',
   },
   text: {
     fontWeight: 'bold',
-    color: 'black',
     fontSize: 18,
   },
   content: {
@@ -86,7 +84,6 @@ const s = StyleSheet.create({
   },
   frequencyContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   badge: {
     marginHorizontal: 5,
@@ -94,13 +91,11 @@ const s = StyleSheet.create({
     color: 'white',
   },
   textRight: {
-    color: 'black',
     fontSize: 18,
   },
   numberText: {
     marginHorizontal: 5,
     fontSize: 16,
-    color: 'black',
   },
   numberContainer: {
     flexDirection: 'row',
@@ -111,5 +106,3 @@ const s = StyleSheet.create({
     marginHorizontal: 5,
   },
 });
-
-export default ChoreFrequency;
