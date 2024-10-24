@@ -39,9 +39,9 @@
 
 ### Statistics (3)
 
-- [ ] 18. A user should be able to see the distribution of completed chores among the users in their household.
-- [ ] 19. Each statistics view should show the total distribution (including the weights of the chores) as well as the distribution of each individual chore.
-- [ ] 20. There should be a statistics view for the “current week.”
+- [X] 18. A user should be able to see the distribution of completed chores among the users in their household.
+- [X] 19. Each statistics view should show the total distribution (including the weights of the chores) as well as the distribution of each individual chore.
+- [X] 20. There should be a statistics view for the “current week.”
 
 ---
 
@@ -82,9 +82,9 @@
 
 ### Statistics (3)
 
-- [ ] 15. There should be a statistics view for the “previous week.”
-- [ ] 16. There should be a statistics view for the “previous month.”
-- [ ] 17. If there are no statistics for one of the views, that view should not be displayed.
+- [X] 15. There should be a statistics view for the “previous week.”
+- [X] 16. There should be a statistics view for the “previous month.”
+- [X] 17. If there are no statistics for one of the views, that view should not be displayed.
 
 ### Scheduling (3)
 
