@@ -16,6 +16,11 @@ const initialState: ChoresState = {
   loading: 'idle',
 };
 
+type NewChorePayload = Omit<
+  Chore,
+  'id' | 'voice_recording' | 'image' | 'is_active' | 'is_archived'
+>;
+
 export const fetchChores = createAppAsyncThunk<Chore[], void>(
   'chores/fetchChores',
   async (_, { rejectWithValue }) => {
@@ -38,6 +43,28 @@ export const fetchChores = createAppAsyncThunk<Chore[], void>(
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while fetching chores');
+    }
+  },
+);
+
+export const addChore = createAppAsyncThunk<Chore, NewChorePayload>(
+  'chores/addChore',
+  async (newChore, { rejectWithValue }) => {
+    try {
+      const { data: insertedChore, error } = await supabase
+        .from('chore')
+        .insert(newChore)
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return insertedChore;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while adding chore');
     }
   },
 );
