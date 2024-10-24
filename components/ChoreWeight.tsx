@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-export default function ChoreWeight() {
+type ChoreWeightProps = {
+  setWeight: (value: number) => void;
+};
+
+export default function ChoreWeight({ setWeight }: ChoreWeightProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [value, setValue] = useState(2);
   const [backgroundColor, setBackgroundColor] = useState('rgba(0, 0, 0, 0.2)');
@@ -14,6 +18,7 @@ export default function ChoreWeight() {
   const handleNumberPress = (num: number, color: string) => {
     setIsPressed(false);
     setValue(num);
+    setWeight(num);
     setBackgroundColor(color);
   };
 

@@ -16,6 +16,33 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CreateChore'>;
 export default function CreateChoreScreen({ navigation }: Props) {
   const [titleText, setTitleText] = useState('');
   const [descriptionText, setDescriptionText] = useState('');
+  const [frequency, setFrequency] = useState(7);
+  const [weight, setWeight] = useState(2);
+
+  const handlePress = () => {
+    try {
+      if (titleText.length < 2) {
+        throw new Error('The title must contain at least 2 characters');
+      }
+      const choreData = {
+        title: titleText,
+        description: descriptionText,
+        frequency: frequency,
+        weight: weight,
+      };
+
+      console.log('Chore data:', choreData);
+
+      // setTitleText('');
+      // setDescriptionText('');
+
+      navigation.goBack();
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  };
+
   return (
     <TouchableNativeFeedback onPress={Keyboard.dismiss}>
       <View style={s.container}>
@@ -48,16 +75,16 @@ export default function CreateChoreScreen({ navigation }: Props) {
           </Card.Actions>
         </Card>
         <View style={s.frequencyComponent}>
-          <ChoreFrequency />
+          <ChoreFrequency setFrequency={setFrequency} />
         </View>
         <View style={s.weightComponent}>
-          <ChoreWeight />
+          <ChoreWeight setWeight={setWeight} />
         </View>
         <View style={s.buttonRow}>
           <Button
             icon="plus"
             mode="contained"
-            onPress={() => console.log('Spara')}
+            onPress={() => handlePress()}
           >
             Save
           </Button>
