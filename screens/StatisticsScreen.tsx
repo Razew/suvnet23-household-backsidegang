@@ -20,23 +20,17 @@ import {
   Chore_To_User,
 } from '../types/types';
 import { selectLoggedInUser } from '../store/auth/slice';
-
-interface StatisticsScreenProps {
-  timespan: string[];
-}
+import { set } from 'react-hook-form';
 
 const screenWidth = Dimensions.get('window').width;
 const bigChartRadius = screenWidth * 0.45;
 const smallChartRadius = screenWidth * 0.13;
 
-export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
-  // useEffect(() => {
-  //   dispatch(fetchChores());
-  //   dispatch(fetchAvatars());
-  //   dispatch(fetchChoresToUsers());
-  //   dispatch(fetchHouseholds());
-  //   dispatch(fetchUsersToHouseholds());
-  // }, []);
+export default function StatisticsScreen({
+  chores,
+}: {
+  chores: Chore_To_User[];
+}) {
   const storedHousehold = useAppSelector(selectCurrentHousehold);
   console.log('stored household', storedHousehold);
   const allChores = useAppSelector(selectChores);
@@ -79,7 +73,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
 
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<PieDataItem[]>([]);
-  const [topChoresData, setTopChoresData] = useState<
+  const [singleChoreData, setSingleChoreData] = useState<
     { name: string; chartData: PieDataItem[] }[]
   >([]);
 
@@ -87,116 +81,99 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
   let currentHouseholdUsers: User_To_Household[] = [];
   let completedChores: Chore_To_User[] = [];
 
-  console.log('selected household', selectedHousehold);
   useEffect(() => {
     const fetchData = async () => {
-      // household
-      //   ? console.log('Household found for the user')
-      //   : console.log('No household found for the user');
-
       setLoading(true);
-      console.log('all chores', allChores);
-      // Filter household-specific chores and users
-      if (allChores.length < 1) {
-        console.log('No chores found');
-      } else {
-        householdChores = allChores.filter((chore) => {
-          return selectedHousehold
-            ? chore.household_id === selectedHousehold.household_id
-            : false;
-        });
-      }
-      if (allUserToHouseholds.length < 1) {
-        console.log('No userToHouseholds found');
-      } else {
-        currentHouseholdUsers = allUserToHouseholds.filter(
-          (userToHousehold) =>
-            userToHousehold.household_id === selectedHousehold.household_id,
-        );
-      }
 
-      if (householdChores.length < 1) {
-        console.log('No chores found for the household');
-      } else {
-        completedChores = allChoreToUsers.filter(
-          (choreToUser) =>
-            choreToUser.is_completed &&
-            householdChores.some(
-              (chore) => chore.id === choreToUser.chore_id,
-            ) &&
-            timespan.includes(
-              new Date(choreToUser.done_date).toISOString().slice(0, 10),
-            ),
-        );
-        console.log('Completed chores:', completedChores);
-      }
-      // Aggregated data for all chores
-      const aggregatedChartData: PieDataItem[] = currentHouseholdUsers
-        .map((userToHousehold) => {
-          const userCompletedChores = completedChores.filter(
-            (choreToUser) => choreToUser.user_id === userToHousehold.user_id,
-          ).length;
-          const avatar = allAvatars.find(
-            (avatar) => avatar.id === userToHousehold.avatar_id,
-          );
+      householdChores = allChores.filter(
+        (chore) => chore.household_id === storedHousehold.id,
+      );
+      currentHouseholdUsers = allUserToHouseholds.filter(
+        (uth) => uth.household_id === storedHousehold.id && uth.is_active,
+      );
 
-          return {
-            value: userCompletedChores,
-            color: avatar?.colour_code || '#000000',
-            emoji: avatar?.emoji || '',
-          };
-        })
-        .filter((item) => item.value > 0); // Exclude users with zero completed chores
+      completedChores = chores.filter((chore) =>
+        currentHouseholdUsers.some((user) => user.user_id === chore.user_id),
+      );
 
-      // Calculate top 6 most completed chores
-      const choreCounts: { [key: number]: number } = {};
-      completedChores.forEach((choreToUser) => {
-        if (choreCounts[choreToUser.chore_id] === undefined) {
-          choreCounts[choreToUser.chore_id] = 1;
+      const aggregatedData: { [userId: number]: number } = {};
+      completedChores.forEach((ctu) => {
+        if (aggregatedData[ctu.user_id]) {
+          aggregatedData[ctu.user_id]++;
         } else {
-          choreCounts[choreToUser.chore_id]++;
+          aggregatedData[ctu.user_id] = 1;
         }
       });
 
-      const topChores = Object.entries(choreCounts)
-        // .filter(([_, count]) => count > 0)
-        .sort((a, b) => b[1] - a[1])
-        .map(([choreId]) => parseInt(choreId));
-      console.log(topChores);
-      // Data for each top chore
-      const topChoresWithData = topChores.map((choreId) => {
-        const choreData: PieDataItem[] = currentHouseholdUsers
-          .map((userToHousehold) => {
-            const userCompletedChores = completedChores.filter(
-              (choreToUser) =>
-                choreToUser.user_id === userToHousehold.user_id &&
-                choreToUser.chore_id === choreId,
-            ).length;
-            const avatar = allAvatars.find(
-              (avatar) => avatar.id === userToHousehold.avatar_id,
-            );
+      // Convert aggregated data to PieDataItem format
+      const newChartData: PieDataItem[] = Object.entries(aggregatedData).map(
+        ([userId, count]) => {
+          const user = currentHouseholdUsers.find(
+            (u) => u.user_id === Number(userId),
+          );
+          const avatar = allAvatars.find((a) => a.id === user?.avatar_id);
+          return {
+            id: Number(userId),
+            value: count,
+            color: avatar?.colour_code || '#FFFFFF',
+            emoji: avatar?.emoji || '👤',
+          };
+        },
+      );
 
-            return {
-              value: userCompletedChores,
-              color: avatar?.colour_code || '#000000',
-              emoji: avatar?.emoji || '',
-            };
-          })
-          .filter((item) => item.value > 0);
+      setChartData(newChartData);
 
-        const choreName =
-          allChores.find((chore) => chore.id === choreId)?.name ||
-          'Unknown Chore';
+      // Generate data for individual chores
+      const newSingleChoreData = householdChores
+        .map((chore) => {
+          const choreCompletions = completedChores.filter(
+            (cc) => cc.chore_id === chore.id,
+          );
+          const choreData: { [userId: number]: number } = {};
 
-        return { name: choreName, chartData: choreData };
-      });
+          choreCompletions.forEach((cc) => {
+            if (choreData[cc.user_id]) {
+              choreData[cc.user_id]++;
+            } else {
+              choreData[cc.user_id] = 1;
+            }
+          });
 
-      setChartData(aggregatedChartData);
-      setTopChoresData(topChoresWithData);
+          const pieData: PieDataItem[] = Object.entries(choreData).map(
+            ([userId, count]) => {
+              const user = currentHouseholdUsers.find(
+                (u) => u.user_id === Number(userId),
+              );
+              const avatar = allAvatars.find((a) => a.id === user?.avatar_id);
+              return {
+                id: Number(userId),
+                value: count,
+                color: avatar?.colour_code || '#FFFFFF',
+                emoji: avatar?.emoji || '👤',
+              };
+            },
+          );
+
+          return {
+            name: chore.name,
+            chartData: pieData,
+          };
+        })
+        .filter((chore) => chore.chartData.length > 0); // Remove chores with no data
+
+      // Sort chores by total completions and take top 5
+      newSingleChoreData.sort(
+        (a, b) =>
+          b.chartData.reduce((sum, item) => sum + item.value, 0) -
+          a.chartData.reduce((sum, item) => sum + item.value, 0),
+      );
+      setSingleChoreData(newSingleChoreData.slice(0, 5));
+
       setLoading(false);
     };
+
     fetchData();
-  }, [timespan, allChores, allChoreToUsers, allUserToHouseholds, allAvatars]);
+  }, [chores, allChores, allUserToHouseholds, allAvatars]);
 
   if (loading) {
     return (
@@ -212,7 +189,7 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
 
   return (
     <View style={[styles.container, { flexDirection: 'column' }]}>
-      {/* Pie chart for aggregated data (all chores) */}
+      {/* Pie chart for total */}
       <View style={styles.totalContainer}>
         <CustomPieChart
           data={chartData}
@@ -220,9 +197,9 @@ export default function StatisticsScreen({ timespan }: StatisticsScreenProps) {
         />
       </View>
 
-      {/* Pie charts for individual top chores */}
+      {/* Pie charts for individual chores */}
       <View style={styles.choresContainer}>
-        {topChoresData.map((chore, index) => (
+        {singleChoreData.map((chore, index) => (
           <View
             key={index}
             style={styles.choreChart}
