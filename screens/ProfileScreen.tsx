@@ -128,10 +128,14 @@ export default function ProfileScreen({ navigation }: Props) {
     if (choosenAvatar === undefined) {
       return console.log('No choosen avatar');
     }
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
     dispatch(
       updateAvatarEmoji({
         avatarId: choosenAvatar,
         userId: loggedInUser.id,
+        currentHouseholdId: currentHousehold?.id,
       }),
     );
   };

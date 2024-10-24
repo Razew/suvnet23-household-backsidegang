@@ -49,15 +49,15 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
 
 export const updateAvatarEmoji = createAppAsyncThunk<
   UserToHousehold,
-  { avatarId: number; userId: number }
+  { avatarId: number; userId: number; currentHouseholdId: number }
 >(
   'usersToHouseholds/updateAvatarEmoji',
-  async ({ avatarId, userId }, { rejectWithValue }) => {
+  async ({ avatarId, userId, currentHouseholdId }, { rejectWithValue }) => {
     try {
       const { data: updatedUserToHousehold, error } = await supabase
         .from('user_to_household')
         .update({ avatar_id: avatarId })
-        .match({ user_id: userId });
+        .match({ user_id: userId, household_id: currentHouseholdId });
 
       if (error) {
         console.error('Supabase Error:', error);
