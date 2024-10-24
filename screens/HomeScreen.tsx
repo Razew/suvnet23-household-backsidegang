@@ -1,60 +1,78 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-// import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Button, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { container, large } from '../themes/styles';
-// import { useAppDispatch, useAppSelector } from '../store/store';
-// import {
-//   fetchHouseholds,
-//   selectAllHouseholds,
-// } from '../store/households/slice';
-
+import {
+  selectHouseholds,
+  setCurrentHousehold,
+} from '../store/households/slice';
+import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { User_To_Household } from '../types/types';
+import { selectLoggedInUser } from '../store/auth/slice';
+import HouseholdCard from '../components/HouseholdCard';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
-  // const dispatch = useAppDispatch();
-  // const households = useAppSelector(selectAllHouseholds);
-  // const householdsStatus = useAppSelector((state) => state.households.loading);
-  // const errorMessage = useAppSelector((state) => state.households.errorMessage);
+  const dispatch = useAppDispatch();
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  if (!loggedInUser) {
+    <View style={container}>
+      <Text style={large}>Not logged in</Text>
+    </View>;
+  }
 
-  // useEffect(() => {
-  //   if (householdsStatus === 'idle') {
-  //     dispatch(fetchHouseholds());
-  //   }
-  // }, [householdsStatus, dispatch]);
+  const allHouseholds = useAppSelector(selectHouseholds);
+  const allUserToHouseholds: User_To_Household[] = useAppSelector(
+    selectUsersToHouseholds,
+  );
+  const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
+    (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
+  );
+
+  const profileAndHouseholds = userHouseholds.map((userHousehold) => {
+    const household = allHouseholds.find(
+      (household) => household.id === userHousehold.household_id,
+    )!;
+    return { household, profile: userHousehold };
+  });
 
   return (
-    <View style={container}>
-      {/* {householdsStatus === 'pending' && <Text>Loading...</Text>}
-      {householdsStatus === 'failed' && <Text>Error: {errorMessage}</Text>}
-      {householdsStatus === 'succeeded' &&
-        households.map((household) => (
-          <View
-            key={household.id}
-            style={s.tempHouseholdContainer}
-          >
-            <Text>{household.name}</Text>
-          </View>
-        ))} */}
-      <Text style={large}>Home screen</Text>
-      <View style={s.tempHouseholdContainer}>
-        <Text style={s.tempHouseholdName}>CodeDiddy Household</Text>
+    <Surface style={container}>
+      <Surface
+        style={s.cardContainer}
+        elevation={0}
+      >
+        {userHouseholds.length > 0 ? (
+          profileAndHouseholds.map((profileAndHousehold) => (
+            <Pressable
+              key={profileAndHousehold.household.id}
+              style={s.pressableContainer}
+              onPress={() => {
+                navigation.navigate('HouseholdScreen');
+                dispatch(setCurrentHousehold(profileAndHousehold.household));
+              }}
+            >
+              <HouseholdCard
+                household={profileAndHousehold.household}
+                profile={profileAndHousehold.profile}
+              />
+            </Pressable>
+          ))
+        ) : (
+          <Text>No households found</Text>
+        )}
+      </Surface>
+      <Surface elevation={0}>
         <Button
           mode="elevated"
-          onPress={() => navigation.replace('HouseholdNavigator')}
+          onPress={() => navigation.replace('CreateHousehold')}
         >
-          Enter
+          Create Household
         </Button>
-      </View>
-      <Button mode="elevated">Another Button</Button>
-      <Button
-        mode="elevated"
-        onPress={() => navigation.replace('CreateHousehold')}
-      >
-        Create Household
-      </Button>
-    </View>
+      </Surface>
+    </Surface>
   );
 }
 
@@ -64,5 +82,18 @@ const s = StyleSheet.create({
   },
   tempHouseholdName: {
     fontSize: 18,
+  },
+  cardContainer: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: '100%',
+    padding: 10,
+  },
+  pressableContainer: {
+    marginBottom: 13,
+    height: 65,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

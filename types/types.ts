@@ -1,7 +1,7 @@
 export type User = {
   id: number;
   username: string;
-  password: string;
+  password?: string | null;
 };
 
 export type Household = {
@@ -33,7 +33,6 @@ export type Avatar = {
 };
 
 export type User_To_Household = {
-  id: number;
   user_id: number;
   household_id: number;
   avatar_id: number;
@@ -43,10 +42,15 @@ export type User_To_Household = {
 };
 
 export type Chore_To_User = {
-  id: number;
   user_id: number;
   chore_id: number;
-  is_complete: boolean;
-  due_data: Date; // unsure if this is the correct type, maybe string? will need to check
-  done_date: Date; // unsure if this is the correct type, maybe string? will need to check
+  is_completed: boolean;
+  due_date: Date;
+  done_date: Date;
+};
+
+export type PieDataItem = {
+  value: number;
+  color: string;
+  emoji: string;
 };

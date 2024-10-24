@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import hushallet_logo from '../assets/image/icon_2.png';
+import hushallet_logo from '../assets/logo/hushallet_logo.png';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import {
   createUser,
   resetState,
   selectLogInSuccess,
-} from '../store/Auth/slice';
+} from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authStyles } from '../themes/styles';
 
@@ -92,6 +92,7 @@ const RegisterScreen = ({ navigation }: Props) => {
                 icon="login"
                 mode="contained"
                 onPress={handleRegister}
+                disabled={loading}
               >
                 {loading ? 'Trying to Register..' : 'Register'}
               </Button>
