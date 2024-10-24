@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-const ChoreWeight = () => {
+export default function ChoreWeight() {
   const [isPressed, setIsPressed] = React.useState(false);
   const [value, setValue] = React.useState(2);
   const [backgroundColor, setBackgroundColor] =
@@ -47,7 +47,7 @@ const ChoreWeight = () => {
               </View>
               <View>
                 <Badge
-                  size={30}
+                  size={25}
                   style={[s.badge, { backgroundColor }]}
                 >
                   {value}
@@ -59,7 +59,7 @@ const ChoreWeight = () => {
       </TouchableOpacity>
     </Card>
   );
-};
+}
 
 const s = StyleSheet.create({
   container: {
@@ -67,7 +67,6 @@ const s = StyleSheet.create({
     height: 80,
     alignItems: 'center',
     padding: 10,
-    backgroundColor: 'white',
   },
   content: {
     flexDirection: 'row',
@@ -95,9 +94,6 @@ const s = StyleSheet.create({
     marginHorizontal: 5,
   },
   circleText: {
-    color: 'black',
     fontWeight: 'bold',
   },
 });
-
-export default ChoreWeight;
