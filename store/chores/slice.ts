@@ -54,6 +54,7 @@ export const addChore = createAppAsyncThunk<Chore, NewChorePayload>(
       const { data: insertedChore, error } = await supabase
         .from('chore')
         .insert(newChore)
+        .select()
         .single();
 
       if (error) {
@@ -86,6 +87,21 @@ const choresSlice = createSlice({
       },
     );
     builder.addCase(fetchChores.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(addChore.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      addChore.fulfilled,
+      (state, action: PayloadAction<Chore>) => {
+        state.list.push(action.payload);
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(addChore.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
