@@ -13,13 +13,16 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const [descriptionText, setDescriptionText] = useState('');
   return (
     <View style={s.container}>
-      <Text style={s.title}>Create a new chore</Text>
+      <View>
+        <Text style={s.title}>Create a new chore</Text>
+      </View>
       <Card style={s.inputCard}>
         <Card.Actions>
           <TextInput
             placeholder="Title"
             value={titleText}
             mode="flat"
+            underlineColor="transparent"
             onChangeText={setTitleText}
             style={s.input}
           />
@@ -32,27 +35,32 @@ export default function CreateChoreScreen({ navigation }: Props) {
             value={descriptionText}
             onChangeText={setDescriptionText}
             mode="flat"
+            underlineColor="transparent"
             multiline={true}
             style={[s.input, { height: 100 }]}
           />
         </Card.Actions>
       </Card>
-      <ChoreFrequency />
-      <ChoreWeight />
+      <View style={s.frequencyComponent}>
+        <ChoreFrequency />
+      </View>
+      <View style={s.weightComponent}>
+        <ChoreWeight />
+      </View>
       <View style={s.buttonRow}>
         <Button
           icon="plus"
           mode="contained"
           onPress={() => console.log('Spara')}
         >
-          Spara
+          Save
         </Button>
         <Button
           icon="close"
           mode="outlined"
           onPress={() => navigation.goBack()}
         >
-          Stäng
+          Close
         </Button>
       </View>
     </View>
@@ -68,7 +76,8 @@ const s = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 24,
+    marginTop: 12,
   },
   inputCard: {
     marginBottom: 16,
@@ -80,7 +89,15 @@ const s = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
+    justifyContent: 'space-around',
+    marginTop: 200,
+  },
+  frequencyComponent: {
+    height: 60,
+    marginBottom: 16,
+  },
+  weightComponent: {
+    height: 80,
+    marginBottom: 16,
   },
 });
