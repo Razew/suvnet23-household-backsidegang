@@ -33,9 +33,6 @@ export default function CreateChoreScreen({ navigation }: Props) {
 
       console.log('Chore data:', choreData);
 
-      // setTitleText('');
-      // setDescriptionText('');
-
       navigation.goBack();
     } catch (error) {
       alert(error.message);
@@ -104,7 +101,6 @@ const s = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
