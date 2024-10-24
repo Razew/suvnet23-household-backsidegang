@@ -15,8 +15,12 @@ import {
 } from '../store/households/slice';
 import { selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 
-export default function ProfileScreen() {
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
@@ -270,6 +274,11 @@ export default function ProfileScreen() {
         </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
+      <View>
+        <Button onPress={() => navigation.replace('HomeNavigator')}>
+          Change household
+        </Button>
+      </View>
     </ScrollView>
   );
 }

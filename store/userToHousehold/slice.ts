@@ -107,7 +107,10 @@ export const updateNickname = createAppAsyncThunk<
   },
 );
 
-export const updateHouseholdName = createAppAsyncThunk<UserToHousehold, { householdName: string; householdId: number }>(
+export const updateHouseholdName = createAppAsyncThunk<
+  UserToHousehold,
+  { householdName: string; householdId: number }
+>(
   'usersToHouseholds/updateHouseholdName',
   async ({ householdName, householdId }, { rejectWithValue }) => {
     try {
@@ -133,7 +136,6 @@ export const updateHouseholdName = createAppAsyncThunk<UserToHousehold, { househ
     }
   },
 );
-
 
 const usersToHouseholdsSlice = createSlice({
   name: 'usersToHouseholds',
