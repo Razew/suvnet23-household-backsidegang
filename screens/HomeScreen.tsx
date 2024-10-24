@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
-import { Button, List, Text } from 'react-native-paper';
+import { Button, List, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -39,11 +39,19 @@ export default function HomeScreen({ navigation }: Props) {
   });
 
   // console.log(JSON.stringify(allUserToHouseholds, null, 2));
-  // console.log(JSON.stringify(allNicknames, null, 2));
+  console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
   return (
     <>
       <View>
+        {profileAndHouseholds.length === 0 ? (
+          <Surface
+            style={s.surface}
+            elevation={4}
+          >
+            <Text>You are not a member of any households</Text>
+          </Surface>
+        ) : null}
         {profileAndHouseholds.map((profileAndHousehold) => (
           <View key={profileAndHousehold.household.id}>
             <List.Accordion
@@ -148,5 +156,13 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'space-between',
     marginTop: 20,
+  },
+  surface: {
+    marginTop: 20,
+    padding: 8,
+    // height: 80,
+    // width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
