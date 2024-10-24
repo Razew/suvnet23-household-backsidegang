@@ -3,10 +3,11 @@ import {
   Keyboard,
   StyleSheet,
   TouchableNativeFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { TextInput, Text, Card, Button } from 'react-native-paper';
+import { TextInput, Text, Card, Button, Icon } from 'react-native-paper';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { useState } from 'react';
@@ -77,20 +78,30 @@ export default function CreateChoreScreen({ navigation }: Props) {
           <ChoreWeight setWeight={setWeight} />
         </View>
         <View style={s.buttonRow}>
-          <Button
-            icon="plus"
-            mode="contained"
-            onPress={() => handlePress()}
+          <Card
+            style={s.saveButton}
+            onPress={handlePress}
           >
-            Save
-          </Button>
-          <Button
-            icon="close"
-            mode="outlined"
+            <Card.Actions>
+              <Icon
+                source={'plus'}
+                size={20}
+              />
+              <Text style={{ fontSize: 20 }}>Save</Text>
+            </Card.Actions>
+          </Card>
+          <Card
+            style={s.closeButton}
             onPress={() => navigation.goBack()}
           >
-            Close
-          </Button>
+            <Card.Actions>
+              <Icon
+                source={'close'}
+                size={20}
+              />
+              <Text style={{ fontSize: 20 }}>Close</Text>
+            </Card.Actions>
+          </Card>
         </View>
       </View>
     </TouchableNativeFeedback>
@@ -118,8 +129,23 @@ const s = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 200,
+    justifyContent: 'space-between',
+    marginTop: 'auto',
+    marginBottom: 10,
+  },
+  saveButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 60,
+    marginRight: 8,
+  },
+  closeButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 60,
   },
   frequencyComponent: {
     height: 60,
