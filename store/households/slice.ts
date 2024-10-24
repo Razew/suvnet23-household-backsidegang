@@ -19,6 +19,9 @@ const initialState: HouseholdState = {
   errorMessage: undefined,
 };
 
+export type HouseholdNameAndId = { name: string; id: number }
+// export type changeHouseholdName =  {name: string; id: string };
+
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
@@ -47,32 +50,49 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
-export const updateHouseholdName = createAppAsyncThunk<{ name: string; id: string }, Household>(
-    'households/updateHouseholdName',
-    async ({ name, id }, { rejectWithValue }) => {
-      try {
-        const { data: updatedHousehold, error } = await supabase
-          .from('household')
-          .update({ name })
-          .eq('id', id)
-          .single();
-        if (error) {
-          console.error('Supabase Error:', error);
-          return rejectWithValue(error.message);
-        }
 
-        if (!updatedHousehold) {
-          console.error('No household found');
-          return rejectWithValue('No household found');
-        }
+// export const updateHouseholdName = createAppAsyncThunk(
+//     'households/updateHouseholdName',
+//     async ({ name, id }: changeHouseholdName, { rejectWithValue }) => {
+//       try {
+//         const { error } = await supabase
+//           .from('household')
+//           .update({ name })
+//           .eq('id', id)
+//           .single();
+//         if (error) {
+//           console.error('Supabase Error:', error);
+//           return rejectWithValue(error.message);
+//         }
+//         return console.log('Household name updated');
+//       } catch (error) {
+//         console.error('Error while updating household name:', error);
+//         return rejectWithValue('Error while updating household name');
+//       }
+//     },
+// );
+  
+export const updateHouseholdName = createAppAsyncThunk(
+  'usersToHouseholds/updateHouseholdName',
+  async ({ name, id }: HouseholdNameAndId, { rejectWithValue }) => {
+    try {
+      const { error } = await supabase
+        .from('household')
+        .update({ name: name })
+        .match({ id: id });
 
-        return updatedHousehold;
-      } catch (error) {
-        console.error('Error while updating household name:', error);
-        return rejectWithValue('Error while updating household name');
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
       }
-    },
-  );
+
+      return console.log('Username updated');
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
+    }
+  },
+);
 
 const householdsSlice = createSlice({
   name: 'households',

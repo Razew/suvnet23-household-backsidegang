@@ -12,6 +12,7 @@ import {
 import {
   fetchHouseholds,
   selectCurrentHousehold,
+  setCurrentHousehold,
   updateHouseholdName,
 } from '../store/households/slice';
 import { selectLoggedInUser } from '../store/auth/slice';
@@ -106,6 +107,12 @@ export default function ProfileScreen({ navigation }: Props) {
     }
     dispatch(
       updateHouseholdName({
+        name: householdName,
+        id: currentHousehold.id,
+      }),
+    );
+    dispatch(
+      setCurrentHousehold({
         name: householdName,
         id: currentHousehold.id,
         code: currentHousehold.code,
