@@ -16,6 +16,10 @@ const initialState: UsersToHouseholdsState = {
   loading: 'idle',
 };
 
+export type TableId = { avatarId: number; userId: number; currentHouseholdId: number }
+export type NicknameAndIds = { nickname: string; userId: number; currentHouseholdId: number }
+export type HouseholdNameAndId = { householdName: string; householdId: number }
+
 export const fetchUsersToHouseholds = createAppAsyncThunk<
   UserToHousehold[],
   void
@@ -47,14 +51,11 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
   },
 );
 
-export const updateAvatarEmoji = createAppAsyncThunk<
-  UserToHousehold,
-  { avatarId: number; userId: number; currentHouseholdId: number }
->(
+export const updateAvatarEmoji = createAppAsyncThunk(
   'usersToHouseholds/updateAvatarEmoji',
-  async ({ avatarId, userId, currentHouseholdId }, { rejectWithValue }) => {
+  async ({ avatarId, userId, currentHouseholdId }: TableId, { rejectWithValue }) => {
     try {
-      const { data: updatedUserToHousehold, error } = await supabase
+      const { error } = await supabase
         .from('user_to_household')
         .update({ avatar_id: avatarId })
         .match({ user_id: userId, household_id: currentHouseholdId });
@@ -63,13 +64,8 @@ export const updateAvatarEmoji = createAppAsyncThunk<
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
-
-      if (updatedUserToHousehold === null) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      return updatedUserToHousehold[0];
+      
+      return "Avatar updated";
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while updating user to household');
@@ -77,16 +73,13 @@ export const updateAvatarEmoji = createAppAsyncThunk<
   },
 );
 
-export const updateNickname = createAppAsyncThunk<
-  UserToHousehold,
-  { nickname: string; userId: number; currentHouseholdId: number }
->(
+export const updateNickname = createAppAsyncThunk(
   'usersToHouseholds/updateNickname',
-  async ({ nickname, userId, currentHouseholdId }, { rejectWithValue }) => {
+  async ({ nickname, userId, currentHouseholdId }: NicknameAndIds, { rejectWithValue }) => {
     try {
-      const { data: updatedUserToHousehold, error } = await supabase
+      const { error } = await supabase
         .from('user_to_household')
-        .update({ nickname: nickname })
+        .update({ nickname })
         .match({ user_id: userId, household_id: currentHouseholdId });
 
       if (error) {
@@ -94,12 +87,7 @@ export const updateNickname = createAppAsyncThunk<
         return rejectWithValue(error.message);
       }
 
-      if (updatedUserToHousehold === null) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      return updatedUserToHousehold[0];
+      return "Nickname updated";
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while updating user to household');
@@ -107,14 +95,11 @@ export const updateNickname = createAppAsyncThunk<
   },
 );
 
-export const updateHouseholdName = createAppAsyncThunk<
-  UserToHousehold,
-  { householdName: string; householdId: number }
->(
+export const updateHouseholdName = createAppAsyncThunk(
   'usersToHouseholds/updateHouseholdName',
-  async ({ householdName, householdId }, { rejectWithValue }) => {
+  async ({ householdName, householdId }: HouseholdNameAndId, { rejectWithValue }) => {
     try {
-      const { data: updatedUserToHousehold, error } = await supabase
+      const { error } = await supabase
         .from('user_to_household')
         .update({ household_name: householdName })
         .match({ household_id: householdId });
@@ -124,12 +109,7 @@ export const updateHouseholdName = createAppAsyncThunk<
         return rejectWithValue(error.message);
       }
 
-      if (updatedUserToHousehold === null) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      return updatedUserToHousehold[0];
+      return "success";
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while updating user to household');
