@@ -14,9 +14,6 @@ type Props = {
 
 export default function ChoreCard({ chore }: Props) {
   const { colors } = useTheme();
-  // const avatars = mockedChoreStatuses
-  //   .filter((status) => status.chore.id === chore.id)
-  //   .map((status) => status.user.avatar.image);
   const profiles = useAppSelector(
     selectUsersWithAvatarsWhoCompletedChoreToday(chore.id),
   );
