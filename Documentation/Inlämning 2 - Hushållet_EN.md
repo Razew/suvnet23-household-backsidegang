@@ -25,7 +25,7 @@ Distinction: 32 (80%).
 
 ### Household (7)
 
-- [ ] A household should have a name and a generated (simple) code so others can join the household. The name should be editable. **Mandatory for G** \*
+- [ ] A household should have a name and a generated (simple) code so others can join the household.The name should be editable. **Mandatory for G** \*
 - [ ] All users in a household should be able to see who belongs to the household.
 - [ ] An owner of a household should be able to see requests to join the household.
 - [ ] An owner should be able to accept or decline requests.

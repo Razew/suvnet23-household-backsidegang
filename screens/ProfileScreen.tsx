@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -23,6 +23,8 @@ export default function ProfileScreen() {
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
   const currentHousehold = useAppSelector(selectCurrentHousehold); //Household[]
+  const [householdName, setHouseholdName] = useState('');
+  // const isAdmin = useAppSelector();
 
   const dispatch = useAppDispatch();
 
@@ -33,6 +35,7 @@ export default function ProfileScreen() {
   }, []);
 
   //******* FOR AVALIBALE AVATAR EMOJIS */
+
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === currentHousehold?.id)
     // .filter((user) => user.household_id === loggedInUser?.id)
@@ -49,8 +52,16 @@ export default function ProfileScreen() {
     (UserToHousehold) => UserToHousehold.user_id === loggedInUser?.id,
   );
 
-  const userAvatar = allAvatars.find(
-    (avatar) => getUserToHousehold?.avatar_id === avatar.id,
+  const isAdminOnHousehold =
+    getUserToHousehold?.is_admin === true &&
+    getUserToHousehold?.household_id === currentHousehold?.id;
+
+  const currentHouseholdFromUserToHousehold = allUsersToHouseholds.find(
+    (user) => user.household_id === currentHousehold?.id,
+  );
+
+  const currentHouseholdUserAvatar = allAvatars.find(
+    (avatar) => currentHouseholdFromUserToHousehold?.avatar_id === avatar.id,
   );
 
   const changeName = async () => {
@@ -60,13 +71,50 @@ export default function ProfileScreen() {
     if (nickname === '') {
       return console.log('No nickname');
     }
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
     setNickname(nickname);
-    dispatch(updateNickname({ nickname, userId: loggedInUser.id }));
+    dispatch(
+      updateNickname({
+        nickname,
+        userId: loggedInUser.id,
+        currentHouseholdId: currentHousehold.id,
+      }),
+    );
     console.log('nickname', nickname);
   };
 
   const handleSelectAvatar = (avatarId: number) => {
     setChoosenAvatar(avatarId);
+  };
+
+  const isAdmin = () => {
+    if (isAdminOnHousehold) {
+      return (
+        <>
+          <View>
+            <TextInput
+              label={currentHousehold?.name}
+              value={householdName}
+              onChangeText={setHouseholdName}
+            />
+          </View>
+          <View
+            style={{
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              gap: 65,
+              justifyContent: 'center',
+              marginTop: 20,
+            }}
+          >
+            <Button mode="contained">Change household name</Button>
+          </View>
+        </>
+      );
+    }
+    return null;
   };
 
   const submitAvatar = async () => {
@@ -89,25 +137,34 @@ export default function ProfileScreen() {
   )?.nickname;
 
   return (
-    <>
+    <ScrollView>
       <DarkLightModeButton />
-      <Text
+      <View
         style={{
-          fontSize: 20,
+          flexDirection: 'column',
           marginTop: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        Household: {currentHousehold?.name}
-      </Text>
-      <Text
-        style={{
-          fontSize: 20,
-          marginBottom: 50,
-          marginTop: 5,
-        }}
-      >
-        Code: {currentHousehold?.code}
-      </Text>
+        <Text
+          style={{
+            fontSize: 20,
+          }}
+        >
+          Household: {currentHousehold?.name}
+        </Text>
+
+        <Text
+          style={{
+            fontSize: 20,
+            marginBottom: 20,
+          }}
+        >
+          Code: {currentHousehold?.code}
+        </Text>
+      </View>
+      {isAdmin()}
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
       <View style={{ justifyContent: 'center' }}>
         <View
@@ -126,14 +183,14 @@ export default function ProfileScreen() {
               marginLeft: 10,
               fontSize: 20,
               borderWidth: 1,
-              borderColor: userAvatar?.colour_code,
+              borderColor: currentHouseholdUserAvatar?.colour_code,
               width: 27,
               height: 27,
-              backgroundColor: userAvatar?.colour_code,
+              backgroundColor: currentHouseholdUserAvatar?.colour_code,
               borderRadius: 20,
             }}
           >
-            {userAvatar?.emoji}
+            {currentHouseholdUserAvatar?.emoji}
           </Text>
         </View>
         <TextInput
@@ -159,20 +216,21 @@ export default function ProfileScreen() {
         </View>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
-      <Text
+      <View
         style={{
-          fontSize: 20,
+          flexDirection: 'row',
           marginBottom: 50,
           marginTop: 20,
+          justifyContent: 'center',
         }}
       >
-        Change avatar:
-      </Text>
+        <Text style={{ fontSize: 20 }}>Change avatar:</Text>
+      </View>
       <View
         style={{
           flexWrap: 'wrap',
           flexDirection: 'row',
-          gap: 65,
+          gap: 50,
           justifyContent: 'center',
         }}
       >
@@ -188,7 +246,7 @@ export default function ProfileScreen() {
               width: 60,
               height: 60,
               backgroundColor: avatar.colour_code,
-              borderRadius: 50,
+              borderRadius: 40,
             }}
           >
             <Text style={{ fontSize: choosenAvatar === avatar.id ? 60 : 30 }}>
@@ -196,6 +254,14 @@ export default function ProfileScreen() {
             </Text>
           </TouchableOpacity>
         ))}
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 20,
+          justifyContent: 'center',
+        }}
+      >
         <Button
           mode="contained"
           onPress={submitAvatar}
@@ -204,6 +270,6 @@ export default function ProfileScreen() {
         </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
-    </>
+    </ScrollView>
   );
 }

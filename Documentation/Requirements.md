@@ -10,12 +10,13 @@
 
 ### Household (1)
 
-- [ ] 4. A household should have a name and a generated (simple) code so others can join the household; the name should be editable.
+- [x] 4. A household should have a name and a generated (simple) code so others can join the household;
+- [x] the name should be editable.
 
 ### Account (3)
 
 - [x] 5. A user should be able to register and log in.
-- [ ] 6. A user should be able to create a new household.
+- [x] 6. A user should be able to create a new household.
 - [ ] 7. A user should be able to join a household by entering the household’s code.
 
 ### Profile (4)
@@ -33,15 +34,15 @@
 
 ### Daily View (3)
 
-- [ ] 15. All chores should be listed in a daily view and provide an overview of what needs to be done.
-- [ ] 16. In addition to the chore’s name, it should also show who has done the chore, how many days since the chore was last done, and if it is overdue.
+- [x] 15. All chores should be listed in a daily view and provide an overview of what needs to be done.
+- [x] 16. In addition to the chore’s name, it should also show who has done the chore, how many days since the chore was last done, and if it is overdue.
 - [ ] 17. When a user selects a chore, the description of the chore should be displayed, and it should be possible to mark the chore as done with a simple tap.
 
 ### Statistics (3)
 
 - [ ] 18. A user should be able to see the distribution of completed chores among the users in their household.
 - [ ] 19. Each statistics view should show the total distribution (including the weights of the chores) as well as the distribution of each individual chore.
-- [ ] 20. There should be a statistics view for the “current week.”
+- [x] 20. There should be a statistics view for the “current week.”
 
 ---
 

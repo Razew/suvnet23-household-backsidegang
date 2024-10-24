@@ -79,15 +79,15 @@ export const updateAvatarEmoji = createAppAsyncThunk<
 
 export const updateNickname = createAppAsyncThunk<
   UserToHousehold,
-  { nickname: string; userId: number }
+  { nickname: string; userId: number; currentHouseholdId: number }
 >(
   'usersToHouseholds/updateNickname',
-  async ({ nickname, userId }, { rejectWithValue }) => {
+  async ({ nickname, userId, currentHouseholdId }, { rejectWithValue }) => {
     try {
       const { data: updatedUserToHousehold, error } = await supabase
         .from('user_to_household')
         .update({ nickname: nickname })
-        .match({ user_id: userId });
+        .match({ user_id: userId, household_id: currentHouseholdId });
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -106,6 +106,34 @@ export const updateNickname = createAppAsyncThunk<
     }
   },
 );
+
+export const updateHouseholdName = createAppAsyncThunk<UserToHousehold, { householdName: string; householdId: number }>(
+  'usersToHouseholds/updateHouseholdName',
+  async ({ householdName, householdId }, { rejectWithValue }) => {
+    try {
+      const { data: updatedUserToHousehold, error } = await supabase
+        .from('user_to_household')
+        .update({ household_name: householdName })
+        .match({ household_id: householdId });
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      if (updatedUserToHousehold === null) {
+        console.error('No user to household found');
+        return rejectWithValue('No user to household found');
+      }
+
+      return updatedUserToHousehold[0];
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
+    }
+  },
+);
+
 
 const usersToHouseholdsSlice = createSlice({
   name: 'usersToHouseholds',
