@@ -12,6 +12,7 @@ import {
 import {
   fetchHouseholds,
   selectCurrentHousehold,
+  updateHouseholdName,
 } from '../store/households/slice';
 import { selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
@@ -28,7 +29,6 @@ export default function ProfileScreen({ navigation }: Props) {
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
   const currentHousehold = useAppSelector(selectCurrentHousehold); //Household[]
   const [householdName, setHouseholdName] = useState('');
-  // const isAdmin = useAppSelector();
 
   const dispatch = useAppDispatch();
 
@@ -37,8 +37,6 @@ export default function ProfileScreen({ navigation }: Props) {
     dispatch(fetchUsersToHouseholds());
     dispatch(fetchHouseholds());
   }, []);
-
-  //******* FOR AVALIBALE AVATAR EMOJIS */
 
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === currentHousehold?.id)
@@ -49,54 +47,24 @@ export default function ProfileScreen({ navigation }: Props) {
     (avatar) => !unavailableAvatarIds.includes(avatar.id),
   );
 
-  // const availableAvatarsEmojis = availableAvatars.map((avatar) => avatar.emoji);
-  //******************/
+  const isAdminOnHousehold2 = allUsersToHouseholds
+    .filter((user) => user.user_id === loggedInUser?.id)
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => user.is_admin === true);
 
-  const getUserToHousehold = allUsersToHouseholds.find(
-    (UserToHousehold) => UserToHousehold.user_id === loggedInUser?.id,
-  );
-
-  const isAdminOnHousehold =
-    getUserToHousehold?.is_admin === true &&
-    getUserToHousehold?.household_id === currentHousehold?.id;
-
-  const currentHouseholdFromUserToHousehold = allUsersToHouseholds.find(
-    (user) => user.household_id === currentHousehold?.id,
-  );
+  const findAvatarId = allUsersToHouseholds
+    .filter((user) => user.user_id === loggedInUser?.id)
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => user.avatar_id);
 
   const currentHouseholdUserAvatar = allAvatars.find(
-    (avatar) => currentHouseholdFromUserToHousehold?.avatar_id === avatar.id,
+    (avatar) => avatar.id === findAvatarId?.avatar_id,
   );
 
-  const changeName = async () => {
-    if (loggedInUser?.id === undefined) {
-      return console.log('No logged in user');
-    }
-    if (nickname === '') {
-      return console.log('No nickname');
-    }
-    if (currentHousehold?.id === undefined) {
-      return console.log('No current household');
-    }
-    setNickname(nickname);
-    dispatch(
-      updateNickname({
-        nickname,
-        userId: loggedInUser.id,
-        currentHouseholdId: currentHousehold.id,
-      }),
-    );
-    console.log('nickname', nickname);
-  };
-
-  const handleSelectAvatar = (avatarId: number) => {
-    setChoosenAvatar(avatarId);
-  };
-
   const isAdmin = () => {
-    if (isAdminOnHousehold) {
+    if (isAdminOnHousehold2) {
       return (
-        <>
+        <View>
           <View>
             <TextInput
               label={currentHousehold?.name}
@@ -113,13 +81,72 @@ export default function ProfileScreen({ navigation }: Props) {
               marginTop: 20,
             }}
           >
-            <Button mode="contained">Change household name</Button>
+            <Button
+              mode="contained"
+              onPress={changeHouseholdName}
+            >
+              Change household name
+            </Button>
           </View>
-        </>
+        </View>
       );
     }
     return null;
   };
+
+  const changeHouseholdName = async () => {
+    if (loggedInUser?.id === undefined) {
+      return console.log('No logged in user');
+    }
+    if (householdName === '') {
+      return console.log('No household name');
+    }
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
+    dispatch(
+      updateHouseholdName({
+        name: householdName,
+        id: currentHousehold.id,
+        code: currentHousehold.code,
+      }),
+    );
+    // Add the timer when using the emulator it works on the phone witout it
+    // setTimeout(() => {
+    navigation.push('Profile');
+    // }, 2000);
+  };
+
+  const changeName = async () => {
+    if (loggedInUser?.id === undefined) {
+      return console.log('No logged in user');
+    }
+    if (nickname === '') {
+      return console.log('No nickname');
+    }
+    if (currentHousehold?.id === undefined || currentHousehold.id === null) {
+      return console.log('No current household');
+    }
+    dispatch(
+      updateNickname({
+        nickname,
+        userId: loggedInUser.id,
+        currentHouseholdId: currentHousehold.id,
+      }),
+    );
+    // Add the timer when using the emulator it works on the phone witout it
+    // setTimeout(() => {
+    navigation.push('Profile');
+    // }, 2000);
+  };
+
+  // useEffect(() => {
+  //   changeName();
+  // }, [loggedInUser, nickname, currentHousehold]);
+
+  // const handleSelectAvatar = (avatarId: number) => {
+  //   setChoosenAvatar(avatarId);
+  // };
 
   const submitAvatar = async () => {
     if (loggedInUser?.id === undefined) {
@@ -138,11 +165,16 @@ export default function ProfileScreen({ navigation }: Props) {
         currentHouseholdId: currentHousehold?.id,
       }),
     );
+
+    // Add the timer when using the emulator it works on the phone witout it
+    // setTimeout(() => {
+    navigation.push('Profile');
+    // }, 2000);
   };
 
-  const currentNickname = allUsersToHouseholds.find(
-    (user) => loggedInUser?.id === user.user_id,
-  )?.nickname;
+  const currentNickname = allUsersToHouseholds
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => loggedInUser?.id === user.user_id)?.nickname;
 
   return (
     <ScrollView>
@@ -245,7 +277,7 @@ export default function ProfileScreen({ navigation }: Props) {
         {availableAvatars.map((avatar) => (
           <TouchableOpacity
             key={avatar.id}
-            onPress={() => handleSelectAvatar(avatar.id)}
+            onPress={() => setChoosenAvatar(avatar.id)}
             style={{
               borderWidth: 1,
               borderColor: avatar.colour_code,
@@ -278,9 +310,26 @@ export default function ProfileScreen({ navigation }: Props) {
         </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
-      <View>
-        <Button onPress={() => navigation.replace('Home')}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          gap: 30,
+          marginBottom: 20,
+        }}
+      >
+        <Button
+          style={{ backgroundColor: '#daa520' }}
+          mode="contained"
+          onPress={() => navigation.replace('Home')}
+        >
           Change household
+        </Button>
+        <Button
+          mode="contained"
+          style={{ backgroundColor: 'red' }}
+        >
+          Leave Household
         </Button>
       </View>
     </ScrollView>

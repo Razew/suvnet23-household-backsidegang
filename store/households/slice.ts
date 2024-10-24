@@ -47,6 +47,33 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
+export const updateHouseholdName = createAppAsyncThunk<{ name: string; id: string }, Household>(
+    'households/updateHouseholdName',
+    async ({ name, id }, { rejectWithValue }) => {
+      try {
+        const { data: updatedHousehold, error } = await supabase
+          .from('household')
+          .update({ name })
+          .eq('id', id)
+          .single();
+        if (error) {
+          console.error('Supabase Error:', error);
+          return rejectWithValue(error.message);
+        }
+
+        if (!updatedHousehold) {
+          console.error('No household found');
+          return rejectWithValue('No household found');
+        }
+
+        return updatedHousehold;
+      } catch (error) {
+        console.error('Error while updating household name:', error);
+        return rejectWithValue('Error while updating household name');
+      }
+    },
+  );
+
 const householdsSlice = createSlice({
   name: 'households',
   initialState,
