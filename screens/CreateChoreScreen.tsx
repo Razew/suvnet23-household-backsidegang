@@ -131,7 +131,7 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 'auto',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   saveButton: {
     flex: 1,
