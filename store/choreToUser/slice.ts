@@ -19,12 +19,12 @@ const initialState: ChoresToUsersState = {
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching chores to users...');
+    // console.log('Fetching chores to users...');
     try {
       const { data: fetchedChoresToUsers, error } = await supabase
         .from('chore_to_user')
         .select('*');
-      console.log('Fetched Chores To Users:', fetchedChoresToUsers);
+      // console.log('Fetched Chores To Users:', fetchedChoresToUsers);
 
       if (error) {
         console.error('Supabase Error:', error);

@@ -22,12 +22,12 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
 >(
   'usersToHouseholds/fetchUsersToHouseholds',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching users to households...');
+    // console.log('Fetching users to households...');
     try {
       const { data: fetchedUsersToHouseholds, error } = await supabase
         .from('user_to_household')
         .select('*');
-      console.log('Fetched users to households:', fetchedUsersToHouseholds);
+      // console.log('Fetched users to households:', fetchedUsersToHouseholds);
 
       if (error) {
         console.error('Supabase Error:', error);
