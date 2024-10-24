@@ -36,8 +36,6 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedText = Animated.createAnimatedComponent(SvgText);
 
 function PieSlice({
-  id,
-  value,
   color,
   emoji,
   startAngle,
@@ -95,7 +93,6 @@ function PieSlice({
 
     if (isRemovedSlice) {
       if (nextSliceGrowing && prevSliceGrowing) {
-        // Both neighboring slices are growing, shrink towards the middle
         const midAngle = (currentStartAngle + currentEndAngle) / 2;
         adjustedStartAngle = interpolate(
           currentProgress,
