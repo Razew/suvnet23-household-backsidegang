@@ -3,11 +3,10 @@ import {
   Keyboard,
   StyleSheet,
   TouchableNativeFeedback,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { TextInput, Text, Card, Button, Icon } from 'react-native-paper';
+import { TextInput, Text, Card, Icon } from 'react-native-paper';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { useState } from 'react';
