@@ -150,7 +150,7 @@ export default function StatisticsScreen({
           const pieData: PieDataItem[] = Object.entries(choreData).map(
             ([userId, weightedCount]) => {
               const user = currentHouseholdUsers.find(
-                (u) => u.user_id === Number(userId),
+                (u) => u.user_id === Number(userId) && u.is_active,
               );
               const avatar = allAvatars.find((a) => a.id === user?.avatar_id);
               return {
