@@ -1,5 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableNativeFeedback,
+  View,
+} from 'react-native';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { TextInput, Text, Card, Button } from 'react-native-paper';
 import ChoreFrequency from '../components/ChoreFrequency';
@@ -12,58 +17,60 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const [titleText, setTitleText] = useState('');
   const [descriptionText, setDescriptionText] = useState('');
   return (
-    <View style={s.container}>
-      <View>
-        <Text style={s.title}>Create a new chore</Text>
+    <TouchableNativeFeedback onPress={Keyboard.dismiss}>
+      <View style={s.container}>
+        <View>
+          <Text style={s.title}>Create a new chore</Text>
+        </View>
+        <Card style={s.inputCard}>
+          <Card.Actions>
+            <TextInput
+              placeholder="Title"
+              value={titleText}
+              mode="flat"
+              underlineColor="transparent"
+              onChangeText={setTitleText}
+              style={s.input}
+            />
+          </Card.Actions>
+        </Card>
+        <Card style={s.inputCard}>
+          <Card.Actions>
+            <TextInput
+              placeholder="Description"
+              value={descriptionText}
+              onChangeText={setDescriptionText}
+              mode="flat"
+              underlineColor="transparent"
+              multiline={true}
+              style={[s.input, { height: 100 }]}
+            />
+          </Card.Actions>
+        </Card>
+        <View style={s.frequencyComponent}>
+          <ChoreFrequency />
+        </View>
+        <View style={s.weightComponent}>
+          <ChoreWeight />
+        </View>
+        <View style={s.buttonRow}>
+          <Button
+            icon="plus"
+            mode="contained"
+            onPress={() => console.log('Spara')}
+          >
+            Save
+          </Button>
+          <Button
+            icon="close"
+            mode="outlined"
+            onPress={() => navigation.goBack()}
+          >
+            Close
+          </Button>
+        </View>
       </View>
-      <Card style={s.inputCard}>
-        <Card.Actions>
-          <TextInput
-            placeholder="Title"
-            value={titleText}
-            mode="flat"
-            underlineColor="transparent"
-            onChangeText={setTitleText}
-            style={s.input}
-          />
-        </Card.Actions>
-      </Card>
-      <Card style={s.inputCard}>
-        <Card.Actions>
-          <TextInput
-            placeholder="Description"
-            value={descriptionText}
-            onChangeText={setDescriptionText}
-            mode="flat"
-            underlineColor="transparent"
-            multiline={true}
-            style={[s.input, { height: 100 }]}
-          />
-        </Card.Actions>
-      </Card>
-      <View style={s.frequencyComponent}>
-        <ChoreFrequency />
-      </View>
-      <View style={s.weightComponent}>
-        <ChoreWeight />
-      </View>
-      <View style={s.buttonRow}>
-        <Button
-          icon="plus"
-          mode="contained"
-          onPress={() => console.log('Spara')}
-        >
-          Save
-        </Button>
-        <Button
-          icon="close"
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-        >
-          Close
-        </Button>
-      </View>
-    </View>
+    </TouchableNativeFeedback>
   );
 }
 
