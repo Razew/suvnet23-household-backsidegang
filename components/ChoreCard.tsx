@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text, useTheme } from 'react-native-paper';
 import {
@@ -19,11 +18,6 @@ export default function ChoreCard({ chore }: Props) {
   );
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
-
-  useEffect(() => {
-    console.log('Days since last completed: ', daysSinceLastCompleted);
-    console.log('Profiles: ', profiles);
-  });
 
   const daysContainerStyle = {
     ...s.daysContainer,
@@ -57,7 +51,10 @@ export default function ChoreCard({ chore }: Props) {
 
   return (
     <Pressable style={s.pressableContainer}>
-      <Surface style={s.cardSurface}>
+      <Surface
+        style={s.cardSurface}
+        elevation={2}
+      >
         <Text
           style={s.choreTitle}
           numberOfLines={1}
@@ -65,7 +62,7 @@ export default function ChoreCard({ chore }: Props) {
           {chore.name}
         </Text>
         {daysSinceLastCompleted === 0 ? (
-          profiles.slice(0, 3).map((profile, index) => (
+          profiles.slice(0, 4).map((profile, index) => (
             <Text
               key={index}
               style={s.avatar}
@@ -84,21 +81,6 @@ export default function ChoreCard({ chore }: Props) {
             </View>
           </View>
         )}
-        {/* {daysSinceLastCompleted > 0 ? (
-          <View style={getDaysContainerStyle()}>
-            <Text style={getDaysTextStyle()}>{daysSinceLastCompleted}</Text>
-          </View>
-        ) : (
-          <Text>Hi LOL</Text>
-          // avatars.slice(0, 3).map((avatar, index) => (
-          //   <Text
-          //     key={index}
-          //     style={s.avatar}
-          //   >
-          //     {avatar}
-          //   </Text>
-          // ))
-        )} */}
       </Surface>
     </Pressable>
   );
@@ -110,6 +92,7 @@ const s = StyleSheet.create({
     height: 65,
   },
   cardSurface: {
+    width: '100%',
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
@@ -151,12 +134,13 @@ const s = StyleSheet.create({
     right: 0,
     overflow: 'hidden',
     width: 75,
-    height: 75,
+    height: 65,
+    borderBottomRightRadius: 10,
   },
   ribbon: {
     position: 'absolute',
     top: 10,
-    right: -20,
+    right: -25,
     transform: [{ rotate: '45deg' }],
     padding: 5,
     width: 100,
