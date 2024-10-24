@@ -1,9 +1,12 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, List, Text } from 'react-native-paper';
 import { useHouseholdContext } from '../contexts/HouseholdContext';
+import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { Household, User } from '../types/types';
 import { supabase } from '../utils/supabase';
+type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 // Need a button to set a household as the current household. Uses context now. Does it Use redux?
 
@@ -30,9 +33,10 @@ type SupabaseHouseholdResponse = {
   }[];
 };
 
-export default function ChangeHousehold() {
+export default function ChangeHousehold(props: Props) {
+  const { navigation } = props;
   const [userHouseholds, setUserHouseholds] = useState<Household[]>([]);
-  const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
+  const { setMostRecentHousehold } = useHouseholdContext();
 
   // Using store instead of context
   // const loggedInUser = useAppSelector(selectLoggedInUser);
@@ -165,9 +169,8 @@ export default function ChangeHousehold() {
         </Button>
         <Button
           mode="contained"
-          // onPress={handleSubmit(onSubmit)}
           style={style.button}
-          // disabled={AddedToDataBase}
+          onPress={() => navigation.navigate('CreateHousehold')}
         >
           Create household
         </Button>
