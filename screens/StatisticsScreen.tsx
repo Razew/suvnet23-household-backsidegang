@@ -85,36 +85,44 @@ export default function StatisticsScreen({
     const fetchData = async () => {
       setLoading(true);
 
+      // Get all chores for the current household
       householdChores = allChores.filter(
         (chore) => chore.household_id === storedHousehold.id,
       );
+
+      // Get all active users in the current household
       currentHouseholdUsers = allUserToHouseholds.filter(
         (uth) => uth.household_id === storedHousehold.id && uth.is_active,
       );
 
+      // Filter completed chores to only include those done by current household users
       completedChores = chores.filter((chore) =>
         currentHouseholdUsers.some((user) => user.user_id === chore.user_id),
       );
 
+      // Aggregate data for all chores, accounting for weights
       const aggregatedData: { [userId: number]: number } = {};
       completedChores.forEach((ctu) => {
-        if (aggregatedData[ctu.user_id]) {
-          aggregatedData[ctu.user_id]++;
-        } else {
-          aggregatedData[ctu.user_id] = 1;
+        const chore = householdChores.find((c) => c.id === ctu.chore_id);
+        if (chore) {
+          if (aggregatedData[ctu.user_id]) {
+            aggregatedData[ctu.user_id] += chore.weight;
+          } else {
+            aggregatedData[ctu.user_id] = chore.weight;
+          }
         }
       });
 
       // Convert aggregated data to PieDataItem format
       const newChartData: PieDataItem[] = Object.entries(aggregatedData).map(
-        ([userId, count]) => {
+        ([userId, weightedCount]) => {
           const user = currentHouseholdUsers.find(
             (u) => u.user_id === Number(userId),
           );
           const avatar = allAvatars.find((a) => a.id === user?.avatar_id);
           return {
             id: Number(userId),
-            value: count,
+            value: weightedCount,
             color: avatar?.colour_code || '#FFFFFF',
             emoji: avatar?.emoji || '👤',
           };
@@ -133,21 +141,21 @@ export default function StatisticsScreen({
 
           choreCompletions.forEach((cc) => {
             if (choreData[cc.user_id]) {
-              choreData[cc.user_id]++;
+              choreData[cc.user_id] += chore.weight;
             } else {
-              choreData[cc.user_id] = 1;
+              choreData[cc.user_id] = chore.weight;
             }
           });
 
           const pieData: PieDataItem[] = Object.entries(choreData).map(
-            ([userId, count]) => {
+            ([userId, weightedCount]) => {
               const user = currentHouseholdUsers.find(
                 (u) => u.user_id === Number(userId),
               );
               const avatar = allAvatars.find((a) => a.id === user?.avatar_id);
               return {
                 id: Number(userId),
-                value: count,
+                value: weightedCount,
                 color: avatar?.colour_code || '#FFFFFF',
                 emoji: avatar?.emoji || '👤',
               };
@@ -161,7 +169,7 @@ export default function StatisticsScreen({
         })
         .filter((chore) => chore.chartData.length > 0); // Remove chores with no data
 
-      // Sort chores by total completions and take top 5
+      // Sort chores by total weighted completions and take top 5
       newSingleChoreData.sort(
         (a, b) =>
           b.chartData.reduce((sum, item) => sum + item.value, 0) -
