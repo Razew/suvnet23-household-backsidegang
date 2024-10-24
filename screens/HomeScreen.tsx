@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, List, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
@@ -40,6 +41,12 @@ export default function HomeScreen({ navigation }: Props) {
 
   // console.log(JSON.stringify(allUserToHouseholds, null, 2));
   console.log(JSON.stringify(profileAndHouseholds, null, 2));
+
+  useEffect(() => {
+    if (profileAndHouseholds.length === 1) {
+      dispatch(setCurrentHousehold(profileAndHouseholds[0].household));
+    }
+  }, [profileAndHouseholds, dispatch]);
 
   return (
     <>
