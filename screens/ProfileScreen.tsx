@@ -16,9 +16,9 @@ import {
 import { selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
 export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
@@ -275,7 +275,7 @@ export default function ProfileScreen({ navigation }: Props) {
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
       <View>
-        <Button onPress={() => navigation.replace('HomeNavigator')}>
+        <Button onPress={() => navigation.replace('Home')}>
           Change household
         </Button>
       </View>
