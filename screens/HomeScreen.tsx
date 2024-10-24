@@ -1,17 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Surface, Text } from 'react-native-paper';
+import HouseholdCard from '../components/HouseholdCard';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { container, large } from '../themes/styles';
+import { selectLoggedInUser } from '../store/auth/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectHouseholds,
   setCurrentHousehold,
 } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { container, large } from '../themes/styles';
 import { User_To_Household } from '../types/types';
-import { selectLoggedInUser } from '../store/auth/slice';
-import HouseholdCard from '../components/HouseholdCard';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -70,6 +70,14 @@ export default function HomeScreen({ navigation }: Props) {
           onPress={() => navigation.replace('CreateHousehold')}
         >
           Create Household
+        </Button>
+      </Surface>
+      <Surface elevation={0}>
+        <Button
+          mode="elevated"
+          onPress={() => navigation.replace('JoinHousehold')}
+        >
+          Join Household
         </Button>
       </Surface>
     </Surface>
