@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, List, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
+import { selectAvatars } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
@@ -27,6 +28,9 @@ export default function HomeScreen({ navigation }: Props) {
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   const allHouseholds = useAppSelector(selectHouseholds);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const allAvatars = useAppSelector(selectAvatars);
+
+  console.log(allAvatars);
 
   const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
@@ -85,6 +89,12 @@ export default function HomeScreen({ navigation }: Props) {
                         description={
                           userToHousehold.is_active ? '' : 'Not active'
                         }
+                        left={() => {
+                          const avatar = allAvatars.find(
+                            (avatar) => avatar.id === userToHousehold.avatar_id,
+                          );
+                          return avatar ? <Text>{avatar.emoji}</Text> : null;
+                        }}
                         right={(props) =>
                           userToHousehold.is_admin ? (
                             <List.Icon
