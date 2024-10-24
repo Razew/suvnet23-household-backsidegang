@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 // import { container } from '../themes/styles';
 import {
   GestureHandlerRootView,
@@ -7,28 +7,39 @@ import {
   PanGestureHandlerGestureEvent,
   State,
 } from 'react-native-gesture-handler';
-import { Appbar, IconButton, Surface } from 'react-native-paper';
+import { Appbar, IconButton, Surface, Text } from 'react-native-paper';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { container } from '../themes/styles';
-import {
-  getLastMonthDates,
-  getLastWeekDates,
-  getThisWeekDates,
-} from '../utils/statistics';
+import { getChoresByDates, hasCompletedChores } from '../utils/statistics';
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
+import { useAppSelector } from '../store/hooks';
+import { selectChores } from '../store/chores/slice';
+import { selectChoresToUsers } from '../store/choreToUser/slice';
+import { selectCurrentHousehold } from '../store/households/slice';
 
 export default function HouseholdScreen() {
-  // const chores = useAppSelector(selectActiveChoresCurrentHousehold);
-  // const dispatch = useAppDispatch();
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
+  const allChores = useAppSelector(selectChores);
+  const allChoreToUsers = useAppSelector(selectChoresToUsers);
 
-  // useEffect(() => {
-  //   dispatch(fetchChores());
-  // }, []);
+  if (!currentHousehold) {
+    return (
+      <View>
+        <Text>No household selected</Text>
+      </View>
+    );
+  }
+
+  const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
+    getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
+  console.log('this weeks chores: ', thisWeeksChores);
+  console.log('last weeks chores: ', lastWeeksChores);
+  console.log('last months chores: ', lastMonthsChores);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
@@ -45,27 +56,48 @@ export default function HouseholdScreen() {
       setTitle('Last month');
     }
   };
+  const findNextPageWithChores = (startPage: number) => {
+    if (startPage === 0) return 0; // Always allow navigation to Today
+    if (startPage === 1 && hasCompletedChores(thisWeeksChores)) return 1;
+    if (startPage === 2 && hasCompletedChores(lastWeeksChores)) return 2;
+    if (startPage === 3 && hasCompletedChores(lastMonthsChores)) return 3;
+    if (startPage < 3) return findNextPageWithChores(startPage + 1);
+    return -1; // No page with chores found
+  };
+
+  const findPrevPageWithChores = (startPage: number) => {
+    if (startPage === 0) return 0; // Can't go back from Today
+    if (startPage === 1 && hasCompletedChores(thisWeeksChores)) return 1;
+    if (startPage === 2 && hasCompletedChores(lastWeeksChores)) return 2;
+    if (startPage === 3 && hasCompletedChores(lastMonthsChores)) return 3;
+    if (startPage > 1) return findPrevPageWithChores(startPage - 1);
+    return 0; // Default to Today if no previous page with chores found
+  };
+
   const handleRightPress = () => {
-    const newPage = currentPage + 1;
-    setCurrentPage(newPage);
-    updateTitle(newPage);
-    if (currentPage === 0) {
-      translateX.value = 1000;
-      translateX.value = withTiming(0, { duration: 300 });
+    const nextPage = findNextPageWithChores(currentPage + 1);
+    if (nextPage !== -1 && nextPage !== currentPage) {
+      setCurrentPage(nextPage);
+      updateTitle(nextPage);
+      if (currentPage === 0) {
+        translateX.value = 1000;
+        translateX.value = withTiming(0, { duration: 300 });
+      }
     }
   };
 
   const handleLeftPress = () => {
     if (currentPage === 0) return;
-    const newPage = currentPage - 1;
-    setCurrentPage(newPage);
-    updateTitle(newPage);
-    if (currentPage === 1) {
-      translateX.value = -1000;
-      translateX.value = withTiming(0, { duration: 300 });
+    const prevPage = findPrevPageWithChores(currentPage - 1);
+    if (prevPage !== currentPage) {
+      setCurrentPage(prevPage);
+      updateTitle(prevPage);
+      if (currentPage === 1) {
+        translateX.value = -1000;
+        translateX.value = withTiming(0, { duration: 300 });
+      }
     }
   };
-
   const handleSwipe = (event: PanGestureHandlerGestureEvent) => {
     if (event.nativeEvent.state === State.END) {
       const { translationX } = event.nativeEvent;
@@ -91,13 +123,17 @@ export default function HouseholdScreen() {
     if (currentPage === 0) {
       return <DailyViewScreen />;
     } else if (currentPage === 1) {
-      return <StatisticsScreen timespan={getThisWeekDates()} />;
+      return <StatisticsScreen chores={thisWeeksChores} />;
     } else if (currentPage === 2) {
-      return <StatisticsScreen timespan={getLastWeekDates()} />;
+      return <StatisticsScreen chores={lastWeeksChores} />;
     } else {
-      return <StatisticsScreen timespan={getLastMonthDates()} />;
+      return <StatisticsScreen chores={lastMonthsChores} />;
     }
     // }
+  };
+
+  const isRightArrowDisabled = () => {
+    return findNextPageWithChores(currentPage + 1) === -1;
   };
 
   return (
@@ -126,7 +162,7 @@ export default function HouseholdScreen() {
             icon="arrow-right"
             size={30}
             onPress={handleRightPress}
-            disabled={currentPage === 3}
+            disabled={isRightArrowDisabled()}
           />
         </Surface>
 
