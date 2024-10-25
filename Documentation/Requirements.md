@@ -17,19 +17,19 @@
 
 - [x] 5. A user should be able to register and log in.
 - [x] 6. A user should be able to create a new household.
-- [ ] 7. A user should be able to join a household by entering the household’s code.
+- [x] 7. A user should be able to join a household by entering the household’s code.
 
 ### Profile (4)
 
-- [ ] 8. A user should be able to enter their name.
+- [x] 8. A user should be able to enter their name.
 - [x] 9. A user should be able to choose an avatar (emoji animal + color) from a predefined list.
 - [x] 10. Chosen avatars should not be selectable by other users in the household.
-- [ ] 11. The avatar should be used in the app to show what the user has done.
+- [x] 11. The avatar should be used in the app to show what the user has done.
 
 ### Chores (3)
 
 - [ ] 12. An owner should be able to add chores to be done in the home.
-- [ ] 13. A chore should have a name, a description (text), how often it should be done (days), and a weight that describes how energy-consuming it is.
+- [x] 13. A chore should have a name, a description (text), how often it should be done (days), and a weight that describes how energy-consuming it is.
 - [ ] 14. An owner should be able to edit a chore.
 
 ### Daily View (3)
@@ -40,8 +40,8 @@
 
 ### Statistics (3)
 
-- [ ] 18. A user should be able to see the distribution of completed chores among the users in their household.
-- [ ] 19. Each statistics view should show the total distribution (including the weights of the chores) as well as the distribution of each individual chore.
+- [x] 18. A user should be able to see the distribution of completed chores among the users in their household.
+- [x] 19. Each statistics view should show the total distribution (including the weights of the chores) as well as the distribution of each individual chore.
 - [x] 20. There should be a statistics view for the “current week.”
 
 ---
@@ -54,11 +54,11 @@
 
 ### Household (6)
 
-- [ ] 2. All users in a household should be able to see who belongs to the household.
+- [x] 2. All users in a household should be able to see who belongs to the household.
 - [ ] 3. An owner of a household should be able to see requests to join the household.
 - [ ] 4. An owner should be able to accept or decline requests.
 - [ ] 5. An owner should be able to make others owners.
-- [ ] 6. An owner should be able to pause a user, and during paused periods, users should not be included in the statistics.
+- [ ] 6. An owner should be able to pause a user, and during paused periods, X users should not be included in the statistics.
 - [ ] 7. If a user has been paused during part of a period in the statistics, the graphs should be normalized.
 
 ### Account (2)
@@ -68,8 +68,8 @@
 
 ### Profile (2)
 
-- [ ] 10. A user should be able to set the app’s appearance (dark, light, auto).
-- [ ] 11. If a user belongs to two or more households, they should be able to switch between the different households.
+- [x] 10. A user should be able to set the app’s appearance (dark, light, auto).
+- [x] 11. If a user belongs to two or more households, they should be able to switch between the different households.
 
 ### Chores (3)
 
@@ -85,7 +85,7 @@
 
 - [x] 15. There should be a statistics view for the “previous week.”
 - [x] 16. There should be a statistics view for the “previous month.”
-- [ ] 17. If there are no statistics for one of the views, that view should not be displayed.
+- [x] 17. If there are no statistics for one of the views, that view should not be displayed.
 
 ### Scheduling (3)
 
