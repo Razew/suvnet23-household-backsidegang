@@ -98,15 +98,24 @@ export default function ChoreCard({ chore }: Props) {
         />
         <View style={s.collapsedContainer}>
           <Text style={s.description}>{chore.description}</Text>
+          <Button
+            mode="contained"
+            icon="check"
+            style={[s.button, { alignSelf: 'center' }]}
+          >
+            Complete
+          </Button>
           <View style={s.buttonRow}>
             <Button
-              mode="contained"
+              // mode="contained"
+              icon="lead-pencil"
               style={s.button}
             >
               Edit
             </Button>
             <Button
-              mode="contained"
+              // mode="contained"
+              icon="delete"
               style={s.button}
             >
               Delete
