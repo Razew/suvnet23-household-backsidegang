@@ -14,6 +14,7 @@ import {
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import { container, large } from '../themes/styles';
 import { User_To_Household } from '../types/types';
+
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -107,6 +108,19 @@ export default function HomeScreen({ navigation }: Props) {
                     </View>
                   ),
               )}
+              <Button
+                icon={'warehouse'}
+                style={{
+                  marginTop: 10,
+                  width: '50%',
+                  alignSelf: 'center',
+                }}
+                contentStyle={{ marginRight: 10 }}
+                mode="contained"
+                onPress={() => navigation.navigate('HouseholdScreen')}
+              >
+                Go to household
+              </Button>
               {profileAndHousehold.household.id !== usersLastHousehold?.id && (
                 <Button
                   mode="outlined"

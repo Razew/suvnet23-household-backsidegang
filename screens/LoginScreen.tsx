@@ -94,12 +94,6 @@ export default function LoginScreen({ navigation }: Props) {
                 >
                   {loading ? 'Logging in...' : 'Log In'}
                 </Button>
-                <Button
-                  mode="contained"
-                  onPress={() => navigation.navigate('CreateChore')}
-                >
-                  tryck här
-                </Button>
                 <View style={authStyles.linkTextContainer}>
                   <Text>Dont have an account? </Text>
                   <TouchableOpacity onPress={handleNavigate}>
@@ -114,26 +108,3 @@ export default function LoginScreen({ navigation }: Props) {
     </>
   );
 }
-// function useEffect(arg0: () => void, arg1: never[]) {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchChores(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchAvatars(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchChoresToUsers(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchHouseholds(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchUsersToHouseholds(): any {
-//   throw new Error('Function not implemented.');
-// }
