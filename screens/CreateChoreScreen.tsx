@@ -50,6 +50,7 @@ export default function CreateChoreScreen({ navigation }: Props) {
             <TextInput
               placeholder="Title"
               value={titleText}
+              textColor="black"
               mode="flat"
               underlineColor="transparent"
               onChangeText={setTitleText}
@@ -64,6 +65,7 @@ export default function CreateChoreScreen({ navigation }: Props) {
               value={descriptionText}
               onChangeText={setDescriptionText}
               mode="flat"
+              textColor="black"
               underlineColor="transparent"
               multiline={true}
               style={[s.input, { height: 100 }]}
