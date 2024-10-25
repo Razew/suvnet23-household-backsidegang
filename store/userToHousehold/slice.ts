@@ -11,11 +11,22 @@ interface UsersToHouseholdsState {
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
-const initialState: UsersToHouseholdsState = {
+export const initialState: UsersToHouseholdsState = {
   list: [],
   current: undefined,
   errorMessage: undefined,
   loading: 'idle',
+};
+
+export type TableId = {
+  avatarId: number;
+  userId: number;
+  currentHouseholdId: number;
+};
+export type NicknameAndIds = {
+  nickname: string;
+  userId: number;
+  currentHouseholdId: number;
 };
 
 export const fetchUsersToHouseholds = createAppAsyncThunk<
@@ -45,6 +56,56 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while fetching user to household');
+    }
+  },
+);
+
+export const updateAvatarEmoji = createAppAsyncThunk(
+  'usersToHouseholds/updateAvatarEmoji',
+  async (
+    { avatarId, userId, currentHouseholdId }: TableId,
+    { rejectWithValue },
+  ) => {
+    try {
+      const { error } = await supabase
+        .from('user_to_household')
+        .update({ avatar_id: avatarId })
+        .match({ user_id: userId, household_id: currentHouseholdId });
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return console.log('Avatar updated');
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
+    }
+  },
+);
+
+export const updateNickname = createAppAsyncThunk(
+  'usersToHouseholds/updateNickname',
+  async (
+    { nickname, userId, currentHouseholdId }: NicknameAndIds,
+    { rejectWithValue },
+  ) => {
+    try {
+      const { error } = await supabase
+        .from('user_to_household')
+        .update({ nickname })
+        .match({ user_id: userId, household_id: currentHouseholdId });
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return console.log('Nickname updated');
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while updating user to household');
     }
   },
 );

@@ -5,6 +5,7 @@ import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
 import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import HouseholdScreen from '../screens/HouseholdScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
@@ -14,6 +15,7 @@ export type HomeStackParamList = {
   JoinHousehold: undefined;
   CreateHousehold: undefined;
   HouseholdScreen: undefined;
+  Profile: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -28,22 +30,39 @@ export default function HomeStackNavigator() {
       initialRouteName="Home"
       screenOptions={({ navigation }) => ({
         headerRight: () => (
-          <Pressable
-            style={s.tempExit}
-            onPress={() => navigation.replace('Loading')}
-          >
-            <Text style={s.tempText}>LoadingScreen</Text>
-            <MaterialIcons
-              name="exit-to-app"
-              size={24}
-              color="#D32F2F"
-            />
-          </Pressable>
+          <>
+            <Pressable
+              style={s.tempExit}
+              onPress={() => navigation.replace('Loading')}
+            >
+              <Text style={s.tempText}>LoadingScreen</Text>
+              <MaterialIcons
+                name="exit-to-app"
+                size={24}
+                color="#D32F2F"
+              />
+            </Pressable>
+            <Pressable
+              style={s.tempExit}
+              onPress={() => navigation.replace('Profile')}
+            >
+              <Text style={s.tempText}>ProfileScreen</Text>
+              <MaterialIcons
+                name="exit-to-app"
+                size={24}
+                color="#D32F2F"
+              />
+            </Pressable>
+          </>
         ),
         headerBackTitle: 'Back',
         headerTitleAlign: 'center',
       })}
     >
+      <HomeStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+      />
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
