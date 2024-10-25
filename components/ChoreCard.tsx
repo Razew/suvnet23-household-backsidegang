@@ -158,11 +158,11 @@ const s = StyleSheet.create({
     overflow: 'hidden',
     width: 75,
     height: 65,
-    borderBottomRightRadius: 6,
+    borderBottomRightRadius: 5,
   },
   ribbon: {
     position: 'absolute',
-    top: 8,
+    top: 10,
     right: -25,
     transform: [{ rotate: '40deg' }],
     padding: 5,
