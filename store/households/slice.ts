@@ -8,7 +8,7 @@ import { RootState } from '../store';
 interface HouseholdState {
   list: Household[];
   current?: Household;
-  foundHousehold?: Household; // Alex & ANdrew are using the from JoinHousehold.tsx
+  foundHousehold?: Household; // Alex & Andrew are using the from JoinHousehold.tsx
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }

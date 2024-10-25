@@ -7,12 +7,14 @@ import { RootState } from '../store';
 interface AvatarsState {
   list: Avatar[];
   errorMessage?: string;
+  currentAvatar?: Avatar; // Alex & Andrew are using the from JoinHousehold.tsx and more
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: AvatarsState = {
   list: [],
   errorMessage: undefined,
+  currentAvatar: undefined,
   loading: 'idle',
 };
 
@@ -47,7 +49,11 @@ export const fetchAvatars = createAppAsyncThunk<Avatar[], void>(
 const avatarsSlice = createSlice({
   name: 'avatars',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setCurrentAvatar(state, action) {
+      state.currentAvatar = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAvatars.pending, (state) => {
       state.loading = 'pending';
@@ -71,3 +77,8 @@ export const avatarsReducer = avatarsSlice.reducer;
 
 // SELECTORS
 export const selectAvatars = (state: RootState) => state.avatars.list;
+export const selectCurrentAvatar = (state: RootState) => state.avatars.list.find(
+  (a) => a.id === state.usersToHouseholds.current?.avatar_id, );
+  //Alex and Andrews selector, dont get mad Marcus :( <3<3<3<3<3
+
+  export const { setCurrentAvatar } = avatarsSlice.actions;
