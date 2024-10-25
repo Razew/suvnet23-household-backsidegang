@@ -6,6 +6,7 @@ import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import {
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
+  setCurrentProfile,
   updateAvatarEmoji,
   updateNickname,
 } from '../store/userToHousehold/slice';
@@ -25,11 +26,11 @@ type Props = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
+  const [householdName, setHouseholdName] = useState('');
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
   const currentHousehold = useAppSelector(selectCurrentHousehold); //Household[]
-  const [householdName, setHouseholdName] = useState('');
 
   const dispatch = useAppDispatch();
 
@@ -48,7 +49,12 @@ export default function ProfileScreen({ navigation }: Props) {
     (avatar) => !unavailableAvatarIds.includes(avatar.id),
   );
 
-  const isAdminOnHousehold2 = allUsersToHouseholds
+  const isUserActive = allUsersToHouseholds
+    .filter((user) => user.user_id === loggedInUser?.id)
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => user.is_active === true);
+
+  const isAdminOnHousehold = allUsersToHouseholds
     .filter((user) => user.user_id === loggedInUser?.id)
     .filter((user) => user.household_id === currentHousehold?.id)
     .find((user) => user.is_admin === true);
@@ -63,7 +69,7 @@ export default function ProfileScreen({ navigation }: Props) {
   );
 
   const isAdmin = () => {
-    if (isAdminOnHousehold2) {
+    if (isAdminOnHousehold) {
       return (
         <View>
           <View>
@@ -141,10 +147,20 @@ export default function ProfileScreen({ navigation }: Props) {
         currentHouseholdId: currentHousehold.id,
       }),
     );
+    dispatch(
+      setCurrentProfile({
+        nickname: nickname,
+        userId: loggedInUser.id,
+        householdId: currentHousehold.id,
+        avatarId: currentHouseholdUserAvatar?.emoji,
+        isAdmin: isAdminOnHousehold?.is_admin,
+        isActive: isUserActive,
+      }),
+    );
     // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    navigation.push('Profile');
-    // }, 2000);
+    setTimeout(() => {
+      navigation.push('Profile');
+    }, 2000);
   };
 
   // useEffect(() => {
@@ -173,10 +189,21 @@ export default function ProfileScreen({ navigation }: Props) {
       }),
     );
 
+    dispatch(
+      setCurrentProfile({
+        nickname: currentNickname,
+        userId: loggedInUser.id,
+        householdId: currentHousehold.id,
+        avatarId: choosenAvatar,
+        isAdmin: isAdminOnHousehold?.is_admin,
+        isActive: isUserActive,
+      }),
+    );
+
     // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    navigation.push('Profile');
-    // }, 2000);
+    setTimeout(() => {
+      navigation.push('Profile');
+    }, 2000);
   };
 
   const currentNickname = allUsersToHouseholds
