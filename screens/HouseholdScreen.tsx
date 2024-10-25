@@ -5,6 +5,7 @@ import {
   GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
+  ScrollView,
   State,
 } from 'react-native-gesture-handler';
 import { Appbar, IconButton, Surface } from 'react-native-paper';
@@ -89,7 +90,11 @@ export default function HouseholdScreen() {
 
   const renderScreen = () => {
     if (currentPage === 0) {
-      return <DailyViewScreen />;
+      return (
+        <ScrollView>
+          <DailyViewScreen />
+        </ScrollView>
+      );
     } else if (currentPage === 1) {
       return <StatisticsScreen timespan={getThisWeekDates()} />;
     } else if (currentPage === 2) {
@@ -139,26 +144,8 @@ export default function HouseholdScreen() {
         </PanGestureHandler>
       </Surface>
     </GestureHandlerRootView>
-    //   <ScrollView contentContainerStyle={s.root}>
-    //   {chores.length === 0 ? (
-    //     <Text style={large}>Household screen</Text>
-    //   ) : (
-    //     chores.map((chore) => (
-    //       <ChoreCard
-    //         key={chore.id}
-    //         chore={chore}
-    //       />
-    //     ))
-    //   )}
-    // </ScrollView>
   );
 }
-
-// const s = StyleSheet.create({
-//   root: {
-//     padding: 15,
-//   },
-// });
 
 const styles = StyleSheet.create({
   header: {
