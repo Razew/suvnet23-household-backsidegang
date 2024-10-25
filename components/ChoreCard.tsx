@@ -9,12 +9,13 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import { updateChore } from '../store/chores/slice';
 import {
   selectDaysSinceLastCompleted,
   selectIsCurrentUserAdminForCurrentHousehold,
   selectUsersWithAvatarsWhoCompletedChoreToday,
 } from '../store/combinedSelectors';
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Chore } from '../types/types';
 import { CollapsibleContainer } from './CollapsibleContainer';
 
@@ -26,6 +27,7 @@ export default function ChoreCard({ chore }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(false);
   const { colors } = useTheme();
+  const dispatch = useAppDispatch();
 
   const profiles = useAppSelector(
     selectUsersWithAvatarsWhoCompletedChoreToday(chore.id),
@@ -38,6 +40,13 @@ export default function ChoreCard({ chore }: Props) {
 
   const onItemPress = () => {
     setExpanded(!expanded);
+  };
+
+  // Used for both archive and delete, as we don't have an "is_deleted" field for our soft delete currently.
+  const onArchive = () => {
+    dispatch(
+      updateChore({ id: chore.id, is_active: false, is_archived: true }),
+    );
   };
 
   const daysContainerStyle = {
@@ -153,8 +162,18 @@ export default function ChoreCard({ chore }: Props) {
                     </Text>
                   </Dialog.Content>
                   <Dialog.Actions>
-                    <Button icon="archive">Archive</Button>
-                    <Button icon="delete">Confirm</Button>
+                    <Button
+                      icon="archive"
+                      onPress={onArchive}
+                    >
+                      Archive
+                    </Button>
+                    <Button
+                      icon="delete"
+                      onPress={onArchive}
+                    >
+                      Confirm
+                    </Button>
                   </Dialog.Actions>
                 </Dialog>
               </Portal>
