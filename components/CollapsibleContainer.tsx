@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
   expanded: boolean;
 }
 
-export function CollapsableContainer({ children, expanded }: Props) {
+export function CollapsibleContainer({ children, expanded }: Props) {
   const [height, setHeight] = useState(0);
   const animatedHeight = useSharedValue(0);
 
@@ -22,7 +22,7 @@ export function CollapsableContainer({ children, expanded }: Props) {
     }
   };
 
-  const collapsableStyle = useAnimatedStyle(() => {
+  const collapsibleStyle = useAnimatedStyle(() => {
     animatedHeight.value = expanded ? withTiming(height) : withTiming(0);
 
     return {
@@ -31,7 +31,7 @@ export function CollapsableContainer({ children, expanded }: Props) {
   }, [expanded]);
 
   return (
-    <Animated.View style={[collapsableStyle, { overflow: 'hidden' }]}>
+    <Animated.View style={[collapsibleStyle, { overflow: 'hidden' }]}>
       <View
         style={{ position: 'absolute', width: '100%' }}
         onLayout={onLayout}
