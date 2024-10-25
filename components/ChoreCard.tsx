@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Divider, Surface, Text, useTheme } from 'react-native-paper';
+import { Button, Divider, Surface, Text, useTheme } from 'react-native-paper';
 import {
   selectDaysSinceLastCompleted,
   selectUsersWithAvatarsWhoCompletedChoreToday,
@@ -98,6 +98,20 @@ export default function ChoreCard({ chore }: Props) {
         />
         <View style={s.collapsedContainer}>
           <Text style={s.description}>{chore.description}</Text>
+          <View style={s.buttonRow}>
+            <Button
+              mode="contained"
+              style={s.button}
+            >
+              Edit
+            </Button>
+            <Button
+              mode="contained"
+              style={s.button}
+            >
+              Delete
+            </Button>
+          </View>
         </View>
       </CollapsibleContainer>
     </Surface>
@@ -139,9 +153,17 @@ const s = StyleSheet.create({
   },
   collapsedContainer: {
     padding: 15,
+    gap: 15,
   },
   description: {
     opacity: 0.7,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    width: '35%',
   },
   newLabelContainer: {
     justifyContent: 'center',
