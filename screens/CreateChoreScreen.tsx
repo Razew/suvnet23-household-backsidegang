@@ -20,7 +20,7 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const [titleText, setTitleText] = useState('');
   const [descriptionText, setDescriptionText] = useState('');
   const [frequency, setFrequency] = useState(7);
-  const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(1);
+  const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(2);
 
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
 
