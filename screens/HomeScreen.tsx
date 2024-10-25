@@ -1,17 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Button, Surface, Text } from 'react-native-paper';
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, List, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { container, large } from '../themes/styles';
+import { selectLoggedInUser } from '../store/auth/slice';
+import { selectAvatars } from '../store/avatars/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+  selectCurrentHousehold,
   selectHouseholds,
   setCurrentHousehold,
 } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { container, large } from '../themes/styles';
 import { User_To_Household } from '../types/types';
-import { selectLoggedInUser } from '../store/auth/slice';
-import HouseholdCard from '../components/HouseholdCard';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -23,10 +25,13 @@ export default function HomeScreen({ navigation }: Props) {
     </View>;
   }
 
+  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   const allHouseholds = useAppSelector(selectHouseholds);
-  const allUserToHouseholds: User_To_Household[] = useAppSelector(
-    selectUsersToHouseholds,
-  );
+  const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const allAvatars = useAppSelector(selectAvatars);
+
+  console.log(allAvatars);
+
   const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
   );
@@ -38,41 +43,105 @@ export default function HomeScreen({ navigation }: Props) {
     return { household, profile: userHousehold };
   });
 
+  // console.log(JSON.stringify(allUserToHouseholds, null, 2));
+  console.log(JSON.stringify(profileAndHouseholds, null, 2));
+
+  useEffect(() => {
+    if (profileAndHouseholds.length === 1) {
+      dispatch(setCurrentHousehold(profileAndHouseholds[0].household));
+    }
+  }, [profileAndHouseholds, dispatch]);
+
   return (
-    <Surface style={container}>
-      <Surface
-        style={s.cardContainer}
-        elevation={0}
-      >
-        {userHouseholds.length > 0 ? (
-          profileAndHouseholds.map((profileAndHousehold) => (
-            <Pressable
-              key={profileAndHousehold.household.id}
-              style={s.pressableContainer}
-              onPress={() => {
-                navigation.navigate('HouseholdScreen');
-                dispatch(setCurrentHousehold(profileAndHousehold.household));
-              }}
+    <>
+      <View>
+        {profileAndHouseholds.length === 0 ? (
+          <Surface
+            style={s.surface}
+            elevation={4}
+          >
+            <Text>You are not a member of any households</Text>
+          </Surface>
+        ) : null}
+        {profileAndHouseholds.map((profileAndHousehold) => (
+          <View key={profileAndHousehold.household.id}>
+            <List.Accordion
+              title={profileAndHousehold.household.name}
+              description={
+                profileAndHousehold.household.id === usersLastHousehold?.id
+                  ? `${profileAndHousehold.household.code} (Current household)`
+                  : profileAndHousehold.household.code
+              }
+              left={(props) => (
+                <List.Icon
+                  {...props}
+                  icon="home"
+                />
+              )}
             >
-              <HouseholdCard
-                household={profileAndHousehold.household}
-                profile={profileAndHousehold.profile}
-              />
-            </Pressable>
-          ))
-        ) : (
-          <Text>No households found</Text>
-        )}
-      </Surface>
-      <Surface elevation={0}>
-        <Button
-          mode="elevated"
-          onPress={() => navigation.replace('CreateHousehold')}
-        >
-          Create Household
-        </Button>
-      </Surface>
-    </Surface>
+              {allUserToHouseholds.map(
+                (userToHousehold) =>
+                  userToHousehold.household_id ===
+                    profileAndHousehold.household.id && (
+                    <View key={userToHousehold.nickname}>
+                      <List.Item
+                        title={userToHousehold.nickname}
+                        description={
+                          userToHousehold.is_active ? '' : 'Not active'
+                        }
+                        left={() => {
+                          const avatar = allAvatars.find(
+                            (avatar) => avatar.id === userToHousehold.avatar_id,
+                          );
+                          return avatar ? <Text>{avatar.emoji}</Text> : null;
+                        }}
+                        right={(props) =>
+                          userToHousehold.is_admin ? (
+                            <List.Icon
+                              {...props}
+                              icon="crown"
+                            />
+                          ) : null
+                        }
+                      />
+                    </View>
+                  ),
+              )}
+              {profileAndHousehold.household.id !== usersLastHousehold?.id && (
+                <Button
+                  mode="outlined"
+                  onPress={() => {
+                    dispatch(
+                      setCurrentHousehold(profileAndHousehold.household),
+                    );
+                  }}
+                  style={{ marginTop: 10 }}
+                >
+                  {`Set ${profileAndHousehold.household.name} as current household`}
+                </Button>
+              )}
+            </List.Accordion>
+          </View>
+        ))}
+
+        <View style={s.buttonContainer}>
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate('JoinHousehold')}
+            style={s.button}
+          >
+            Join household
+          </Button>
+          <Button
+            mode="contained"
+            style={s.button}
+            onPress={() => navigation.navigate('CreateHousehold')}
+          >
+            Create household
+          </Button>
+        </View>
+      </View>
+    </>
   );
 }
 
@@ -95,5 +164,22 @@ const s = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  surface: {
+    marginTop: 20,
+    padding: 8,
+    // height: 80,
+    // width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
