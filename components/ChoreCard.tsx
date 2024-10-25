@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Button, Divider, Surface, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Divider,
+  Portal,
+  Surface,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import {
   selectDaysSinceLastCompleted,
   selectUsersWithAvatarsWhoCompletedChoreToday,
@@ -21,6 +29,9 @@ export default function ChoreCard({ chore }: Props) {
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
   const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const hideDialog = () => setVisible(false);
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -107,19 +118,42 @@ export default function ChoreCard({ chore }: Props) {
           </Button>
           <View style={s.buttonRow}>
             <Button
-              // mode="contained"
               icon="lead-pencil"
               style={s.button}
             >
               Edit
             </Button>
             <Button
-              // mode="contained"
               icon="delete"
               style={s.button}
+              onPress={() => setVisible(true)}
             >
               Delete
             </Button>
+            <Portal>
+              <Dialog
+                visible={visible}
+                onDismiss={hideDialog}
+              >
+                <Dialog.Icon
+                  icon="alert"
+                  color={colors.error}
+                />
+                <Dialog.Title style={{ textAlign: 'center' }}>
+                  Delete chore
+                </Dialog.Title>
+                <Dialog.Content>
+                  <Text variant="bodyMedium">
+                    Are you sure you want to delete the chore? All data
+                    pertaining to it will be lost forever.
+                  </Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                  <Button icon="archive">Archive</Button>
+                  <Button icon="delete">Confirm</Button>
+                </Dialog.Actions>
+              </Dialog>
+            </Portal>
           </View>
         </View>
       </CollapsibleContainer>
@@ -128,6 +162,10 @@ export default function ChoreCard({ chore }: Props) {
 }
 
 const s = StyleSheet.create({
+  modal: {
+    padding: 20,
+    backgroundColor: 'white',
+  },
   cardContainer: {
     marginBottom: 13,
     borderRadius: 10,
