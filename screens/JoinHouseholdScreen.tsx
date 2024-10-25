@@ -69,8 +69,8 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       const userToInsert: User_To_Household = {
         user_id: currentUser?.id,
         household_id: household.id,
-        avatar_id: 2,
-        nickname: 'gumman',
+        avatar_id: 2, // FIXME: Temporary hardcoded avatar
+        nickname: 'gumman', // FIXME: Temporary hardcoded name
         is_active: true,
         is_admin: false,
       };
