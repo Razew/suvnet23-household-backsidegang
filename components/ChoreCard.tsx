@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper';
 import {
   selectDaysSinceLastCompleted,
+  selectIsCurrentUserAdminForCurrentHousehold,
   selectUsersWithAvatarsWhoCompletedChoreToday,
 } from '../store/combinedSelectors';
 import { useAppSelector } from '../store/hooks';
@@ -22,14 +23,16 @@ type Props = {
 };
 
 export default function ChoreCard({ chore }: Props) {
+  const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { colors } = useTheme();
+
   const profiles = useAppSelector(
     selectUsersWithAvatarsWhoCompletedChoreToday(chore.id),
   );
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
-  const [expanded, setExpanded] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
 
   const hideDialog = () => setVisible(false);
 
@@ -112,49 +115,51 @@ export default function ChoreCard({ chore }: Props) {
           <Button
             mode="contained"
             icon="check"
-            style={[s.button, { alignSelf: 'center' }]}
+            style={s.button}
           >
             Complete
           </Button>
-          <View style={s.buttonRow}>
-            <Button
-              icon="lead-pencil"
-              style={s.button}
-            >
-              Edit
-            </Button>
-            <Button
-              icon="delete"
-              style={s.button}
-              onPress={() => setVisible(true)}
-            >
-              Delete
-            </Button>
-            <Portal>
-              <Dialog
-                visible={visible}
-                onDismiss={hideDialog}
+          {isAdmin && (
+            <View style={s.buttonRow}>
+              <Button
+                icon="lead-pencil"
+                style={s.button}
               >
-                <Dialog.Icon
-                  icon="alert"
-                  color={colors.error}
-                />
-                <Dialog.Title style={{ textAlign: 'center' }}>
-                  Delete chore
-                </Dialog.Title>
-                <Dialog.Content>
-                  <Text variant="bodyMedium">
-                    Are you sure you want to delete the chore? All data
-                    pertaining to it will be lost forever.
-                  </Text>
-                </Dialog.Content>
-                <Dialog.Actions>
-                  <Button icon="archive">Archive</Button>
-                  <Button icon="delete">Confirm</Button>
-                </Dialog.Actions>
-              </Dialog>
-            </Portal>
-          </View>
+                Edit
+              </Button>
+              <Button
+                icon="delete"
+                style={s.button}
+                onPress={() => setVisible(true)}
+              >
+                Delete
+              </Button>
+              <Portal>
+                <Dialog
+                  visible={visible}
+                  onDismiss={hideDialog}
+                >
+                  <Dialog.Icon
+                    icon="alert"
+                    color={colors.error}
+                  />
+                  <Dialog.Title style={{ textAlign: 'center' }}>
+                    Delete chore
+                  </Dialog.Title>
+                  <Dialog.Content>
+                    <Text variant="bodyMedium">
+                      Are you sure you want to delete the chore? All data
+                      pertaining to it will be lost forever.
+                    </Text>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button icon="archive">Archive</Button>
+                    <Button icon="delete">Confirm</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
+            </View>
+          )}
         </View>
       </CollapsibleContainer>
     </Surface>
@@ -162,10 +167,6 @@ export default function ChoreCard({ chore }: Props) {
 }
 
 const s = StyleSheet.create({
-  modal: {
-    padding: 20,
-    backgroundColor: 'white',
-  },
   cardContainer: {
     marginBottom: 13,
     borderRadius: 10,
@@ -200,17 +201,17 @@ const s = StyleSheet.create({
   },
   collapsedContainer: {
     padding: 15,
-    gap: 15,
+    gap: 25,
   },
   description: {
     opacity: 0.7,
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   button: {
-    width: '35%',
+    width: 125,
   },
   newLabelContainer: {
     justifyContent: 'center',
