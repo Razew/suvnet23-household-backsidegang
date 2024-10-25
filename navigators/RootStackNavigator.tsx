@@ -4,7 +4,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeStackNavigator from './HomeStackNavigator';
 import CreateChoreScreen from '../screens/CreateChoreScreen';
-import EditScreen from '../screens/EditScreen';
+import EditScreen from '../screens/EditChoreScreen';
 
 export type RootStackParamList = {
   Loading: undefined;

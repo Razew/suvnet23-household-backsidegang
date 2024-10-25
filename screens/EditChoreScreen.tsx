@@ -11,8 +11,9 @@ import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { useState } from 'react';
 import { Chore } from '../types/types';
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
+import { updateChore } from '../store/chores/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EditChore'>;
 
@@ -24,17 +25,16 @@ export default function CreateChoreScreen(
   { navigation }: Props,
   { chore }: EditProps,
 ) {
-  const [titleText, setTitleText] = useState(chore?.name ?? '');
-  const [descriptionText, setDescriptionText] = useState(
-    chore?.description ?? '',
-  );
+  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   if (chore === undefined) {
     throw new Error('Current Chore is undefined');
   }
+  const [titleText, setTitleText] = useState(chore.name);
+  const [descriptionText, setDescriptionText] = useState(chore?.description);
   const [frequency, setFrequency] = useState(chore.frequency);
   const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(chore.weight);
 
-  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
+  const dispatch = useAppDispatch();
 
   const handlePress = () => {
     try {
@@ -56,6 +56,8 @@ export default function CreateChoreScreen(
         voice_recording: '',
         image: '',
       };
+
+      dispatch(updateChore(editChore));
 
       console.log('Chore data:', editChore);
 
