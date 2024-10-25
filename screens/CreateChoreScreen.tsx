@@ -11,6 +11,8 @@ import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { useState } from 'react';
 import { NewChore } from '../types/types';
+import { useAppSelector } from '../store/hooks';
+import { selectCurrentHousehold } from '../store/households/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChore'>;
 
@@ -20,22 +22,19 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const [frequency, setFrequency] = useState(7);
   const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(1);
 
+  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
+
   const handlePress = () => {
     try {
       if (titleText.length < 2) {
         throw new Error('The title must contain at least 2 characters');
+      } else if (!usersLastHousehold) {
+        throw new Error('usersLastHousehold.id is undefined');
       }
-      // const choreData = {
-      //   title: titleText,
-      //   description: descriptionText,
-      //   frequency: frequency,
-      //   weight: weight,
-      // };
 
       const newChore: NewChore = {
         name: titleText,
-        // Household_id is Mocked data for now.
-        household_id: 1,
+        household_id: usersLastHousehold.id,
         description: descriptionText,
         frequency: frequency,
         weight: weight,
@@ -45,6 +44,7 @@ export default function CreateChoreScreen({ navigation }: Props) {
 
       navigation.goBack();
     } catch (error) {
+      alert('The title field must consist of at least two characters.');
       console.error('Error fetching households:', (error as Error).message);
     }
   };
