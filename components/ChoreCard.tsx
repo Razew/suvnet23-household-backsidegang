@@ -139,6 +139,7 @@ export default function ChoreCard({ chore }: Props) {
               <Button
                 icon="delete"
                 style={s.button}
+                textColor={colors.error}
                 onPress={() => setVisible(true)}
               >
                 Delete
