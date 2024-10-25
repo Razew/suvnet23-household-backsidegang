@@ -74,6 +74,30 @@ export const addChore = createAppAsyncThunk<Chore, NewChorePayload>(
   },
 );
 
+export const updateChore = createAppAsyncThunk<Chore, UpdateChorePayload>(
+  'chores/updateChore',
+  async (updateChoreData, { rejectWithValue }) => {
+    try {
+      const { data: updatedChore, error } = await supabase
+        .from('chore')
+        .update(updateChoreData)
+        .eq('id', updateChoreData.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return updatedChore;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while adding chore');
+    }
+  },
+);
+
 const choresSlice = createSlice({
   name: 'chores',
   initialState: initialState,
@@ -106,6 +130,26 @@ const choresSlice = createSlice({
       },
     );
     builder.addCase(addChore.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(updateChore.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      updateChore.fulfilled,
+      (state, action: PayloadAction<Chore>) => {
+        const targetChore = state.list.find(
+          (chore) => chore.id === action.payload.id,
+        );
+        if (targetChore) {
+          Object.assign(targetChore, action.payload);
+        }
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(updateChore.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
