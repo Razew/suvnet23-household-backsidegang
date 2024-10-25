@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS household (
     id SERIAL PRIMARY KEY,
     name VARCHAR(64) NOT NULL, 
     code VARCHAR(4) NOT NULL,
-    CONSTRAINT unique_name_code UNIQUE (name, code),  -- Ensure that the combination of name and code is unique
+    -- CONSTRAINT unique_name_code UNIQUE (name, code),  -- Ensure that the combination of name and code is unique
     CONSTRAINT code_length CHECK (LENGTH(code) = 4)  -- Ensure that the code is exactly 4 characters long
 );
 
