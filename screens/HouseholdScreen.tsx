@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-// import { container } from '../themes/styles';
-import { Text } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
