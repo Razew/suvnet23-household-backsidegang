@@ -5,17 +5,18 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
-import SelectAvatar from '../components/AvatarSelector';
+import AvatarSelector from '../components/AvatarSelector';
+import NicknameForm from '../components/NicknameForm';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setHouseholdBeingJoined } from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
   selectCurrentProfile,
 } from '../store/userToHousehold/slice';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
-import { setHouseholdBeingJoined } from '../store/households/slice';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'JoinHousehold'>;
 
@@ -150,7 +151,6 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
           </Button>
         </Card.Content>
       </Card>
-
       <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
@@ -163,20 +163,12 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       >
         {snackBarMessage}
       </Snackbar>
-      {/* 
-      
-      Arrive on screen
-      Only household form visible
-      Enter code
-      - check if code exists
-        if code exists
-          - display avatar selector
-        else
-          - snackbar error message: does not exist
-      
-      */}
-
-      {avatarSelectorVisible ? <SelectAvatar /> : null}
+      {avatarSelectorVisible ? (
+        <View>
+          <AvatarSelector />
+          <NicknameForm />
+        </View>
+      ) : null}
     </View>
   );
 }

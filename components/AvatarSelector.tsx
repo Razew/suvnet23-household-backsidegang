@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { selectAvatars } from '../store/avatars/slice';
-import { useAppSelector } from '../store/hooks';
+import { selectAvatars, setCurrentAvatar } from '../store/avatars/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
   selectHouseholdBeingJoined,
@@ -12,8 +11,6 @@ import {
   selectCurrentProfile,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
-import { User_To_Household } from '../types/types';
-import { supabase } from '../utils/supabase';
 
 // type Props = {
 //   avatar: Avatar;
@@ -30,7 +27,7 @@ inserting to user_to_household
 
 */
 
-export default function SelectAvatar() {
+export default function AvatarSelector() {
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
@@ -38,6 +35,7 @@ export default function SelectAvatar() {
   const currentHousehold = useAppSelector(selectCurrentHousehold); //UserToHousehold
   const currentUser = useAppSelector(selectLoggedInUser);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
+  const dispatch = useAppDispatch();
 
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === householdBeingJoined?.id)
@@ -47,40 +45,40 @@ export default function SelectAvatar() {
     (avatar) => !unavailableAvatarIds.includes(avatar.id),
   );
 
-  const insertUserToHousehold = async () => {
-    console.log('Entarrdd insertUserToHousehold function');
-    // const result: boolean = loggedinuser, currentHousehold;
-    console.log('logged in user:', currentUser?.username);
-    console.log('household being joined:', householdBeingJoined);
-    console.log('chosen avatar:', choosenAvatar);
-    if (currentUser && householdBeingJoined) {
-      const userToInsert: User_To_Household = {
-        user_id: currentUser.id,
-        household_id: householdBeingJoined.id,
-        avatar_id: choosenAvatar ?? 0,
-        nickname: 'AnnaAnus',
-        is_active: true,
-        is_admin: false,
-      };
-      console.log('userToInsert object:', userToInsert.nickname);
+  // const insertUserToHousehold = async () => {
+  //   console.log('Entarrdd insertUserToHousehold function');
+  //   // const result: boolean = loggedinuser, currentHousehold;
+  //   console.log('logged in user:', currentUser?.username);
+  //   console.log('household being joined:', householdBeingJoined);
+  //   console.log('chosen avatar:', choosenAvatar);
+  //   if (currentUser && householdBeingJoined) {
+  //     const userToInsert: User_To_Household = {
+  //       user_id: currentUser.id,
+  //       household_id: householdBeingJoined.id,
+  //       avatar_id: choosenAvatar ?? 0,
+  //       nickname: 'AnnaAnus',
+  //       is_active: true,
+  //       is_admin: false,
+  //     };
+  //     console.log('userToInsert object:', userToInsert.nickname);
 
-      try {
-        const { error } = await supabase
-          .from('user_to_household')
-          .insert(userToInsert);
-        console.log('Post insert');
+  //     try {
+  //       const { error } = await supabase
+  //         .from('user_to_household')
+  //         .insert(userToInsert);
+  //       console.log('Post insert');
 
-        if (error) {
-          console.error(error.message);
-          throw error;
-        }
-      } catch (error) {
-        console.log('CALL DA POLICE: ', (error as Error).message);
-      }
-    } else {
-      console.log('You are an idiot');
-    }
-  };
+  //       if (error) {
+  //         console.error(error.message);
+  //         throw error;
+  //       }
+  //     } catch (error) {
+  //       console.log('CALL DA POLICE: ', (error as Error).message);
+  //     }
+  //   } else {
+  //     console.log('You are an idiot');
+  //   }
+  // };
 
   return (
     <View
@@ -95,7 +93,11 @@ export default function SelectAvatar() {
         <TouchableOpacity
           key={avatar.id}
           // Onpress -> tell reducer to insert to user_to_household table
-          onPress={() => setChoosenAvatar(avatar.id)}
+          onPress={() => {
+            setChoosenAvatar(avatar.id);
+            dispatch(setCurrentAvatar(avatar));
+          }}
+          // onPress={() => setChoosenAvatar(avatar.id)}
           // onPress={() => insertUserToHousehold}
           style={{
             borderWidth: 1,
@@ -114,12 +116,12 @@ export default function SelectAvatar() {
         </TouchableOpacity>
       ))}
 
-      <Button
+      {/* <Button
         mode="contained"
-        onPress={insertUserToHousehold}
+        onPress={}
       >
         JOIN
-      </Button>
+      </Button> */}
     </View>
   );
 }
