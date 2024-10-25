@@ -6,12 +6,14 @@ import { RootState } from '../store';
 
 interface UsersToHouseholdsState {
   list: UserToHousehold[];
+  current?: UserToHousehold;
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: UsersToHouseholdsState = {
   list: [],
+  current: undefined,
   errorMessage: undefined,
   loading: 'idle',
 };
@@ -22,12 +24,12 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
 >(
   'usersToHouseholds/fetchUsersToHouseholds',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching users to households...');
+    // console.log('Fetching users to households...');
     try {
       const { data: fetchedUsersToHouseholds, error } = await supabase
         .from('user_to_household')
         .select('*');
-      console.log('Fetched users to households:', fetchedUsersToHouseholds);
+      // console.log('Fetched users to households:', fetchedUsersToHouseholds);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -50,7 +52,11 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
 const usersToHouseholdsSlice = createSlice({
   name: 'usersToHouseholds',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setCurrentProfile(state, action) {
+      state.current = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUsersToHouseholds.pending, (state) => {
       state.loading = 'pending';
@@ -75,3 +81,7 @@ export const usersToHouseholdsReducer = usersToHouseholdsSlice.reducer;
 // SELECTORS
 export const selectUsersToHouseholds = (state: RootState) =>
   state.usersToHouseholds.list;
+export const selectCurrentProfile = (state: RootState) =>
+  state.usersToHouseholds.current;
+
+export const { setCurrentProfile } = usersToHouseholdsSlice.actions;

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
 type ChoreWeightProps = {
-  setWeight: (value: number) => void;
+  setWeight: (value: 1 | 2 | 4 | 6 | 8) => void;
 };
 
 export default function ChoreWeight({ setWeight }: ChoreWeightProps) {
@@ -15,7 +15,7 @@ export default function ChoreWeight({ setWeight }: ChoreWeightProps) {
     setIsPressed(true);
   };
 
-  const handleNumberPress = (num: number, color: string) => {
+  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8, color: string) => {
     setIsPressed(false);
     setValue(num);
     setWeight(num);
@@ -27,7 +27,7 @@ export default function ChoreWeight({ setWeight }: ChoreWeightProps) {
       <TouchableOpacity onPress={handlePress}>
         {isPressed ? (
           <View style={s.numberRow}>
-            {[1, 2, 4, 6, 8].map((num, index) => {
+            {([1, 2, 4, 6, 8] as const).map((num, index) => {
               const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
               return (
                 <TouchableOpacity

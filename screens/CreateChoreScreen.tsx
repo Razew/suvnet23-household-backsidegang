@@ -10,6 +10,7 @@ import { TextInput, Text, Card, Icon } from 'react-native-paper';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { useState } from 'react';
+import { NewChore } from '../types/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChore'>;
 
@@ -17,25 +18,34 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const [titleText, setTitleText] = useState('');
   const [descriptionText, setDescriptionText] = useState('');
   const [frequency, setFrequency] = useState(7);
-  const [weight, setWeight] = useState(2);
+  const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(1);
 
   const handlePress = () => {
     try {
       if (titleText.length < 2) {
         throw new Error('The title must contain at least 2 characters');
       }
-      const choreData = {
-        title: titleText,
+      // const choreData = {
+      //   title: titleText,
+      //   description: descriptionText,
+      //   frequency: frequency,
+      //   weight: weight,
+      // };
+
+      const newChore: NewChore = {
+        name: titleText,
+        // Household_id is Mocked data for now.
+        household_id: 1,
         description: descriptionText,
         frequency: frequency,
         weight: weight,
       };
 
-      console.log('Chore data:', choreData);
+      console.log('Chore data:', newChore);
 
       navigation.goBack();
     } catch (error) {
-      alert(error.message);
+      console.error('Error fetching households:', (error as Error).message);
     }
   };
 
