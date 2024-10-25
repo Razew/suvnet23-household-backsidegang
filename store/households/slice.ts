@@ -8,6 +8,7 @@ import { RootState } from '../store';
 interface HouseholdState {
   list: Household[];
   current?: Household;
+  foundHousehold?: Household; // Alex & ANdrew are using the from JoinHousehold.tsx
   errorMessage?: string;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
@@ -15,6 +16,7 @@ interface HouseholdState {
 const initialState: HouseholdState = {
   list: [],
   current: undefined,
+  foundHousehold: undefined,
   loading: 'idle',
   errorMessage: undefined,
 };
@@ -100,6 +102,9 @@ const householdsSlice = createSlice({
     setCurrentHousehold(state, action) {
       state.current = action.payload;
     },
+    setHouseholdBeingJoined(state, action) {
+      state.foundHousehold = action.payload;
+    }
   },
 
   extraReducers: (builder) => {
@@ -128,5 +133,9 @@ export const householdsReducer = householdsSlice.reducer;
 export const selectHouseholds = (state: RootState) => state.households.list;
 export const selectCurrentHousehold = (state: RootState) =>
   state.households.current;
+export const selectHouseholdBeingJoined = (state: RootState) => state.households.list.find(
+  (h) => h.id === state.households.foundHousehold?.id,
+);
+//Alex and Andrews selector, dont get mad Marcus :( <3<3<3<3<3
 
-export const { setCurrentHousehold } = householdsSlice.actions;
+export const { setCurrentHousehold, setHouseholdBeingJoined } = householdsSlice.actions;
