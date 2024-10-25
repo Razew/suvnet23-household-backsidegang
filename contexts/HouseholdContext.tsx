@@ -4,6 +4,8 @@ import { Household } from '../types/types';
 type HouseholdContextType = {
   mostRecentHousehold: Household | null;
   setMostRecentHousehold: (household: Household) => void;
+  mostRecentHouseholdId: number | null;
+  setMostRecentHouseholdId: (id: number) => void;
 };
 
 const HouseholdContext = createContext<HouseholdContextType | undefined>(
@@ -13,10 +15,18 @@ const HouseholdContext = createContext<HouseholdContextType | undefined>(
 export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
   const [mostRecentHousehold, setMostRecentHousehold] =
     useState<Household | null>(null);
+  const [mostRecentHouseholdId, setMostRecentHouseholdId] = useState<
+    number | null
+  >(null);
 
   return (
     <HouseholdContext.Provider
-      value={{ mostRecentHousehold, setMostRecentHousehold }}
+      value={{
+        mostRecentHousehold,
+        setMostRecentHousehold,
+        mostRecentHouseholdId,
+        setMostRecentHouseholdId,
+      }}
     >
       {children}
     </HouseholdContext.Provider>

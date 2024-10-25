@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS household (
     id SERIAL PRIMARY KEY,
     name VARCHAR(64) NOT NULL, 
     code VARCHAR(4) NOT NULL,
-    CONSTRAINT unique_name_code UNIQUE (name, code)  -- Ensure that the combination of name and code is unique
+    -- CONSTRAINT unique_name_code UNIQUE (name, code),  -- Ensure that the combination of name and code is unique
     CONSTRAINT code_length CHECK (LENGTH(code) = 4)  -- Ensure that the code is exactly 4 characters long
 );
 
@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS chore_to_user (
     user_id INTEGER NOT NULL REFERENCES "user"(id), -- Many-to-Many: Links to User table (user assigned to a chore)
     chore_id INTEGER NOT NULL REFERENCES chore(id) ON DELETE CASCADE, -- Many-to-Many: Links to Chore table (tracks which chore). Cascade delete on chore_id when chore is deleted to maintain referential integrity
     is_completed BOOLEAN NOT NULL DEFAULT FALSE, -- Indicates if the chore is completed
-    due_date TIMESTAMP, -- The date the chore is due
-    done_date TIMESTAMP, -- The date the chore was completed
-    PRIMARY KEY (user_id, chore_id) -- Composite primary key to ensure uniqueness of the combination of user_id and chore_id
+    due_date DATE, -- The date the chore is due
+    done_date DATE, -- The date the chore was completed
+    -- PRIMARY KEY (user_id, chore_id) -- Composite primary key to ensure uniqueness of the combination of user_id and chore_id
 );
 
 CREATE TABLE IF NOT EXISTS user_to_household (
