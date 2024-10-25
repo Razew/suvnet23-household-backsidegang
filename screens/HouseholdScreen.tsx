@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-// import { container } from '../themes/styles';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
+  ScrollView,
   State,
 } from 'react-native-gesture-handler';
 import { Appbar, IconButton, Surface } from 'react-native-paper';
@@ -21,19 +21,37 @@ import {
 } from '../utils/statistics';
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
+import { selectCurrentHousehold } from '../store/households/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectLoggedInUser } from '../store/auth/slice';
+import {
+  selectCurrentProfile,
+  selectUsersToHouseholds,
+  setCurrentProfile,
+} from '../store/userToHousehold/slice';
 
 export default function HouseholdScreen() {
-  // const chores = useAppSelector(selectActiveChoresCurrentHousehold);
-  // const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //   dispatch(fetchChores());
-  // }, []);
-
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
+  if (!currentHousehold) {
+    console.log('No current household found');
+  }
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const currentUserToHousehold = allUserToHouseholds.find(
+    (userToHousehold) =>
+      userToHousehold.user_id === loggedInUser?.id &&
+      userToHousehold.household_id === currentHousehold?.id,
+  );
+  const dispatch = useAppDispatch();
+  if (!currentUserToHousehold) {
+    console.log('No current user to household found');
+  }
+  dispatch(setCurrentProfile(currentUserToHousehold));
+  const currentProfile = useAppSelector(selectCurrentProfile);
+  console.log(currentProfile);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
-
   const updateTitle = (page: number) => {
     if (page === 0) {
       setTitle('Today');
@@ -89,7 +107,11 @@ export default function HouseholdScreen() {
 
   const renderScreen = () => {
     if (currentPage === 0) {
-      return <DailyViewScreen />;
+      return (
+        <ScrollView>
+          <DailyViewScreen />
+        </ScrollView>
+      );
     } else if (currentPage === 1) {
       return <StatisticsScreen timespan={getThisWeekDates()} />;
     } else if (currentPage === 2) {
@@ -139,26 +161,8 @@ export default function HouseholdScreen() {
         </PanGestureHandler>
       </Surface>
     </GestureHandlerRootView>
-    //   <ScrollView contentContainerStyle={s.root}>
-    //   {chores.length === 0 ? (
-    //     <Text style={large}>Household screen</Text>
-    //   ) : (
-    //     chores.map((chore) => (
-    //       <ChoreCard
-    //         key={chore.id}
-    //         chore={chore}
-    //       />
-    //     ))
-    //   )}
-    // </ScrollView>
   );
 }
-
-// const s = StyleSheet.create({
-//   root: {
-//     padding: 15,
-//   },
-// });
 
 const styles = StyleSheet.create({
   header: {

@@ -18,14 +18,14 @@ Distinction: 32 (80%).
 
 ### Requirements List (4)
 
-- [ ] A logo, splash screen, and app icon should be designed and used. **Mandatory for G** \*
-- [ ] The application should be built with RN, Expo & TS. **Mandatory for G** \*
-- [ ] The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented. **Mandatory for G** \*
-- [ ] Information should be communicated to and from a server. (VG)
+- [x] A logo, splash screen, and app icon should be designed and used. **Mandatory for G** \*
+- [x] The application should be built with RN, Expo & TS. **Mandatory for G** \*
+- [x] The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented. **Mandatory for G** \*
+- [x] Information should be communicated to and from a server. (VG)
 
 ### Household (7)
 
-- [ ] A household should have a name and a generated (simple) code so others can join the household. The name should be editable. **Mandatory for G** \*
+- [ ] A household should have a name and a generated (simple) code so others can join the household.The name should be editable. **Mandatory for G** \*
 - [ ] All users in a household should be able to see who belongs to the household.
 - [ ] An owner of a household should be able to see requests to join the household.
 - [ ] An owner should be able to accept or decline requests.
@@ -35,7 +35,7 @@ Distinction: 32 (80%).
 
 ### Account (5)
 
-- [ ] A user should be able to register and log in. **Mandatory for G** \*
+- [x] A user should be able to register and log in. **Mandatory for G** \*
 - [ ] A user should be able to create a new household. **Mandatory for G** \*
 - [ ] A user should be able to join a household by entering the household's code. **Mandatory for G** \*
 - [ ] When a user has chosen to join a household, an owner of the household needs to approve the user first.
@@ -43,11 +43,11 @@ Distinction: 32 (80%).
 
 ### Profile (6)
 
-- [ ] A user should be able to enter their name. **Mandatory for G** \*
-- [ ] A user should be able to choose an avatar (emoji animal + color) from a predefined list. **Mandatory for G** \*
-- [ ] Chosen avatars should not be selectable by other users in the household. **Mandatory for G** \*
-- [ ] The avatar should be used in the app to show what the user has done. **Mandatory for G** \*
-- [ ] A user should be able to set the app's appearance (dark, light, auto).
+- [x] A user should be able to enter their name. **Mandatory for G** \*
+- [x] A user should be able to choose an avatar (emoji animal + color) from a predefined list. **Mandatory for G** \*
+- [x] Chosen avatars should not be selectable by other users in the household. **Mandatory for G** \*
+- [x] The avatar should be used in the app to show what the user has done. **Mandatory for G** \*
+- [x] A user should be able to set the app's appearance (dark, light, auto).
 - [ ] If a user belongs to two or more households, they should be able to switch between the different households.
 
 ### Chores (6)
@@ -83,10 +83,10 @@ If there are no statistics for one of the views, that view should not be display
 
 ## Submission
 
-- [ ] To pass this assignment, you MUST use GIT and GitHub.
+- [x] To pass this assignment, you MUST use GIT and GitHub.
 - [ ] The submission is done as usual via the learning platform. In your project folder, there should be (in addition to all code):
   - [ ] a README.md file. It should contain a title, a description of the project, information on how to build and run the project, and which requirements are met.
-  - [ ] Also, include a .git folder so I can find your public repo.
+  - [x] Also, include a .git folder so I can find your public repo.
 
 ## Presentation
 
@@ -99,24 +99,24 @@ At the end of the course, you will review each other's work and submit an indivi
 # Requirements for Pass
 
 - [ ] The mandatory requirements from the list above are met.
-- [ ] Git & GitHub have been used.
-- [ ] The project folder contains a README.md file (see above for more info).
+- [x] Git & GitHub have been used.
+- [x] The project folder contains a README.md file (see above for more info).
 - [ ] The assignment is submitted on time!
 - [ ] An oral presentation is conducted.
 
 # Requirements for Distinction:
 
 - [ ] All points for a pass are met.
-- [ ] You have used CI/CD during the project.
-- [ ] The application communicates data to and from a backend service (of your choice) using Redux & redux-thunk.
+- [x] You have used CI/CD during the project.
+- [x] The application communicates data to and from a backend service (of your choice) using Redux & redux-thunk.
 
 # G Requirements (20)
 
 ### General (3)
 
-- [ ] A logo, splash screen, and app icon should be designed and used. **Mandatory for G** \*
-- [ ] The application should be built with RN, Expo & TS. **Mandatory for G** \*
-- [ ] The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented. **Mandatory for G** \*
+- [x] A logo, splash screen, and app icon should be designed and used. **Mandatory for G** \*
+- [x] The application should be built with RN, Expo & TS. **Mandatory for G** \*
+- [x] The design of the app should be based on existing sketches; exceptions can be made but must be discussed with the product owner, approved, and documented. **Mandatory for G** \*
 
 ### Household (1)
 
@@ -130,9 +130,9 @@ At the end of the course, you will review each other's work and submit an indivi
 
 ### Profile (4)
 
-- [ ] A user should be able to enter their name. **Mandatory for G** \*
-- [ ] A user should be able to choose an avatar (emoji animal + color) from a predefined list. **Mandatory for G** \*
-- [ ] Chosen avatars should not be selectable by other users in the household. **Mandatory for G** \*
+- [x] A user should be able to enter their name. **Mandatory for G** \*
+- [x] A user should be able to choose an avatar (emoji animal + color) from a predefined list. **Mandatory for G** \*
+- [x] Chosen avatars should not be selectable by other users in the household. **Mandatory for G** \*
 - [ ] The avatar should be used in the app to show what the user has done. **Mandatory for G** \*
 
 ### Chores (3)
