@@ -5,11 +5,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
+import SelectAvatar from '../components/AvatarSelector';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setCurrentHousehold } from '../store/households/slice';
-import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
+import {
+  fetchUsersToHouseholds,
+  selectCurrentProfile,
+} from '../store/userToHousehold/slice';
 import { Household, User_To_Household } from '../types/types';
 import { supabase } from '../utils/supabase';
 
@@ -25,8 +29,10 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [visible, setVisible] = useState(false);
+  const [avatarSelectorVisible, setAvatarSelectorVisible] = useState(false);
   const currentUser = useAppSelector(selectLoggedInUser);
   const dispatch = useAppDispatch();
+  const loggedinuser = useAppSelector(selectCurrentProfile);
   // const { setMostRecentHousehold } = useHouseholdContext();
   const {
     control,
@@ -69,8 +75,8 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       const userToInsert: User_To_Household = {
         user_id: currentUser?.id,
         household_id: household.id,
-        avatar_id: 2, // FIXME: Temporary hardcoded avatar
-        nickname: 'gumman', // FIXME: Temporary hardcoded name
+        avatar_id: loggedinuser?.avatar_id ?? 0,
+        nickname: loggedinuser?.nickname ?? '',
         is_active: true,
         is_admin: false,
       };
@@ -104,8 +110,11 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       dispatch(setCurrentHousehold(household));
       dispatch(fetchUsersToHouseholds());
       setSnackBarMessage(`Joined household: ${household.name}`);
+      setAvatarSelectorVisible(true);
+
       // onToggleSnackBar();
-      navigation.replace('HouseholdScreen');
+      // navigation.replace('HouseholdScreen');
+      console.log('balls');
     } else {
       setSnackBarMessage('Household code not found');
       onToggleSnackBar();
@@ -152,6 +161,20 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       >
         {snackBarMessage}
       </Snackbar>
+      {/* 
+      
+      Arrive on screen
+      Only household form visible
+      Enter code
+      - check if code exists
+        if code exists
+          - display avatar selector
+        else
+          - snackbar error message: does not exist
+      
+      */}
+
+      {avatarSelectorVisible ? <SelectAvatar /> : null}
     </View>
   );
 }
