@@ -5,6 +5,14 @@ import { selectCompletedChoreToUsersByChoreId } from './choreToUser/slice';
 import { selectCurrentHousehold } from './households/slice';
 import { selectUsersToHouseholds } from './userToHousehold/slice';
 
+// USERS
+export const selectUsersCurrentHousehold = createSelector(
+  [selectUsersToHouseholds, selectCurrentHousehold],
+  (users, currentHousehold) => {
+    return users.filter((user) => user.household_id === currentHousehold?.id);
+  },
+);
+
 // CHORES
 export const selectChoresCurrentHousehold = createSelector(
   [selectChores, selectCurrentHousehold],
@@ -22,34 +30,7 @@ export const selectActiveChoresCurrentHousehold = createSelector(
   },
 );
 
-// export const selectActiveCompletedChoresCurrentHousehold = createSelector([selectActiveChoresCurrentHousehold,],
-//   (chores) => {
-//     return chores.filter((chore) => chore)
-//   }
-// )
-
 // CHORES TO USERS, AKA CHORE RECORDS
-// export const selectChoreRecords = (choreId: number) =>
-//   createSelector([selectChoresToUsers], (choreRecords) => {
-//     return choreRecords.filter(
-//       (choreRecord) => choreRecord.chore_id === choreId,
-//     );
-//   });
-
-// export const selectCompletedChoreRecords = (choreId: number) =>
-//   createSelector([selectChoreRecords(choreId)], (choreRecords) => {
-//     return choreRecords.filter((choreRecord) => choreRecord.is_completed);
-//   });
-
-// export const selectChoresCompletedToday = (choreId: number) =>
-//   createSelector([selectChoreRecords(choreId)], (choreRecords) => {
-//     const today = new Date().toDateString();
-//     return choreRecords.filter(
-//       (choreRecord) =>
-//         choreRecord.is_completed &&
-//         new Date(choreRecord.done_date).toDateString() === today,
-//     );
-//   });
 export const selectChoresCompletedToday = (choreId: number) =>
   createSelector(
     [selectCompletedChoreToUsersByChoreId(choreId)],
@@ -70,6 +51,37 @@ export const selectChoresCompletedToday = (choreId: number) =>
     },
   );
 
+export const selectSortedChoreRecordsByCompletionDate = (choreId: number) =>
+  createSelector(
+    [selectCompletedChoreToUsersByChoreId(choreId)],
+    (choreRecords) => {
+      return choreRecords.sort(
+        (a, b) =>
+          new Date(b.done_date).getTime() - new Date(a.done_date).getTime(),
+      );
+    },
+  );
+
+export const selectDaysSinceLastCompleted = (choreId: number) =>
+  createSelector(
+    [selectSortedChoreRecordsByCompletionDate(choreId)],
+    (choreRecords) => {
+      const validChoreRecords = choreRecords.filter(
+        (chore) =>
+          chore.done_date !== null && new Date(chore.done_date) <= new Date(),
+      );
+
+      if (validChoreRecords.length === 0) return null;
+
+      const lastCompletedDate = new Date(validChoreRecords[0].done_date);
+      const today = new Date();
+
+      const timeDiff = today.getTime() - lastCompletedDate.getTime();
+      const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+      return daysDiff;
+    },
+  );
+
 export const selectUsersWithAvatarsWhoCompletedChoreToday = (choreId: number) =>
   createSelector(
     [
@@ -82,74 +94,9 @@ export const selectUsersWithAvatarsWhoCompletedChoreToday = (choreId: number) =>
     },
   );
 
-export const selectSortedChoreRecordsByCompletionDate = (choreId: number) =>
-  createSelector(
-    [selectCompletedChoreToUsersByChoreId(choreId)],
-    (choreRecords) => {
-      return choreRecords.sort(
-        (a, b) =>
-          new Date(a.done_date).getTime() - new Date(b.done_date).getTime(),
-      );
-    },
-  );
-
-export const selectDaysSinceLastCompleted = (choreId: number) =>
-  createSelector(
-    [selectSortedChoreRecordsByCompletionDate(choreId)],
-    (choreRecords) => {
-      const validChoreRecords = choreRecords.filter(
-        (chore) => chore.done_date !== null,
-      );
-
-      if (validChoreRecords.length === 0) return null;
-
-      // const lastCompletedDate = new Date(validChoreRecords[0].done_date);
-      // console.log('lastCompletedDate: ', lastCompletedDate);
-
-      // const today = new Date();
-      // console.log('Today: ', today);
-
-      // const lastCompletedDateUTC = new Date(
-      //   Date.UTC(
-      //     lastCompletedDate.getUTCFullYear(),
-      //     lastCompletedDate.getUTCMonth(),
-      //     lastCompletedDate.getUTCDate(),
-      //   ),
-      // );
-
-      // const todayUTC = new Date(
-      //   Date.UTC(
-      //     today.getUTCFullYear(),
-      //     today.getUTCMonth(),
-      //     today.getUTCDate(),
-      //   ),
-      // );
-
-      // console.log('LAST COMPLETED UTC: ', lastCompletedDateUTC);
-      // console.log('TODAY UTC: ', todayUTC);
-
-      // const timeDiff = todayUTC.getTime() - lastCompletedDateUTC.getTime();
-      // console.log('Time difference: ', timeDiff);
-
-      // const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-
-      return 0;
-    },
-  );
-
-// export const selectChoreRecordsForUser = (userId: number) =>
-//   createSelector([selectChoresToUserById(userId), selectActiveChoresCurrentHousehold], ());
-
-// USERS
-export const selectUsersCurrentHousehold = createSelector(
-  [selectUsersToHouseholds, selectCurrentHousehold],
-  (users, currentHousehold) => {
-    return users.filter((user) => user.household_id === currentHousehold?.id);
-  },
-);
-
 // TODO: Select only active users for current household
 
+// AVATARS
 export const selectUsersWithAvatarsCurrentHousehold = createSelector(
   [selectUsersCurrentHousehold, selectAvatars],
   (users, avatars) => {
@@ -160,7 +107,6 @@ export const selectUsersWithAvatarsCurrentHousehold = createSelector(
   },
 );
 
-// AVATARS
 export const selectAvailableAvatarsCurrentHousehold = createSelector(
   [selectUsersCurrentHousehold, selectAvatars],
   (users, avatars) => {

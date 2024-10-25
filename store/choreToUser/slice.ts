@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Chore_To_User as ChoreToUser } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
@@ -82,9 +82,11 @@ export const selectChoresToUserByUserId =
     state.choresToUsers.list.filter(
       (choreRecord) => choreRecord.user_id === userId,
     );
-export const selectCompletedChoreToUsersByChoreId =
-  (choreId: number) => (state: RootState) =>
-    state.choresToUsers.list.filter(
+export const selectCompletedChoreToUsersByChoreId = (choreId: number) =>
+  createSelector([selectChoresToUsers], (choresToUsers) =>
+    choresToUsers.filter(
       (choreRecord) =>
         choreRecord.chore_id === choreId && choreRecord.is_completed,
-    );
+    ),
+  );
+// export const selectCompletedChoresToUsers;
