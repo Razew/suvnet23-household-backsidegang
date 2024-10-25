@@ -11,6 +11,8 @@ import { useAppDispatch } from '../store/hooks';
 import { fetchHouseholds } from '../store/households/slice';
 import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 import { container } from '../themes/styles';
+// import { useAppSelector } from '../store/hooks';
+// import { selectLoggedInUser } from '../store/Auth/slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Loading'>;
 

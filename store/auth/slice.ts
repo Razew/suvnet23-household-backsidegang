@@ -77,6 +77,7 @@ export const logoutUser = createAsyncThunk(
     }
   },
 );
+//TODO:  set current user to null, navigate to first scrren
 
 export const createUser = createAsyncThunk(
   'auth/createUser',
