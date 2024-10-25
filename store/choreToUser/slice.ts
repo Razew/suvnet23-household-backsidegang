@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Chore_To_User as ChoreToUser } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
@@ -19,12 +19,12 @@ const initialState: ChoresToUsersState = {
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
   async (_, { rejectWithValue }) => {
-    console.log('Fetching chores to users...');
+    // console.log('Fetching chores to users...');
     try {
       const { data: fetchedChoresToUsers, error } = await supabase
         .from('chore_to_user')
         .select('*');
-      console.log('Fetched Chores To Users:', fetchedChoresToUsers);
+      // console.log('Fetched Chores To Users:', fetchedChoresToUsers);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -82,9 +82,11 @@ export const selectChoresToUserByUserId =
     state.choresToUsers.list.filter(
       (choreRecord) => choreRecord.user_id === userId,
     );
-export const selectCompletedChoreToUsersByChoreId =
-  (choreId: number) => (state: RootState) =>
-    state.choresToUsers.list.filter(
+export const selectCompletedChoreToUsersByChoreId = (choreId: number) =>
+  createSelector([selectChoresToUsers], (choresToUsers) =>
+    choresToUsers.filter(
       (choreRecord) =>
         choreRecord.chore_id === choreId && choreRecord.is_completed,
-    );
+    ),
+  );
+// export const selectCompletedChoresToUsers;
