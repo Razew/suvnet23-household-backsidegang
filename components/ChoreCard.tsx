@@ -1,11 +1,13 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Surface, Text, useTheme } from 'react-native-paper';
+import { useState } from 'react';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Divider, Surface, Text, useTheme } from 'react-native-paper';
 import {
   selectDaysSinceLastCompleted,
   selectUsersWithAvatarsWhoCompletedChoreToday,
 } from '../store/combinedSelectors';
 import { useAppSelector } from '../store/hooks';
 import { Chore } from '../types/types';
+import { CollapsibleContainer } from './CollapsibleContainer';
 
 type Props = {
   chore: Chore;
@@ -18,6 +20,11 @@ export default function ChoreCard({ chore }: Props) {
   );
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
+  const [expanded, setExpanded] = useState(false);
+
+  const onItemPress = () => {
+    setExpanded(!expanded);
+  };
 
   const daysContainerStyle = {
     ...s.daysContainer,
@@ -50,55 +57,66 @@ export default function ChoreCard({ chore }: Props) {
   };
 
   return (
-    <Pressable style={s.pressableContainer}>
-      <Surface
-        style={s.cardSurface}
-        elevation={2}
-      >
-        <Text
-          style={s.choreTitle}
-          numberOfLines={1}
-        >
-          {chore.name}
-        </Text>
-        {daysSinceLastCompleted === 0 ? (
-          profiles.slice(0, 4).map((profile, index) => (
-            <Text
-              key={index}
-              style={s.avatar}
-            >
-              {profile.avatar?.emoji}
-            </Text>
-          ))
-        ) : daysSinceLastCompleted > 0 ? (
-          <View style={daysContainerStyle}>
-            <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
-          </View>
-        ) : (
-          <View style={ribbonContainerStyle}>
-            <View style={ribbonStyle}>
-              <Text style={ribbonTextStyle}>New</Text>
+    <Surface
+      style={s.cardContainer}
+      elevation={2}
+    >
+      <TouchableWithoutFeedback onPress={onItemPress}>
+        <View style={s.card}>
+          <Text
+            style={s.choreTitle}
+            numberOfLines={1}
+          >
+            {chore.name}
+          </Text>
+          {daysSinceLastCompleted === 0 ? (
+            profiles.slice(0, 4).map((profile, index) => (
+              <Text
+                key={index}
+                style={s.avatar}
+              >
+                {profile.avatar?.emoji}
+              </Text>
+            ))
+          ) : daysSinceLastCompleted > 0 ? (
+            <View style={daysContainerStyle}>
+              <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
             </View>
-          </View>
-        )}
-      </Surface>
-    </Pressable>
+          ) : (
+            <View style={ribbonContainerStyle}>
+              <View style={ribbonStyle}>
+                <Text style={ribbonTextStyle}>New</Text>
+              </View>
+            </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+      <CollapsibleContainer expanded={expanded}>
+        <Divider
+          horizontalInset={true}
+          bold
+        />
+        <View style={s.collapsedContainer}>
+          <Text style={s.description}>{chore.description}</Text>
+        </View>
+      </CollapsibleContainer>
+    </Surface>
   );
 }
 
 const s = StyleSheet.create({
-  pressableContainer: {
+  cardContainer: {
     marginBottom: 13,
-    height: 65,
+    borderRadius: 10,
   },
-  cardSurface: {
-    width: '100%',
-    alignItems: 'center',
+  card: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
+    minHeight: 65,
     padding: 15,
-    borderRadius: 10,
   },
   daysContainer: {
     width: 32,
@@ -119,6 +137,12 @@ const s = StyleSheet.create({
   avatar: {
     fontSize: 22,
   },
+  collapsedContainer: {
+    padding: 15,
+  },
+  description: {
+    opacity: 0.7,
+  },
   newLabelContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -126,7 +150,6 @@ const s = StyleSheet.create({
   newLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'green',
   },
   ribbonContainer: {
     position: 'absolute',
@@ -135,15 +158,15 @@ const s = StyleSheet.create({
     overflow: 'hidden',
     width: 75,
     height: 65,
-    borderBottomRightRadius: 10,
+    borderBottomRightRadius: 6,
   },
   ribbon: {
     position: 'absolute',
-    top: 10,
+    top: 8,
     right: -25,
-    transform: [{ rotate: '45deg' }],
+    transform: [{ rotate: '40deg' }],
     padding: 5,
-    width: 100,
+    width: 105,
   },
   ribbonText: {
     fontWeight: 'bold',
