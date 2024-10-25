@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { selectLoggedInUser } from './auth/slice';
 import { selectAvatars } from './avatars/slice';
 import { selectChores } from './chores/slice';
 import { selectCompletedChoreToUsersByChoreId } from './choreToUser/slice';
@@ -10,6 +11,15 @@ export const selectUsersCurrentHousehold = createSelector(
   [selectUsersToHouseholds, selectCurrentHousehold],
   (users, currentHousehold) => {
     return users.filter((user) => user.household_id === currentHousehold?.id);
+  },
+);
+
+export const selectIsCurrentUserAdminForCurrentHousehold = createSelector(
+  [selectUsersCurrentHousehold, selectLoggedInUser],
+  (users, currentUser) => {
+    return users.some(
+      (user) => user.user_id === currentUser?.id && user.is_admin,
+    );
   },
 );
 
