@@ -51,7 +51,10 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
-export const leaveHousehold = createAppAsyncThunk<DeleteUserFromHousehold, { householdId: number; userId: number }>(
+export const leaveHousehold = createAppAsyncThunk<
+  DeleteUserFromHousehold,
+  { householdId: number; userId: number }
+>(
   'households/leaveHousehold',
   async ({ householdId, userId }, { rejectWithValue }) => {
     try {
