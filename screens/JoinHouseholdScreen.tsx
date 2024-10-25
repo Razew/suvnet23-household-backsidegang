@@ -9,13 +9,13 @@ import SelectAvatar from '../components/AvatarSelector';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setCurrentHousehold } from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
   selectCurrentProfile,
 } from '../store/userToHousehold/slice';
-import { Household, User_To_Household } from '../types/types';
+import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
+import { setHouseholdBeingJoined } from '../store/households/slice';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'JoinHousehold'>;
 
@@ -34,6 +34,8 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const loggedinuser = useAppSelector(selectCurrentProfile);
   // const { setMostRecentHousehold } = useHouseholdContext();
+  console.log(`user: ${currentUser?.id}`);
+
   const {
     control,
     handleSubmit,
@@ -70,46 +72,46 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
     }
   };
 
-  const insertUserToHousehold = async (household: Household) => {
-    if (currentUser) {
-      const userToInsert: User_To_Household = {
-        user_id: currentUser?.id,
-        household_id: household.id,
-        avatar_id: loggedinuser?.avatar_id ?? 0,
-        nickname: loggedinuser?.nickname ?? '',
-        is_active: true,
-        is_admin: false,
-      };
+  // const insertUserToHousehold = async (household: Household) => {
+  //   if (currentUser) {
+  //     const userToInsert: User_To_Household = {
+  //       user_id: currentUser?.id,
+  //       household_id: household.id,
+  //       avatar_id: loggedinuser?.avatar_id ?? 0,
+  //       nickname: loggedinuser?.nickname ?? '',
+  //       is_active: true,
+  //       is_admin: false,
+  //     };
 
-      try {
-        const { error } = await supabase
-          .from('user_to_household')
-          .insert(userToInsert);
+  //     try {
+  //       const { error } = await supabase
+  //         .from('user_to_household')
+  //         .insert(userToInsert);
 
-        if (error) {
-          console.error(error.message);
-          throw error;
-        }
-      } catch (error) {
-        console.log('CALL DA POLICE: ', (error as Error).message);
-      }
-    }
-  };
+  //       if (error) {
+  //         console.error(error.message);
+  //         throw error;
+  //       }
+  //     } catch (error) {
+  //       console.log('CALL DA POLICE: ', (error as Error).message);
+  //     }
+  //   }
+  // };
 
   const onSubmit = async (data: FormData) => {
     const { householdCode } = data;
 
-    const household = existingHouseholds.find(
+    const householdBeingJoined = existingHouseholds.find(
       (h) => h.code.toLowerCase() === householdCode.toLowerCase(),
     );
-    console.log('Household is: ', household);
+    console.log('Household being joined:', householdBeingJoined);
 
-    if (household) {
+    if (householdBeingJoined) {
       // setMostRecentHousehold(household);
-      await insertUserToHousehold(household);
-      dispatch(setCurrentHousehold(household));
+      // await insertUserToHousehold(household);
+      dispatch(setHouseholdBeingJoined(householdBeingJoined));
       dispatch(fetchUsersToHouseholds());
-      setSnackBarMessage(`Joined household: ${household.name}`);
+      setSnackBarMessage(`Joined household: ${householdBeingJoined.name}`);
       setAvatarSelectorVisible(true);
 
       // onToggleSnackBar();
@@ -144,7 +146,7 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
             onPress={handleSubmit(onSubmit)}
             style={style.button}
           >
-            Join
+            SEARCH FOR HOUSEHOLD
           </Button>
         </Card.Content>
       </Card>
