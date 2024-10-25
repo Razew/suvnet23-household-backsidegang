@@ -12,6 +12,7 @@ import {
 } from '../store/userToHousehold/slice';
 import {
   fetchHouseholds,
+  leaveHousehold,
   selectCurrentHousehold,
   setCurrentHousehold,
   updateHouseholdName,
@@ -99,6 +100,24 @@ export default function ProfileScreen({ navigation }: Props) {
       );
     }
     return null;
+  };
+
+  const handleLeaveHousehold = async () => {
+    if (loggedInUser?.id === undefined) {
+      return console.log('No logged in user');
+    }
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
+    dispatch(
+      leaveHousehold({
+        householdId: currentHousehold.id,
+        userId: loggedInUser.id,
+      }),
+    );
+    setTimeout(() => {
+      navigation.replace('Home');
+    }, 2000);
   };
 
   const changeHouseholdName = async () => {
@@ -362,6 +381,7 @@ export default function ProfileScreen({ navigation }: Props) {
         <Button
           mode="contained"
           style={{ backgroundColor: 'red' }}
+          onPress={handleLeaveHousehold}
         >
           Leave Household
         </Button>
