@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-export default function ChoreWeight() {
+type ChoreWeightProps = {
+  setWeight: (value: 1 | 2 | 4 | 6 | 8) => void;
+};
+
+export default function ChoreWeight({ setWeight }: ChoreWeightProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [value, setValue] = useState(2);
   const [backgroundColor, setBackgroundColor] = useState('rgba(0, 0, 0, 0.2)');
@@ -11,9 +15,10 @@ export default function ChoreWeight() {
     setIsPressed(true);
   };
 
-  const handleNumberPress = (num: number, color: string) => {
+  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8, color: string) => {
     setIsPressed(false);
     setValue(num);
+    setWeight(num);
     setBackgroundColor(color);
   };
 
@@ -22,7 +27,7 @@ export default function ChoreWeight() {
       <TouchableOpacity onPress={handlePress}>
         {isPressed ? (
           <View style={s.numberRow}>
-            {[1, 2, 4, 6, 8].map((num, index) => {
+            {([1, 2, 4, 6, 8] as const).map((num, index) => {
               const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
               return (
                 <TouchableOpacity
@@ -65,7 +70,8 @@ const s = StyleSheet.create({
     flex: 1,
     height: 80,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    padding: 5,
     backgroundColor: 'white',
   },
   content: {
@@ -86,8 +92,8 @@ const s = StyleSheet.create({
     gap: 5,
   },
   circle: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',

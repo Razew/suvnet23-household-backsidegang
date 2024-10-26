@@ -19,8 +19,8 @@ const initialState: HouseholdState = {
   errorMessage: undefined,
 };
 
-export type HouseholdNameAndId = { name: string; id: number };
-export type DeleteUserFromHousehold = { householdId: number; userId: number };
+type HouseholdNameAndId = { name: string; id: number };
+type DeleteUserFromHousehold = { householdId: number; userId: number };
 // export type changeHouseholdName =  {name: string; id: string };
 
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
