@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Keyboard,
   StyleSheet,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
@@ -69,10 +69,10 @@ export default function CreateChoreScreen(
   };
 
   return (
-    <TouchableNativeFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={s.container}>
         <View>
-          <Text style={s.title}>Create a new chore</Text>
+          <Text style={s.title}>Edit chore</Text>
         </View>
         <Card style={s.inputCard}>
           <Card.Actions>
@@ -134,7 +134,7 @@ export default function CreateChoreScreen(
           </Card>
         </View>
       </View>
-    </TouchableNativeFeedback>
+    </TouchableWithoutFeedback>
   );
 }
 

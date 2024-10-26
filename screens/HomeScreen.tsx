@@ -119,6 +119,7 @@ export default function HomeScreen({ navigation }: Props) {
                     navigation.navigate('HouseholdScreen');
                   }}
                   style={{ marginTop: 10, width: '50%', alignSelf: 'center' }}
+                  contentStyle={{ marginRight: 10 }}
                 >
                   Go to household
                 </Button>
