@@ -89,6 +89,21 @@ const choresToUsersSlice = createSlice({
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
+    builder.addCase(addChoreToUser.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      addChoreToUser.fulfilled,
+      (state, action: PayloadAction<ChoreToUser>) => {
+        state.list.push(action.payload);
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(addChoreToUser.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
   },
 });
 
