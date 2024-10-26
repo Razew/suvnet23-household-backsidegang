@@ -46,7 +46,6 @@ export default function HomeStackNavigator() {
               style={s.tempExit}
               onPress={() => navigation.replace('Loading')}
             >
-              <Text style={s.tempText}>AdminPage</Text>
               <MaterialIcons
                 name="admin-panel-settings"
                 size={40}
