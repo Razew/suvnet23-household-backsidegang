@@ -23,6 +23,16 @@ export const selectIsCurrentUserAdminForCurrentHousehold = createSelector(
   },
 );
 
+// USERS TO HOUSEHOLDS
+export const selectCurrentUserHouseholds = createSelector(
+  [selectLoggedInUser, selectUsersToHouseholds],
+  (currentUser, usersToHouseholds) => {
+    return usersToHouseholds.filter(
+      (userToHousehold) => userToHousehold.user_id === currentUser?.id,
+    );
+  },
+);
+
 // CHORES
 export const selectChoresCurrentHousehold = createSelector(
   [selectChores, selectCurrentHousehold],
