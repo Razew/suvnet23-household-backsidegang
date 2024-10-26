@@ -64,7 +64,7 @@
 ### Account (2)
 
 - [ ] 8. When a user has chosen to join a household, an owner of the household needs to approve the user first.
-- [ ] 9. A user should be able to leave a household.
+- [x] 9. A user should be able to leave a household.
 
 ### Profile (2)
 

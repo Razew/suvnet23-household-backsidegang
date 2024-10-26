@@ -108,26 +108,3 @@ export default function LoginScreen({ navigation }: Props) {
     </>
   );
 }
-// function useEffect(arg0: () => void, arg1: never[]) {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchChores(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchAvatars(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchChoresToUsers(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchHouseholds(): any {
-//   throw new Error('Function not implemented.');
-// }
-
-// function fetchUsersToHouseholds(): any {
-//   throw new Error('Function not implemented.');
-// }

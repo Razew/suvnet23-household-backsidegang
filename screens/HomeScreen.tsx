@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, List, Surface, Text } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
@@ -14,6 +14,7 @@ import {
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import { container, large } from '../themes/styles';
 import { User_To_Household } from '../types/types';
+
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -53,7 +54,7 @@ export default function HomeScreen({ navigation }: Props) {
   }, [profileAndHouseholds, dispatch]);
 
   return (
-    <>
+    <ScrollView>
       <View>
         {profileAndHouseholds.length === 0 ? (
           <Surface
@@ -107,17 +108,34 @@ export default function HomeScreen({ navigation }: Props) {
                     </View>
                   ),
               )}
-              {profileAndHousehold.household.id !== usersLastHousehold?.id && (
+              {profileAndHousehold.household.id !== usersLastHousehold?.id ? (
                 <Button
-                  mode="outlined"
+                  icon={'warehouse'}
+                  mode="contained"
                   onPress={() => {
                     dispatch(
                       setCurrentHousehold(profileAndHousehold.household),
                     );
+                    navigation.navigate('HouseholdScreen');
                   }}
-                  style={{ marginTop: 10 }}
+                  style={{ marginTop: 10, width: '50%', alignSelf: 'center' }}
+                  contentStyle={{ marginRight: 10 }}
                 >
-                  {`Set ${profileAndHousehold.household.name} as current household`}
+                  Go to household
+                </Button>
+              ) : (
+                <Button
+                  icon={'warehouse'}
+                  style={{
+                    marginTop: 10,
+                    width: '50%',
+                    alignSelf: 'center',
+                  }}
+                  contentStyle={{ marginRight: 10 }}
+                  mode="contained"
+                  onPress={() => navigation.navigate('HouseholdScreen')}
+                >
+                  Go to household
                 </Button>
               )}
             </List.Accordion>
@@ -141,7 +159,7 @@ export default function HomeScreen({ navigation }: Props) {
           </Button>
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }
 
