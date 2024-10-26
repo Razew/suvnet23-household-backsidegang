@@ -10,6 +10,7 @@ export type ButtonGroupProps = {
   buttons: {
     label: string;
     icon: string;
+    mode?: 'text' | 'outlined' | 'contained' | 'contained-tonal' | 'elevated';
     target: keyof RootStackParamList | keyof HomeStackParamList;
     stack: 'RootStack' | 'HomeStack';
     params?: { chore: Chore } | undefined;
@@ -49,7 +50,7 @@ export default function ButtonGroup({ buttons }: ButtonGroupProps) {
         <Button
           key={index}
           icon={button.icon}
-          mode="elevated"
+          mode={button.mode || 'elevated'}
           elevation={5}
           style={s.button}
           onPress={() => handleNavigation(button)}
@@ -64,11 +65,11 @@ export default function ButtonGroup({ buttons }: ButtonGroupProps) {
 const s = StyleSheet.create({
   button: {
     flex: 1,
-    borderRadius: 6,
+    borderRadius: 0,
+    padding: 8,
   },
   buttonRow: {
     flexDirection: 'row',
-    padding: 10,
-    gap: 10,
+    gap: 1,
   },
 });
