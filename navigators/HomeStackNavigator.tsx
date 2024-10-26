@@ -30,17 +30,30 @@ export default function HomeStackNavigator() {
       initialRouteName="Home"
       screenOptions={({ navigation }) => ({
         headerRight: () => (
-          <Pressable
-            style={s.tempExit}
-            onPress={() => navigation.replace('Loading')}
-          >
-            <Text style={s.tempText}>LoadingScreen</Text>
-            <MaterialIcons
-              name="exit-to-app"
-              size={24}
-              color="#D32F2F"
-            />
-          </Pressable>
+          <>
+            <Pressable
+              style={s.tempExit}
+              onPress={() => navigation.replace('Loading')}
+            >
+              <Text style={s.tempText}>LoadingScreen</Text>
+              <MaterialIcons
+                name="exit-to-app"
+                size={24}
+                color="#D32F2F"
+              />
+            </Pressable>
+            <Pressable
+              style={s.tempExit}
+              onPress={() => navigation.replace('Loading')}
+            >
+              <Text style={s.tempText}>AdminPage</Text>
+              <MaterialIcons
+                name="admin-panel-settings"
+                size={40}
+                color="black"
+              />
+            </Pressable>
+          </>
         ),
         headerLeft: () => (
           <Pressable

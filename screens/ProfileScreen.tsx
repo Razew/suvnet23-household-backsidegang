@@ -17,12 +17,17 @@ import {
   setCurrentHousehold,
   updateHouseholdName,
 } from '../store/households/slice';
-import { selectLoggedInUser } from '../store/auth/slice';
+import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 
-type Props = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParamList, 'Profile'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
 
 export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
@@ -39,7 +44,7 @@ export default function ProfileScreen({ navigation }: Props) {
     dispatch(fetchAvatars());
     dispatch(fetchUsersToHouseholds());
     dispatch(fetchHouseholds());
-  }, []);
+  }, [dispatch]);
 
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === currentHousehold?.id)
@@ -101,7 +106,11 @@ export default function ProfileScreen({ navigation }: Props) {
     }
     return null;
   };
-
+  const handleSignOut = () => {
+    console.log('Sign out');
+    dispatch(resetState());
+    navigation.replace('Login');
+  };
   const handleLeaveHousehold = async () => {
     if (loggedInUser?.id === undefined) {
       return console.log('No logged in user');
@@ -376,7 +385,7 @@ export default function ProfileScreen({ navigation }: Props) {
           mode="contained"
           onPress={() => navigation.replace('Home')}
         >
-          Change household
+          Change Household
         </Button>
         <Button
           mode="contained"
@@ -386,6 +395,13 @@ export default function ProfileScreen({ navigation }: Props) {
           Leave Household
         </Button>
       </View>
+      <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
+      <Button
+        mode="contained"
+        onPress={handleSignOut}
+      >
+        Sign Out
+      </Button>
     </ScrollView>
   );
 }

@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (success) {
-      navigation.replace('HomeNavigator');
+      navigation.replace('HomeNavigator', { screen: 'Home' });
     }
   }, [success]);
 
