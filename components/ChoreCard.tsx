@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import {
@@ -9,6 +11,7 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { updateChore } from '../store/chores/slice';
 import { addChoreToUser } from '../store/choreToUser/slice';
@@ -29,6 +32,8 @@ export default function ChoreCard({ chore }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(false);
   const { colors } = useTheme();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
   const profiles = useAppSelector(
@@ -64,7 +69,7 @@ export default function ChoreCard({ chore }: Props) {
       );
       setExpanded(false);
     } else {
-      console.log(
+      console.warn(
         "Could not dispatch addChoreToUser as there's no current user",
       );
     }
@@ -155,6 +160,7 @@ export default function ChoreCard({ chore }: Props) {
               <Button
                 icon="lead-pencil"
                 style={s.button}
+                onPress={() => navigation.navigate('EditChore', { chore })}
               >
                 Edit
               </Button>

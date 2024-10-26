@@ -1,10 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CreateChoreScreen from '../screens/CreateChoreScreen';
+import EditScreen from '../screens/EditChoreScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import { Chore } from '../types/types';
 import HomeStackNavigator from './HomeStackNavigator';
-import CreateChoreScreen from '../screens/CreateChoreScreen';
-import EditScreen from '../screens/EditChoreScreen';
 
 export type RootStackParamList = {
   Loading: undefined;
@@ -12,7 +13,7 @@ export type RootStackParamList = {
   Register: undefined;
   HomeNavigator: undefined;
   CreateChore: undefined;
-  EditChore: undefined;
+  EditChore: { chore: Chore };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();

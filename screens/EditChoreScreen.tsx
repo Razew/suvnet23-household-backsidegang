@@ -1,34 +1,29 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { TextInput, Text, Card, Icon } from 'react-native-paper';
+import { Card, Icon, Text, TextInput } from 'react-native-paper';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
-import { useState } from 'react';
-import { Chore } from '../types/types';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { updateChore } from '../store/chores/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
-import { updateChore } from '../store/chores/slice';
+import { Chore } from '../types/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EditChore'>;
 
-type EditProps = {
-  chore: Chore;
-};
-
-export default function CreateChoreScreen(
-  { navigation }: Props,
-  { chore }: EditProps,
-) {
+export default function CreateChoreScreen({ navigation, route }: Props) {
+  const chore = route.params.chore;
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   if (chore === undefined) {
     throw new Error('Current Chore is undefined');
   }
+  console.log('Chore to edit: ', chore);
   const [titleText, setTitleText] = useState(chore.name);
   const [descriptionText, setDescriptionText] = useState(chore?.description);
   const [frequency, setFrequency] = useState(chore.frequency);
