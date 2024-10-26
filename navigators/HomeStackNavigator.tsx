@@ -8,6 +8,9 @@ import HouseholdScreen from '../screens/HouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
+import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
+import { selectLoggedInUser } from '../store/auth/slice';
+import { color } from '@rneui/themed/dist/config';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
@@ -24,6 +27,13 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 // navigating back easier during development
 export default function HomeStackNavigator() {
   const currentHousehold = useAppSelector(selectCurrentHousehold);
+  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+
+  const isAdminOnHousehold = allUsersToHouseholds
+    .filter((user) => user.user_id === loggedInUser?.id)
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => user.is_admin === true);
 
   return (
     <HomeStack.Navigator
@@ -42,16 +52,18 @@ export default function HomeStackNavigator() {
                 color="#D32F2F"
               />
             </Pressable>
-            <Pressable
-              style={s.tempExit}
-              onPress={() => navigation.replace('Loading')}
-            >
-              <MaterialIcons
-                name="admin-panel-settings"
-                size={40}
-                color="black"
-              />
-            </Pressable>
+            {isAdminOnHousehold && (
+              <Pressable
+                style={s.tempExit}
+                onPress={() => navigation.replace('Loading')}
+              >
+                <MaterialIcons
+                  name="admin-panel-settings"
+                  size={40}
+                  color="black"
+                />
+              </Pressable>
+            )}
           </>
         ),
         headerLeft: () => (
