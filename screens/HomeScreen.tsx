@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, List, Surface, Text, useTheme } from 'react-native-paper';
+import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectAvatars } from '../store/avatars/slice';
@@ -52,6 +53,21 @@ export default function HomeScreen({ navigation }: Props) {
     }
     navigation.navigate('HouseholdScreen');
   };
+
+  const buttons: ButtonGroupProps['buttons'] = [
+    {
+      label: 'Join household',
+      icon: 'home-search',
+      target: 'JoinHousehold',
+      stack: 'HomeStack',
+    },
+    {
+      label: 'Create household',
+      icon: 'home-plus',
+      target: 'CreateHousehold',
+      stack: 'HomeStack',
+    },
+  ];
 
   return (
     <View style={s.container}>
@@ -125,10 +141,12 @@ export default function HomeScreen({ navigation }: Props) {
           ))}
         </View>
       </ScrollView>
-      <View style={[s.buttonRow, { backgroundColor: colors.elevation.level2 }]}>
+      <ButtonGroup buttons={buttons} />
+      {/* <View style={[s.buttonRow, { backgroundColor: colors.elevation.level2 }]}>
         <Button
           icon="home-search"
           mode="elevated"
+          elevation={5}
           style={s.button}
           onPress={() => navigation.navigate('JoinHousehold')}
         >
@@ -143,7 +161,7 @@ export default function HomeScreen({ navigation }: Props) {
         >
           Create household
         </Button>
-      </View>
+      </View> */}
     </View>
   );
 }
