@@ -47,7 +47,9 @@ export default function HomeScreen({ navigation }: Props) {
   // console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
   const goToHousehold = (household: Household) => {
-    dispatch(setCurrentHousehold(household));
+    if (household.id !== usersLastHousehold?.id) {
+      dispatch(setCurrentHousehold(household));
+    }
     navigation.navigate('HouseholdScreen');
   };
 
