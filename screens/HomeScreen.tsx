@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, List, Surface, Text, useTheme } from 'react-native-paper';
+import { Button, List, Surface, Text } from 'react-native-paper';
 import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
@@ -18,7 +18,6 @@ import { Household, User_To_Household } from '../types/types';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
-  const { colors } = useTheme();
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (!loggedInUser) {
@@ -47,7 +46,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   // console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
-  const goToHousehold = (household: Household) => {
+  const enterHousehold = (household: Household) => {
     if (household.id !== usersLastHousehold?.id) {
       dispatch(setCurrentHousehold(household));
     }
@@ -130,7 +129,9 @@ export default function HomeScreen({ navigation }: Props) {
                   <Button
                     icon="home-import-outline"
                     mode="contained"
-                    onPress={() => goToHousehold(profileAndHousehold.household)}
+                    onPress={() =>
+                      enterHousehold(profileAndHousehold.household)
+                    }
                     style={s.enterHouseholdButton}
                   >
                     Enter
@@ -142,26 +143,6 @@ export default function HomeScreen({ navigation }: Props) {
         </View>
       </ScrollView>
       <ButtonGroup buttons={buttons} />
-      {/* <View style={[s.buttonRow, { backgroundColor: colors.elevation.level2 }]}>
-        <Button
-          icon="home-search"
-          mode="elevated"
-          elevation={5}
-          style={s.button}
-          onPress={() => navigation.navigate('JoinHousehold')}
-        >
-          Join household
-        </Button>
-        <Button
-          icon="home-plus"
-          mode="elevated"
-          elevation={5}
-          style={s.button}
-          onPress={() => navigation.navigate('CreateHousehold')}
-        >
-          Create household
-        </Button>
-      </View> */}
     </View>
   );
 }
@@ -169,7 +150,6 @@ export default function HomeScreen({ navigation }: Props) {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   tempHouseholdContainer: {
     marginBottom: 20,
@@ -189,15 +169,6 @@ const s = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  button: {
-    flex: 1,
-    borderRadius: 6,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    padding: 10,
-    gap: 10,
   },
   enterHouseholdButton: {
     marginVertical: 10,
