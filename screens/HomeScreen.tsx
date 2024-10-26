@@ -127,8 +127,8 @@ export default function HomeScreen({ navigation }: Props) {
                 )}
                 <View>
                   <Button
-                    icon="home-import-outline"
-                    mode="contained"
+                    icon="login"
+                    mode="elevated"
                     onPress={() =>
                       enterHousehold(profileAndHousehold.household)
                     }
