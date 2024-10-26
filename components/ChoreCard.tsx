@@ -9,7 +9,9 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { updateChore } from '../store/chores/slice';
+import { addChoreToUser } from '../store/choreToUser/slice';
 import {
   selectDaysSinceLastCompleted,
   selectIsCurrentUserAdminForCurrentHousehold,
@@ -35,6 +37,7 @@ export default function ChoreCard({ chore }: Props) {
   const daysSinceLastCompleted =
     useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
   const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
+  const currentUser = useAppSelector(selectLoggedInUser);
 
   const hideDialog = () => setVisible(false);
 
@@ -47,6 +50,24 @@ export default function ChoreCard({ chore }: Props) {
     dispatch(
       updateChore({ id: chore.id, is_active: false, is_archived: true }),
     );
+  };
+
+  const onCompletedPress = () => {
+    if (currentUser) {
+      dispatch(
+        addChoreToUser({
+          user_id: currentUser?.id,
+          chore_id: chore.id,
+          is_completed: true,
+          done_date: new Date(),
+        }),
+      );
+      setExpanded(false);
+    } else {
+      console.log(
+        "Could not dispatch addChoreToUser as there's no current user",
+      );
+    }
   };
 
   const daysContainerStyle = {
@@ -125,6 +146,7 @@ export default function ChoreCard({ chore }: Props) {
             mode="contained"
             icon="check"
             style={s.button}
+            onPress={onCompletedPress}
           >
             Complete
           </Button>
