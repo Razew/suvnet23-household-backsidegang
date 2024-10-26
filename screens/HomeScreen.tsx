@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, List, Surface, Text } from 'react-native-paper';
+import { Button, List, Surface, Text, useTheme } from 'react-native-paper';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectAvatars } from '../store/avatars/slice';
@@ -18,12 +17,15 @@ import { User_To_Household } from '../types/types';
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
+  const { colors } = useTheme();
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (!loggedInUser) {
-    <View style={container}>
-      <Text style={large}>Not logged in</Text>
-    </View>;
+    return (
+      <View style={container}>
+        <Text style={large}>Not logged in</Text>
+      </View>
+    );
   }
 
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
@@ -44,126 +46,124 @@ export default function HomeScreen({ navigation }: Props) {
     return { household, profile: userHousehold };
   });
 
-  // console.log(JSON.stringify(allUserToHouseholds, null, 2));
-  console.log(JSON.stringify(profileAndHouseholds, null, 2));
+  // console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
-  useEffect(() => {
-    if (profileAndHouseholds.length === 1) {
-      dispatch(setCurrentHousehold(profileAndHouseholds[0].household));
-    }
-  }, [profileAndHouseholds, dispatch]);
+  // useEffect(() => {
+  //   if (profileAndHouseholds.length === 1) {
+  //     dispatch(setCurrentHousehold(profileAndHouseholds[0].household));
+  //   }
+  // }, [profileAndHouseholds, dispatch]);
+
+  // const goToHousehold = () => {
+  //   dispatch(setCurrentHousehold());
+  //   navigation.navigate('HouseholdScreen');
+  // };
 
   return (
-    <ScrollView>
-      <View>
-        {profileAndHouseholds.length === 0 ? (
-          <Surface
-            style={s.surface}
-            elevation={4}
-          >
-            <Text>You are not a member of any households</Text>
-          </Surface>
-        ) : null}
-        {profileAndHouseholds.map((profileAndHousehold) => (
-          <View key={profileAndHousehold.household.id}>
-            <List.Accordion
-              title={profileAndHousehold.household.name}
-              description={
-                profileAndHousehold.household.id === usersLastHousehold?.id
-                  ? `${profileAndHousehold.household.code} (Current household)`
-                  : profileAndHousehold.household.code
-              }
-              left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon="home"
-                />
-              )}
+    <View style={s.container}>
+      <ScrollView>
+        <View>
+          {profileAndHouseholds.length === 0 ? (
+            <Surface
+              style={s.surface}
+              elevation={4}
             >
-              {allUserToHouseholds.map(
-                (userToHousehold) =>
-                  userToHousehold.household_id ===
-                    profileAndHousehold.household.id && (
-                    <View key={userToHousehold.nickname}>
-                      <List.Item
-                        title={userToHousehold.nickname}
-                        description={
-                          userToHousehold.is_active ? '' : 'Not active'
-                        }
-                        left={() => {
-                          const avatar = allAvatars.find(
-                            (avatar) => avatar.id === userToHousehold.avatar_id,
-                          );
-                          return avatar ? <Text>{avatar.emoji}</Text> : null;
-                        }}
-                        right={(props) =>
-                          userToHousehold.is_admin ? (
-                            <List.Icon
-                              {...props}
-                              icon="crown"
-                            />
-                          ) : null
-                        }
-                      />
-                    </View>
-                  ),
-              )}
-              {profileAndHousehold.household.id !== usersLastHousehold?.id ? (
-                <Button
-                  icon={'warehouse'}
-                  mode="contained"
-                  onPress={() => {
-                    dispatch(
-                      setCurrentHousehold(profileAndHousehold.household),
-                    );
-                    navigation.navigate('HouseholdScreen');
-                  }}
-                  style={{ marginTop: 10, width: '50%', alignSelf: 'center' }}
-                  contentStyle={{ marginRight: 10 }}
-                >
-                  Go to household
-                </Button>
-              ) : (
-                <Button
-                  icon={'warehouse'}
-                  style={{
-                    marginTop: 10,
-                    width: '50%',
-                    alignSelf: 'center',
-                  }}
-                  contentStyle={{ marginRight: 10 }}
-                  mode="contained"
-                  onPress={() => navigation.navigate('HouseholdScreen')}
-                >
-                  Go to household
-                </Button>
-              )}
-            </List.Accordion>
-          </View>
-        ))}
-
-        <View style={s.buttonContainer}>
-          <Button
-            mode="contained"
-            onPress={() => navigation.navigate('JoinHousehold')}
-            style={s.button}
-          >
-            Join household
-          </Button>
-          <Button
-            mode="contained"
-            style={s.button}
-            onPress={() => navigation.navigate('CreateHousehold')}
-          >
-            Create household
-          </Button>
+              <Text>You are not a member of any households</Text>
+            </Surface>
+          ) : null}
+          {profileAndHouseholds.map((profileAndHousehold) => (
+            <View key={profileAndHousehold.household.id}>
+              <List.Accordion
+                title={profileAndHousehold.household.name}
+                description={
+                  profileAndHousehold.household.id === usersLastHousehold?.id
+                    ? `${profileAndHousehold.household.code} (Current household)`
+                    : profileAndHousehold.household.code
+                }
+                left={(props) => (
+                  <List.Icon
+                    {...props}
+                    icon="home"
+                  />
+                )}
+              >
+                {allUserToHouseholds.map(
+                  (userToHousehold) =>
+                    userToHousehold.household_id ===
+                      profileAndHousehold.household.id && (
+                      <View key={userToHousehold.nickname}>
+                        <List.Item
+                          title={userToHousehold.nickname}
+                          description={
+                            userToHousehold.is_active ? '' : 'Not active'
+                          }
+                          left={() => {
+                            const avatar = allAvatars.find(
+                              (avatar) =>
+                                avatar.id === userToHousehold.avatar_id,
+                            );
+                            return avatar ? <Text>{avatar.emoji}</Text> : null;
+                          }}
+                          right={(props) =>
+                            userToHousehold.is_admin ? (
+                              <List.Icon
+                                {...props}
+                                icon="crown"
+                              />
+                            ) : null
+                          }
+                        />
+                      </View>
+                    ),
+                )}
+                <View style={{ alignSelf: 'center' }}>
+                  <Button
+                    icon="home-import-outline"
+                    mode="contained"
+                    onPress={() => {
+                      dispatch(
+                        setCurrentHousehold(profileAndHousehold.household),
+                      );
+                      navigation.navigate('HouseholdScreen');
+                    }}
+                    style={s.enterHouseholdButton}
+                  >
+                    Go to household
+                  </Button>
+                </View>
+              </List.Accordion>
+            </View>
+          ))}
         </View>
+      </ScrollView>
+      <View style={[s.buttonRow, { backgroundColor: colors.elevation.level2 }]}>
+        <Button
+          icon="home-search"
+          mode="elevated"
+          style={s.button}
+          onPress={() => navigation.navigate('JoinHousehold')}
+        >
+          Join household
+        </Button>
+        <Button
+          icon="home-plus"
+          mode="elevated"
+          elevation={5}
+          style={s.button}
+          onPress={() => navigation.navigate('CreateHousehold')}
+        >
+          Create household
+        </Button>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
   tempHouseholdContainer: {
     marginBottom: 20,
   },
@@ -185,18 +185,21 @@ const s = StyleSheet.create({
   },
   button: {
     flex: 1,
-    marginHorizontal: 10,
+    borderRadius: 6,
   },
-  buttonContainer: {
+  buttonRow: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
-    marginTop: 20,
+    padding: 10,
+    gap: 10,
+  },
+  enterHouseholdButton: {
+    marginVertical: 10,
+    width: 200,
+    // flex: 1,
   },
   surface: {
     marginTop: 20,
     padding: 8,
-    // height: 80,
-    // width: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
