@@ -19,7 +19,6 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@reduxjs/toolkit": "^2.2.8",
-    "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.45.4",
     "dotenv": "^16.4.5",
     "expo": "~51.0.28",
