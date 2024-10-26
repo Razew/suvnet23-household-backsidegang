@@ -38,9 +38,8 @@ IF NOT EXISTS "user"
     id SERIAL PRIMARY KEY,
     user_name VARCHAR
 (64) NOT NULL UNIQUE,
-    hashed_password VARCHAR
-(64) NOT NULL
-);
+        hashed_password VARCHAR(64) NOT NULL CHECK (LENGTH(hashed_password) > 2)
+
 
 CREATE TABLE
 IF NOT EXISTS avatar
