@@ -12,7 +12,7 @@ import {
 } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import { container, large } from '../themes/styles';
-import { User_To_Household } from '../types/types';
+import { Household, User_To_Household } from '../types/types';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
@@ -33,8 +33,6 @@ export default function HomeScreen({ navigation }: Props) {
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
   const allAvatars = useAppSelector(selectAvatars);
 
-  console.log(allAvatars);
-
   const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
   );
@@ -48,16 +46,10 @@ export default function HomeScreen({ navigation }: Props) {
 
   // console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
-  // useEffect(() => {
-  //   if (profileAndHouseholds.length === 1) {
-  //     dispatch(setCurrentHousehold(profileAndHouseholds[0].household));
-  //   }
-  // }, [profileAndHouseholds, dispatch]);
-
-  // const goToHousehold = () => {
-  //   dispatch(setCurrentHousehold());
-  //   navigation.navigate('HouseholdScreen');
-  // };
+  const goToHousehold = (household: Household) => {
+    dispatch(setCurrentHousehold(household));
+    navigation.navigate('HouseholdScreen');
+  };
 
   return (
     <View style={s.container}>
@@ -116,19 +108,14 @@ export default function HomeScreen({ navigation }: Props) {
                       </View>
                     ),
                 )}
-                <View style={{ alignSelf: 'center' }}>
+                <View>
                   <Button
                     icon="home-import-outline"
                     mode="contained"
-                    onPress={() => {
-                      dispatch(
-                        setCurrentHousehold(profileAndHousehold.household),
-                      );
-                      navigation.navigate('HouseholdScreen');
-                    }}
+                    onPress={() => goToHousehold(profileAndHousehold.household)}
                     style={s.enterHouseholdButton}
                   >
-                    Go to household
+                    Enter
                   </Button>
                 </View>
               </List.Accordion>
@@ -194,8 +181,7 @@ const s = StyleSheet.create({
   },
   enterHouseholdButton: {
     marginVertical: 10,
-    width: 200,
-    // flex: 1,
+    width: 100,
   },
   surface: {
     marginTop: 20,
