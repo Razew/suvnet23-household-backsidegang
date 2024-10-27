@@ -21,9 +21,10 @@ import { CollapsibleContainer } from './CollapsibleContainer';
 
 type Props = {
   chore: Chore;
+  onComplete: () => void;
 };
 
-export default function ChoreCard({ chore }: Props) {
+export default function ChoreCard({ chore, onComplete }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(false);
   const { colors } = useTheme();
@@ -64,6 +65,7 @@ export default function ChoreCard({ chore }: Props) {
         }),
       );
       setExpanded(false);
+      onComplete();
     } else {
       console.warn(
         "Could not dispatch addChoreToUser as there's no current user",
