@@ -16,7 +16,7 @@ const initialState: ChoresToUsersState = {
   loading: 'idle',
 };
 
-// type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
+type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
 
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
@@ -46,7 +46,7 @@ export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   },
 );
 
-export const addChoreToUser = createAppAsyncThunk<ChoreToUser, ChoreToUser>(
+export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
   'choresToUsers/addChoreToUser',
   async (newChoreToUser, { rejectWithValue }) => {
     try {
