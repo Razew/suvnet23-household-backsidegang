@@ -9,22 +9,22 @@ import {
 } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { selectAvatars, fetchAvatars } from '../store/avatars/slice';
+import { fetchAvatars } from '../store/avatars/slice';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import {
   selectCurrentHousehold,
   fetchHouseholds,
   setCurrentHousehold,
   updateHouseholdName,
-  selectHouseholds,
 } from '../store/households/slice';
 import {
-  selectUsersToHouseholds,
   fetchUsersToHouseholds,
+  kickUserFromHousehold,
+  toggleAdmin,
+  togglePauseUser,
 } from '../store/userToHousehold/slice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { User_To_Household } from '../types/types';
 import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelectors';
 
 type Props = {
@@ -42,10 +42,8 @@ export default function AdminScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchAvatars());
     dispatch(fetchUsersToHouseholds());
-    dispatch(fetchHouseholds());
-  }, [dispatch]);
+  }, []);
 
   const changeHouseholdName = async () => {
     if (loggedInUser?.id === undefined) {
@@ -76,12 +74,30 @@ export default function AdminScreen({ navigation }: Props) {
     // }, 2000);
   };
 
-  const kickUser = (userId: number) => {
-    console.log('Kick user:', userId);
+  const handleKickUser = (userId: number) => {
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
+    dispatch(
+      kickUserFromHousehold({ userId, householdId: currentHousehold.id }),
+    );
+    dispatch(fetchUsersToHouseholds());
   };
 
-  const pauseUser = (userId: number) => {
-    console.log('Pause user:', userId);
+  const handlePauseToggle = (userId: number) => {
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
+    dispatch(togglePauseUser({ userId, householdId: currentHousehold.id }));
+    dispatch(fetchUsersToHouseholds());
+  };
+
+  const handleToggleAdmin = (userId: number) => {
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
+    dispatch(toggleAdmin({ userId, householdId: currentHousehold.id }));
+    dispatch(fetchUsersToHouseholds());
   };
 
   return (
@@ -150,28 +166,31 @@ export default function AdminScreen({ navigation }: Props) {
                 {user.avatar?.emoji}
               </Text>
             )}
-            right={(props) => (
+            right={() => (
               <>
-                {user.is_admin && (
+                {/* {user.is_admin && (
                   <List.Icon
                     {...props}
                     icon="crown"
                   />
-                )}
+                )} */}
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginLeft: 80,
                   }}
                 >
                   <IconButton
                     icon="account-remove"
-                    onPress={() => kickUser(user.user_id)}
+                    onPress={() => handleKickUser(user.user_id)}
                   />
                   <IconButton
                     icon={user.is_active ? 'pause-circle' : 'play-circle'}
-                    onPress={() => pauseUser(user.user_id)}
+                    onPress={() => handlePauseToggle(user.user_id)}
+                  />
+                  <IconButton
+                    icon={user.is_admin ? 'crown' : 'crown-outline'}
+                    onPress={() => handleToggleAdmin(user.user_id)}
                   />
                 </View>
               </>
