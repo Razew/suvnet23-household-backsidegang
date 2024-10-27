@@ -16,7 +16,13 @@ const initialState: ChoresToUsersState = {
   loading: 'idle',
 };
 
-type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
+// type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
+// type OptimisticChoreToUser = ChoreToUser & { tempId: number };
+type OptimisticChoreToUser = Omit<ChoreToUser, 'due_date' | 'done_date'> & {
+  due_date?: string | null;
+  done_date?: string | null;
+  tempId: number;
+};
 
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
@@ -46,9 +52,22 @@ export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   },
 );
 
-export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
+export const addChoreToUser = createAppAsyncThunk<
+  OptimisticChoreToUser,
+  ChoreToUser
+>(
   'choresToUsers/addChoreToUser',
-  async (newChoreToUser, { rejectWithValue }) => {
+  async (newChoreToUser, { rejectWithValue, dispatch }) => {
+    const tempId = Date.now();
+    const optimisticChoreToUser: OptimisticChoreToUser = {
+      ...newChoreToUser,
+      due_date: newChoreToUser.due_date?.toISOString() || null,
+      done_date: newChoreToUser.done_date?.toISOString() || null,
+      tempId,
+    };
+
+    dispatch(addOptimisticChoreToUser(optimisticChoreToUser));
+
     try {
       const { data: insertedChoreToUser, error } = await supabase
         .from('chore_to_user')
@@ -58,12 +77,16 @@ export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
 
       if (error) {
         console.error('Supabase Error:', error);
+        dispatch(removeOptimisticChoreToUser(tempId));
         return rejectWithValue(error.message);
       }
 
-      return insertedChoreToUser;
+      // dispatch(removeOptimisticChoreToUser(tempId));
+      // return insertedChoreToUser;
+      return { ...insertedChoreToUser, tempId };
     } catch (error) {
       console.error(error);
+      dispatch(removeOptimisticChoreToUser(tempId));
       return rejectWithValue('Error while adding chore to user');
     }
   },
@@ -72,7 +95,20 @@ export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
 const choresToUsersSlice = createSlice({
   name: 'choresToUsers',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    addOptimisticChoreToUser: (
+      state,
+      action: PayloadAction<OptimisticChoreToUser>,
+    ) => {
+      state.list.push(action.payload as ChoreToUser);
+    },
+    removeOptimisticChoreToUser: (state, action: PayloadAction<number>) => {
+      state.list = state.list.filter(
+        (choreToUser) =>
+          (choreToUser as OptimisticChoreToUser).tempId !== action.payload,
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchChoresToUsers.pending, (state) => {
       state.loading = 'pending';
@@ -95,8 +131,16 @@ const choresToUsersSlice = createSlice({
     });
     builder.addCase(
       addChoreToUser.fulfilled,
-      (state, action: PayloadAction<ChoreToUser>) => {
-        state.list.push(action.payload);
+      (state, action: PayloadAction<OptimisticChoreToUser>) => {
+        const index = state.list.findIndex(
+          (item) =>
+            (item as OptimisticChoreToUser).tempId === action.payload.tempId,
+        );
+        if (index !== -1) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { tempId, ...actualChoreToUser } = action.payload;
+          state.list[index] = actualChoreToUser;
+        }
         state.loading = 'succeeded';
       },
     );
@@ -107,6 +151,8 @@ const choresToUsersSlice = createSlice({
   },
 });
 
+export const { addOptimisticChoreToUser, removeOptimisticChoreToUser } =
+  choresToUsersSlice.actions;
 export const choresToUsersReducer = choresToUsersSlice.reducer;
 
 // SELECTORS
