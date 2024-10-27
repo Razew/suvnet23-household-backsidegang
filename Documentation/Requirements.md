@@ -28,15 +28,15 @@
 
 ### Chores (3)
 
-- [ ] 12. An owner should be able to add chores to be done in the home.
+- [x] 12. An owner should be able to add chores to be done in the home.
 - [x] 13. A chore should have a name, a description (text), how often it should be done (days), and a weight that describes how energy-consuming it is.
-- [ ] 14. An owner should be able to edit a chore.
+- [x] 14. An owner should be able to edit a chore.
 
 ### Daily View (3)
 
 - [x] 15. All chores should be listed in a daily view and provide an overview of what needs to be done.
 - [x] 16. In addition to the chore’s name, it should also show who has done the chore, how many days since the chore was last done, and if it is overdue.
-- [ ] 17. When a user selects a chore, the description of the chore should be displayed, and it should be possible to mark the chore as done with a simple tap.
+- [x] 17. When a user selects a chore, the description of the chore should be displayed, and it should be possible to mark the chore as done with a simple tap.
 
 ### Statistics (3)
 
@@ -74,8 +74,8 @@
 ### Chores (3)
 
 - [ ] 12. A user should be able to add a voice recording and a picture to further describe the chore.
-- [ ] 13. An owner should be able to delete a chore.
-- [ ] 14. When a chore is deleted, the user should receive a warning that all statistics related to the chore will also be deleted and be given the option to archive the chore instead.
+- [x] 13. An owner should be able to delete a chore.
+- [x] 14. When a chore is deleted, the user should receive a warning that all statistics related to the chore will also be deleted and be given the option to archive the chore instead.
 
 ### Daily View (0)
 
