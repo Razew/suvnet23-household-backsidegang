@@ -2,7 +2,10 @@ import { createSelector } from '@reduxjs/toolkit';
 import { selectLoggedInUser } from './auth/slice';
 import { selectAvatars } from './avatars/slice';
 import { selectChores } from './chores/slice';
-import { selectCompletedChoreToUsersByChoreId } from './choreToUser/slice';
+import {
+  selectChoresToUsersStatus,
+  selectCompletedChoreToUsersByChoreId,
+} from './choreToUser/slice';
 import { selectCurrentHousehold } from './households/slice';
 import { selectUsersToHouseholds } from './userToHousehold/slice';
 
@@ -143,11 +146,14 @@ export const selectChoreCardData = (choreId: number) =>
       selectIsCurrentUserAdminForCurrentHousehold,
       selectUsersWithAvatarsWhoCompletedChoreToday(choreId),
       selectLoggedInUser,
+      selectChoresToUsersStatus,
     ],
-    (daysSinceLastCompleted, isAdmin, profiles, currentUser) => ({
+    (daysSinceLastCompleted, isAdmin, profiles, currentUser, status) => ({
       daysSinceLastCompleted: daysSinceLastCompleted ?? -1,
       isAdmin,
       profiles,
       currentUser,
+      loading: status.loading,
+      errorMessage: status.errorMessage,
     }),
   );

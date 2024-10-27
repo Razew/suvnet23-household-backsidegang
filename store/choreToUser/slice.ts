@@ -129,4 +129,13 @@ export const selectCompletedChoreToUsersByChoreId = (choreId: number) =>
         choreRecord.chore_id === choreId && choreRecord.is_completed,
     ),
   );
-// export const selectCompletedChoresToUsers;
+export const selectChoresToUsersStatus = createSelector(
+  [
+    (state: RootState) => state.choresToUsers.loading,
+    (state: RootState) => state.choresToUsers.errorMessage,
+  ],
+  (loading, errorMessage) => ({
+    loading,
+    errorMessage,
+  }),
+);
