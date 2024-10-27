@@ -8,13 +8,9 @@ import { z } from 'zod';
 import AvatarSelector from '../components/AvatarSelector';
 import NicknameForm from '../components/NicknameForm';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { selectLoggedInUser } from '../store/auth/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppDispatch } from '../store/hooks';
 import { setHouseholdBeingJoined } from '../store/households/slice';
-import {
-  fetchUsersToHouseholds,
-  selectCurrentProfile,
-} from '../store/userToHousehold/slice';
+import { fetchUsersToHouseholds } from '../store/userToHousehold/slice';
 import { Household } from '../types/types';
 import { supabase } from '../utils/supabase';
 
@@ -31,11 +27,13 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [visible, setVisible] = useState(false);
   const [avatarSelectorVisible, setAvatarSelectorVisible] = useState(false);
-  const currentUser = useAppSelector(selectLoggedInUser);
+  // const [nicknameFormVisible, setnicknameFormVisible] = useState(false);
+  // const currentUser = useAppSelector(selectLoggedInUser);
   const dispatch = useAppDispatch();
-  const loggedinuser = useAppSelector(selectCurrentProfile);
+  // const loggedinuser = useAppSelector(selectCurrentProfile);
   // const { setMostRecentHousehold } = useHouseholdContext();
-  console.log(`user: ${currentUser?.id}`);
+
+  // console.log(`user: ${currentUser?.id}`);
 
   const {
     control,
@@ -117,7 +115,7 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
 
       // onToggleSnackBar();
       // navigation.replace('HouseholdScreen');
-      console.log('balls');
+      // console.log('balls');
     } else {
       setSnackBarMessage('Household code not found');
       onToggleSnackBar();

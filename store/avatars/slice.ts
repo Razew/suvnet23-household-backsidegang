@@ -7,14 +7,14 @@ import { RootState } from '../store';
 interface AvatarsState {
   list: Avatar[];
   errorMessage?: string;
-  currentAvatar?: Avatar; // Alex & Andrew are using the from JoinHousehold.tsx and more
+  currentAvatar?: Avatar | null; // Alex & Andrew are using the from JoinHousehold.tsx and more
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: AvatarsState = {
   list: [],
   errorMessage: undefined,
-  currentAvatar: undefined,
+  currentAvatar: null,
   loading: 'idle',
 };
 
@@ -50,7 +50,7 @@ const avatarsSlice = createSlice({
   name: 'avatars',
   initialState: initialState,
   reducers: {
-    setCurrentAvatar(state, action) {
+    setCurrentAvatar(state, action: PayloadAction<Avatar>) {
       state.currentAvatar = action.payload;
     },
   },
@@ -77,8 +77,13 @@ export const avatarsReducer = avatarsSlice.reducer;
 
 // SELECTORS
 export const selectAvatars = (state: RootState) => state.avatars.list;
-export const selectCurrentAvatar = (state: RootState) => state.avatars.list.find(
-  (a) => a.id === state.usersToHouseholds.current?.avatar_id, );
-  //Alex and Andrews selector, dont get mad Marcus :( <3<3<3<3<3
+export const selectCurrentAvatar = (state: RootState) =>
+  state.avatars.currentAvatar;
 
-  export const { setCurrentAvatar } = avatarsSlice.actions;
+// export const selectCurrentAvatar = (state: RootState) =>
+//   state.avatars.list.find(
+//     (a) => a.id === state.usersToHouseholds.current?.avatar_id,
+//   );
+//Alex and Andrews selector, dont get mad Marcus :( <3<3<3<3<3
+
+export const { setCurrentAvatar } = avatarsSlice.actions;

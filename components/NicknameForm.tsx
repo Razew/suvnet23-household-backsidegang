@@ -20,11 +20,11 @@ export default function NicknameForm() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
   const currentUser = useAppSelector(selectCurrentProfile); //UserToHousehold
+
   const currentAvatar = useAppSelector(selectCurrentAvatar);
 
-  console.log('Pre flight check avatar!', currentAvatar);
-
   const insertUserToHousehold = async () => {
+    console.log('Pre flight check avatar!', currentAvatar?.emoji);
     console.log('Entarrdd insertUserToHousehold function');
     // const result: boolean = loggedinuser, currentHousehold;
     console.log('logged in user:', loggedInUser?.username);
