@@ -19,18 +19,15 @@ const initialState: HouseholdState = {
   errorMessage: undefined,
 };
 
-type HouseholdNameAndId = { name: string; id: number };
-// export type changeHouseholdName =  {name: string; id: string };
+type UpdateHousehold = Omit<Household, 'code'>;
 
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
-    // console.log('Fetching households...');
     try {
       const { data: fetchedHouseholds, error } = await supabase
         .from('household')
-        .select('*');
-      // console.log('Fetched Households:', fetchedHouseholds);
+        .select();
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -50,24 +47,26 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
-export const updateHouseholdName = createAppAsyncThunk(
-  'usersToHouseholds/updateHouseholdName',
-  async ({ name, id }: HouseholdNameAndId, { rejectWithValue }) => {
+export const updateHousehold = createAppAsyncThunk<Household, UpdateHousehold>(
+  'households/updateHousehold',
+  async (updateHouseholdData, { rejectWithValue }) => {
     try {
-      const { error } = await supabase
+      const { data: updatedHousehold, error } = await supabase
         .from('household')
-        .update({ name: name })
-        .match({ id: id });
+        .update(updateHouseholdData)
+        .eq('id', updateHouseholdData.id)
+        .select()
+        .single();
 
       if (error) {
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
 
-      return console.log('Username updated');
+      return updatedHousehold;
     } catch (error) {
       console.error(error);
-      return rejectWithValue('Error while updating user to household');
+      return rejectWithValue('Error while updating household');
     }
   },
 );
@@ -94,6 +93,26 @@ const householdsSlice = createSlice({
         },
       )
       .addCase(fetchHouseholds.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.errorMessage = action.payload as string;
+      })
+      .addCase(updateHousehold.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(
+        updateHousehold.fulfilled,
+        (state, action: PayloadAction<Household>) => {
+          const targetHousehold = state.list.find(
+            (household) => household.id === action.payload.id,
+          );
+          if (targetHousehold) {
+            Object.assign(targetHousehold, action.payload);
+          }
+          state.loading = 'succeeded';
+        },
+      )
+      .addCase(updateHousehold.rejected, (state, action) => {
         state.loading = 'failed';
         state.errorMessage = action.payload as string;
       });
