@@ -25,6 +25,11 @@ export type Chore = {
   weight: 1 | 2 | 4 | 6 | 8;
 };
 
+export type NewChore = Omit<
+  Chore,
+  'id' | 'is_active' | 'is_archived' | 'voice_recording' | 'image'
+>;
+
 export type Avatar = {
   id: number;
   name: string;

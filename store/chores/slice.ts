@@ -16,6 +16,15 @@ const initialState: ChoresState = {
   loading: 'idle',
 };
 
+type NewChorePayload = Omit<
+  Chore,
+  'id' | 'voice_recording' | 'image' | 'is_active' | 'is_archived'
+>;
+
+type UpdateChorePayload = Partial<
+  Omit<Chore, 'household_id' | 'voice_recording' | 'image'>
+> & { id: number };
+
 export const fetchChores = createAppAsyncThunk<Chore[], void>(
   'chores/fetchChores',
   async (_, { rejectWithValue }) => {
@@ -42,6 +51,53 @@ export const fetchChores = createAppAsyncThunk<Chore[], void>(
   },
 );
 
+export const addChore = createAppAsyncThunk<Chore, NewChorePayload>(
+  'chores/addChore',
+  async (newChore, { rejectWithValue }) => {
+    try {
+      const { data: insertedChore, error } = await supabase
+        .from('chore')
+        .insert(newChore)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return insertedChore;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while adding chore');
+    }
+  },
+);
+
+export const updateChore = createAppAsyncThunk<Chore, UpdateChorePayload>(
+  'chores/updateChore',
+  async (updateChoreData, { rejectWithValue }) => {
+    try {
+      const { data: updatedChore, error } = await supabase
+        .from('chore')
+        .update(updateChoreData)
+        .eq('id', updateChoreData.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return updatedChore;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while adding chore');
+    }
+  },
+);
+
 const choresSlice = createSlice({
   name: 'chores',
   initialState: initialState,
@@ -59,6 +115,41 @@ const choresSlice = createSlice({
       },
     );
     builder.addCase(fetchChores.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(addChore.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      addChore.fulfilled,
+      (state, action: PayloadAction<Chore>) => {
+        state.list.push(action.payload);
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(addChore.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(updateChore.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      updateChore.fulfilled,
+      (state, action: PayloadAction<Chore>) => {
+        const targetChore = state.list.find(
+          (chore) => chore.id === action.payload.id,
+        );
+        if (targetChore) {
+          Object.assign(targetChore, action.payload);
+        }
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(updateChore.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });

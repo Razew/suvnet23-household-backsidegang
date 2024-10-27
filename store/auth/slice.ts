@@ -15,7 +15,7 @@ const initialState: AuthState = {
   error: undefined,
 };
 
-export type CredentialsPayload = { username: string; password: string };
+type CredentialsPayload = { username: string; password: string };
 
 // async function saveUserToLocalStorage(user: {
 //   id: string;
