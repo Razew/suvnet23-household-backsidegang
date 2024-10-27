@@ -1,22 +1,26 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { TextInput, Text, Card, Icon } from 'react-native-paper';
+import { Surface, Text, TextInput } from 'react-native-paper';
+import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
-import { useState } from 'react';
-import { NewChore } from '../types/types';
-import { useAppSelector } from '../store/hooks';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { addChore } from '../store/chores/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
+import { NewChore } from '../types/types';
+import { createButton } from '../utils/buttonUtils';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChore'>;
 
 export default function CreateChoreScreen({ navigation }: Props) {
+  const dispatch = useAppDispatch();
   const [titleText, setTitleText] = useState('');
   const [descriptionText, setDescriptionText] = useState('');
   const [frequency, setFrequency] = useState(7);
@@ -25,13 +29,7 @@ export default function CreateChoreScreen({ navigation }: Props) {
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
 
   const handlePress = () => {
-    try {
-      if (titleText.length < 2) {
-        throw new Error('The title must contain at least 2 characters');
-      } else if (!usersLastHousehold) {
-        throw new Error('usersLastHousehold.id is undefined');
-      }
-
+    if (titleText.length > 2 && usersLastHousehold) {
       const newChore: NewChore = {
         name: titleText,
         household_id: usersLastHousehold.id,
@@ -40,89 +38,70 @@ export default function CreateChoreScreen({ navigation }: Props) {
         weight: weight,
       };
 
-      console.log('Chore data:', newChore);
-
+      dispatch(addChore(newChore));
       navigation.goBack();
-    } catch (error) {
-      alert('The title field must consist of at least two characters.');
-      console.error('Error fetching households:', (error as Error).message);
+    } else {
+      alert('Unable to add chore');
     }
   };
 
+  const buttons: ButtonGroupProps['buttons'] = [
+    createButton('Save', 'plus', handlePress, undefined, 20),
+    createButton('Close', 'close', () => navigation.goBack(), undefined, 20),
+  ];
+
   return (
-    <TouchableNativeFeedback onPress={Keyboard.dismiss}>
-      <View style={s.container}>
-        <View>
-          <Text style={s.title}>Create a new chore</Text>
-        </View>
-        <Card style={s.inputCard}>
-          <Card.Actions>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={s.root}>
+        <View style={s.container}>
+          <View>
+            <Text style={s.title}>Create a new chore</Text>
+          </View>
+          <Surface style={s.inputCard}>
             <TextInput
               placeholder="Title"
               value={titleText}
               textColor="black"
-              mode="flat"
+              mode="outlined"
               underlineColor="transparent"
               onChangeText={setTitleText}
               style={s.input}
             />
-          </Card.Actions>
-        </Card>
-        <Card style={s.inputCard}>
-          <Card.Actions>
+          </Surface>
+          <Surface style={s.inputCard}>
             <TextInput
               placeholder="Description"
               value={descriptionText}
               onChangeText={setDescriptionText}
-              mode="flat"
+              mode="outlined"
               textColor="black"
               underlineColor="transparent"
-              multiline={true}
+              multiline
               style={[s.input, { height: 100 }]}
             />
-          </Card.Actions>
-        </Card>
-        <View style={s.frequencyComponent}>
-          <ChoreFrequency setFrequency={setFrequency} />
+          </Surface>
+          <View style={s.frequencyComponent}>
+            <ChoreFrequency setFrequency={setFrequency} />
+          </View>
+          <View style={s.weightComponent}>
+            <ChoreWeight setWeight={setWeight} />
+          </View>
         </View>
-        <View style={s.weightComponent}>
-          <ChoreWeight setWeight={setWeight} />
-        </View>
-        <View style={s.buttonRow}>
-          <Card
-            style={s.saveButton}
-            onPress={handlePress}
-          >
-            <Card.Actions>
-              <Icon
-                source={'plus'}
-                size={20}
-              />
-              <Text style={{ fontSize: 20 }}>Save</Text>
-            </Card.Actions>
-          </Card>
-          <Card
-            style={s.closeButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Card.Actions>
-              <Icon
-                source={'close'}
-                size={20}
-              />
-              <Text style={{ fontSize: 20 }}>Close</Text>
-            </Card.Actions>
-          </Card>
-        </View>
+        <ButtonGroup buttons={buttons} />
       </View>
-    </TouchableNativeFeedback>
+    </TouchableWithoutFeedback>
   );
 }
 
 const s = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
+    justifyContent: 'space-between',
+  },
+  container: {
+    // flex: 1,
     padding: 16,
+    marginTop: 20,
   },
   title: {
     fontSize: 24,
@@ -135,7 +114,7 @@ const s = StyleSheet.create({
     backgroundColor: 'white',
   },
   input: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'white',
   },
   buttonRow: {
@@ -167,3 +146,98 @@ const s = StyleSheet.create({
     marginBottom: 16,
   },
 });
+
+// const handlePress = () => {
+//   try {
+//     if (titleText.length < 2) {
+//       throw new Error('The title must contain at least 2 characters');
+//     } else if (!usersLastHousehold) {
+//       throw new Error('usersLastHousehold.id is undefined');
+//     }
+
+//     const newChore: NewChore = {
+//       name: titleText,
+//       household_id: usersLastHousehold.id,
+//       description: descriptionText,
+//       frequency: frequency,
+//       weight: weight,
+//     };
+
+//     console.log('Chore data:', newChore);
+
+//     navigation.goBack();
+//   } catch (error) {
+//     alert('The title field must consist of at least two characters.');
+//     console.error('Error fetching households:', (error as Error).message);
+//   }
+// };
+
+//  return (
+//     <TouchableNativeFeedback onPress={Keyboard.dismiss}>
+//       <View style={s.container}>
+//         <View>
+//           <Text style={s.title}>Create a new chore</Text>
+//         </View>
+//         <Card style={s.inputCard}>
+//           <Card.Actions>
+//             <TextInput
+//               placeholder="Title"
+//               value={titleText}
+//               textColor="black"
+//               mode="flat"
+//               underlineColor="transparent"
+//               onChangeText={setTitleText}
+//               style={s.input}
+//             />
+//           </Card.Actions>
+//         </Card>
+//         <Card style={s.inputCard}>
+//           <Card.Actions>
+//             <TextInput
+//               placeholder="Description"
+//               value={descriptionText}
+//               onChangeText={setDescriptionText}
+//               mode="flat"
+//               textColor="black"
+//               underlineColor="transparent"
+//               multiline={true}
+//               style={[s.input, { height: 100 }]}
+//             />
+//           </Card.Actions>
+//         </Card>
+//         <View style={s.frequencyComponent}>
+//           <ChoreFrequency setFrequency={setFrequency} />
+//         </View>
+//         <View style={s.weightComponent}>
+//           <ChoreWeight setWeight={setWeight} />
+//         </View>
+//         <View style={s.buttonRow}>
+//           <Card
+//             style={s.saveButton}
+//             onPress={handlePress}
+//           >
+//             <Card.Actions>
+//               <Icon
+//                 source={'plus'}
+//                 size={20}
+//               />
+//               <Text style={{ fontSize: 20 }}>Save</Text>
+//             </Card.Actions>
+//           </Card>
+//           <Card
+//             style={s.closeButton}
+//             onPress={() => navigation.goBack()}
+//           >
+//             <Card.Actions>
+//               <Icon
+//                 source={'close'}
+//                 size={20}
+//               />
+//               <Text style={{ fontSize: 20 }}>Close</Text>
+//             </Card.Actions>
+//           </Card>
+//         </View>
+//       </View>
+//     </TouchableNativeFeedback>
+//   );
+// }
