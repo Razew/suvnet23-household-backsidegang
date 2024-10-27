@@ -14,6 +14,7 @@ import {
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import { container, large } from '../themes/styles';
 import { Household, User_To_Household } from '../types/types';
+import { createButton } from '../utils/buttonUtils';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
@@ -54,18 +55,12 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   const buttons: ButtonGroupProps['buttons'] = [
-    {
-      label: 'Join household',
-      icon: 'home-search',
-      target: 'JoinHousehold',
-      stack: 'HomeStack',
-    },
-    {
-      label: 'Create household',
-      icon: 'home-plus',
-      target: 'CreateHousehold',
-      stack: 'HomeStack',
-    },
+    createButton('Join household', 'home-search', () =>
+      navigation.navigate('JoinHousehold'),
+    ),
+    createButton('Create household', 'home-plus', () =>
+      navigation.navigate('CreateHousehold'),
+    ),
   ];
 
   return (
