@@ -158,7 +158,7 @@ export default function ChoreCard({ chore }: Props) {
               <Button
                 icon="lead-pencil"
                 style={s.button}
-                onPress={() => navigation.navigate('EditChore', { chore })}
+                onPress={() => navigation.navigate('HandleChore', { chore })}
               >
                 Edit
               </Button>
