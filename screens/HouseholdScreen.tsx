@@ -2,12 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { StyleSheet, View } from 'react-native';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
-  ScrollView,
   PanGestureHandlerGestureEvent,
+  ScrollView,
   State,
 } from 'react-native-gesture-handler';
 import { Appbar, IconButton, Surface, Text } from 'react-native-paper';
@@ -18,24 +17,16 @@ import Animated, {
 } from 'react-native-reanimated';
 import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { selectLoggedInUser } from '../store/auth/slice';
+import { selectChores } from '../store/chores/slice';
+import { selectChoresToUsers } from '../store/choreToUser/slice';
 import { selectIsCurrentUserAdminForCurrentHousehold } from '../store/combinedSelectors';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
-import {
-  selectCurrentProfile,
-  selectUsersToHouseholds,
-  setCurrentProfile,
-} from '../store/userToHousehold/slice';
 import { container } from '../themes/styles';
 import { createButton } from '../utils/buttonUtils';
 import { getChoresByDates, hasCompletedChores } from '../utils/statistics';
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
-import { useAppSelector } from '../store/hooks';
-import { selectChores } from '../store/chores/slice';
-import { selectChoresToUsers } from '../store/choreToUser/slice';
-import { selectCurrentHousehold } from '../store/households/slice';
 
 export default function HouseholdScreen() {
   const navigation =
@@ -161,7 +152,6 @@ export default function HouseholdScreen() {
     } else {
       return <StatisticsScreen chores={lastMonthsChores} />;
     }
-    // }
   };
 
   const isRightArrowDisabled = () => {
@@ -207,26 +197,8 @@ export default function HouseholdScreen() {
         </PanGestureHandler>
       </Surface>
     </GestureHandlerRootView>
-    //   <ScrollView contentContainerStyle={s.root}>
-    //   {chores.length === 0 ? (
-    //     <Text style={large}>Household screen</Text>
-    //   ) : (
-    //     chores.map((chore) => (
-    //       <ChoreCard
-    //         key={chore.id}
-    //         chore={chore}
-    //       />
-    //     ))
-    //   )}
-    // </ScrollView>
   );
 }
-
-// const s = StyleSheet.create({
-//   root: {
-//     padding: 15,
-//   },
-// });
 
 const styles = StyleSheet.create({
   header: {
