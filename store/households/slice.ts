@@ -20,7 +20,6 @@ const initialState: HouseholdState = {
 };
 
 type HouseholdNameAndId = { name: string; id: number };
-type DeleteUserFromHousehold = { householdId: number; userId: number };
 // export type changeHouseholdName =  {name: string; id: string };
 
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
@@ -47,34 +46,6 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
     } catch (error) {
       console.error('Error while fetching households:', error);
       return rejectWithValue('Error while fetching households');
-    }
-  },
-);
-
-export const leaveHousehold = createAppAsyncThunk<
-  DeleteUserFromHousehold,
-  { householdId: number; userId: number }
->(
-  'households/leaveHousehold',
-  async ({ householdId, userId }, { rejectWithValue }) => {
-    try {
-      const { error } = await supabase
-        .from('user_to_household')
-        .delete()
-        .eq('household_id', householdId)
-        .eq('user_id', userId)
-        .single();
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      console.log('Left household');
-      return { householdId, userId };
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while leaving household');
     }
   },
 );
