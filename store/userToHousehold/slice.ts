@@ -154,7 +154,10 @@ export const togglePauseUser = createAppAsyncThunk(
 
 export const kickUserFromHousehold = createAppAsyncThunk(
   'usersToHouseholds/kickUser',
-  async ({ userId, householdId }: { userId: number; householdId: number }, { rejectWithValue }) => {
+  async (
+    { userId, householdId }: { userId: number; householdId: number },
+    { rejectWithValue },
+  ) => {
     try {
       const { error } = await supabase
         .from('user_to_household')
@@ -176,7 +179,10 @@ export const kickUserFromHousehold = createAppAsyncThunk(
 
 export const toggleAdmin = createAppAsyncThunk(
   'usersToHouseholds/toggleAdmin',
-  async ({ userId, householdId }: { userId: number; householdId: number }, { rejectWithValue }) => {
+  async (
+    { userId, householdId }: { userId: number; householdId: number },
+    { rejectWithValue },
+  ) => {
     try {
       const { data: userToHousehold, error } = await supabase
         .from('user_to_household')

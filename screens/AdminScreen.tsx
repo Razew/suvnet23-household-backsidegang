@@ -161,33 +161,25 @@ export default function AdminScreen({ navigation }: Props) {
               </Text>
             )}
             right={() => (
-              <>
-                {/* {user.is_admin && (
-                  <List.Icon
-                    {...props}
-                    icon="crown"
-                  />
-                )} */}
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <IconButton
-                    icon="account-remove"
-                    onPress={() => handleKickUser(user.user_id)}
-                  />
-                  <IconButton
-                    icon={user.is_active ? 'pause-circle' : 'play-circle'}
-                    onPress={() => handlePauseToggle(user.user_id)}
-                  />
-                  <IconButton
-                    icon={user.is_admin ? 'crown' : 'crown-outline'}
-                    onPress={() => handleToggleAdmin(user.user_id)}
-                  />
-                </View>
-              </>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <IconButton
+                  icon="account-remove"
+                  onPress={() => handleKickUser(user.user_id)}
+                />
+                <IconButton
+                  icon={user.is_active ? 'pause-circle' : 'play-circle'}
+                  onPress={() => handlePauseToggle(user.user_id)}
+                />
+                <IconButton
+                  icon={user.is_admin ? 'crown' : 'crown-outline'}
+                  onPress={() => handleToggleAdmin(user.user_id)}
+                />
+              </View>
             )}
           />
         </View>

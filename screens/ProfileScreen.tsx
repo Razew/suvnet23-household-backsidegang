@@ -14,8 +14,6 @@ import {
   fetchHouseholds,
   leaveHousehold,
   selectCurrentHousehold,
-  setCurrentHousehold,
-  updateHouseholdName,
 } from '../store/households/slice';
 import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import DarkLightModeButton from '../components/DarkLightModeButton';
@@ -32,7 +30,6 @@ type Props = CompositeScreenProps<
 export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
-  const [householdName, setHouseholdName] = useState('');
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
@@ -74,38 +71,6 @@ export default function ProfileScreen({ navigation }: Props) {
     (avatar) => avatar.id === findAvatarId?.avatar_id,
   );
 
-  const isAdmin = () => {
-    if (isAdminOnHousehold) {
-      return (
-        <View>
-          <View>
-            <TextInput
-              label={currentHousehold?.name}
-              value={householdName}
-              onChangeText={setHouseholdName}
-            />
-          </View>
-          <View
-            style={{
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              gap: 65,
-              justifyContent: 'center',
-              marginTop: 20,
-            }}
-          >
-            <Button
-              mode="contained"
-              onPress={changeHouseholdName}
-            >
-              Change household name
-            </Button>
-          </View>
-        </View>
-      );
-    }
-    return null;
-  };
   const handleSignOut = () => {
     console.log('Sign out');
     dispatch(resetState());
@@ -127,35 +92,6 @@ export default function ProfileScreen({ navigation }: Props) {
     setTimeout(() => {
       navigation.replace('Home');
     }, 2000);
-  };
-
-  const changeHouseholdName = async () => {
-    if (loggedInUser?.id === undefined) {
-      return console.log('No logged in user');
-    }
-    if (householdName === '') {
-      return console.log('No household name');
-    }
-    if (currentHousehold?.id === undefined) {
-      return console.log('No current household');
-    }
-    dispatch(
-      updateHouseholdName({
-        name: householdName,
-        id: currentHousehold.id,
-      }),
-    );
-    dispatch(
-      setCurrentHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-        code: currentHousehold.code,
-      }),
-    );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    navigation.push('Profile');
-    // }, 2000);
   };
 
   const changeName = async () => {
