@@ -64,8 +64,10 @@ export default function CreateChoreScreen({ navigation }: Props) {
               textColor="black"
               mode="outlined"
               underlineColor="transparent"
+              outlineColor="transparent"
               onChangeText={setTitleText}
               style={s.input}
+              outlineStyle={s.inputOutline}
             />
           </Surface>
           <Surface style={s.inputCard}>
@@ -76,8 +78,10 @@ export default function CreateChoreScreen({ navigation }: Props) {
               mode="outlined"
               textColor="black"
               underlineColor="transparent"
+              outlineColor="transparent"
               multiline
-              style={[s.input, { height: 100 }]}
+              style={[s.input, { height: 150 }]}
+              outlineStyle={s.inputOutline}
             />
           </Surface>
           <View style={s.frequencyComponent}>
@@ -111,11 +115,15 @@ const s = StyleSheet.create({
   },
   inputCard: {
     marginBottom: 16,
+    borderRadius: 10,
     backgroundColor: 'white',
   },
   input: {
     // flex: 1,
     backgroundColor: 'white',
+  },
+  inputOutline: {
+    borderRadius: 10,
   },
   buttonRow: {
     flexDirection: 'row',
