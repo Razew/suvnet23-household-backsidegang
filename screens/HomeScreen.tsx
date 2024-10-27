@@ -21,14 +21,6 @@ type Props = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 export default function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector(selectLoggedInUser);
-  if (!loggedInUser) {
-    return (
-      <View style={container}>
-        <Text style={large}>Not logged in</Text>
-      </View>
-    );
-  }
-
   const usersLastHousehold = useAppSelector(selectCurrentHousehold);
   const allHouseholds = useAppSelector(selectHouseholds);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
@@ -46,6 +38,14 @@ export default function HomeScreen({ navigation }: Props) {
   });
 
   // console.log(JSON.stringify(profileAndHouseholds, null, 2));
+
+  if (!loggedInUser) {
+    return (
+      <View style={container}>
+        <Text style={large}>Not logged in</Text>
+      </View>
+    );
+  }
 
   const enterHousehold = (household: Household) => {
     if (household.id !== usersLastHousehold?.id) {
