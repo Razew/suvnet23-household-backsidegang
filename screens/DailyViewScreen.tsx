@@ -7,6 +7,8 @@ import { large } from '../themes/styles';
 
 export default function DailyViewScreen() {
   const chores = useAppSelector(selectActiveChoresCurrentHousehold);
+  // const navigation =
+  //   useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   // const dispatch = useAppDispatch();
 
   // useEffect(() => {
@@ -14,7 +16,7 @@ export default function DailyViewScreen() {
   // }, []);
 
   return (
-    <View style={s.root}>
+    <View style={s.cardsContainer}>
       {chores.length === 0 ? (
         <Text style={large}>Household screen</Text>
       ) : (
@@ -30,7 +32,8 @@ export default function DailyViewScreen() {
 }
 
 const s = StyleSheet.create({
-  root: {
+  cardsContainer: {
     padding: 15,
+    flex: 1,
   },
 });

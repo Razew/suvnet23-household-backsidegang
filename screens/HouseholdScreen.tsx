@@ -1,5 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
@@ -13,7 +15,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { selectLoggedInUser } from '../store/auth/slice';
+import { selectIsCurrentUserAdminForCurrentHousehold } from '../store/combinedSelectors';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectCurrentHousehold } from '../store/households/slice';
+import {
+  selectCurrentProfile,
+  selectUsersToHouseholds,
+  setCurrentProfile,
+} from '../store/userToHousehold/slice';
 import { container } from '../themes/styles';
+import { createButton } from '../utils/buttonUtils';
 import {
   getLastMonthDates,
   getLastWeekDates,
@@ -21,21 +35,16 @@ import {
 } from '../utils/statistics';
 import DailyViewScreen from './DailyViewScreen';
 import StatisticsScreen from './StatisticsScreen';
-import { selectCurrentHousehold } from '../store/households/slice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectLoggedInUser } from '../store/auth/slice';
-import {
-  selectCurrentProfile,
-  selectUsersToHouseholds,
-  setCurrentProfile,
-} from '../store/userToHousehold/slice';
 
 export default function HouseholdScreen() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const currentHousehold = useAppSelector(selectCurrentHousehold);
   if (!currentHousehold) {
     console.log('No current household found');
   }
   const loggedInUser = useAppSelector(selectLoggedInUser);
+  const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
   const currentUserToHousehold = allUserToHouseholds.find(
     (userToHousehold) =>
@@ -105,12 +114,22 @@ export default function HouseholdScreen() {
     };
   });
 
+  const buttons: ButtonGroupProps['buttons'] = [
+    createButton('Add chore', 'plus', () =>
+      navigation.navigate('HandleChore', { chore: undefined }),
+    ),
+    createButton('Admin', 'cog', () => undefined),
+  ];
+
   const renderScreen = () => {
     if (currentPage === 0) {
       return (
-        <ScrollView>
-          <DailyViewScreen />
-        </ScrollView>
+        <View>
+          <ScrollView>
+            <DailyViewScreen />
+          </ScrollView>
+          {isAdmin ? <ButtonGroup buttons={buttons} /> : null}
+        </View>
       );
     } else if (currentPage === 1) {
       return <StatisticsScreen timespan={getThisWeekDates()} />;
