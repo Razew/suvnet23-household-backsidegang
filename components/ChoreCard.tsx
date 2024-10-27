@@ -182,12 +182,13 @@ export default function ChoreCard({ chore, onComplete }: Props) {
                     color={colors.error}
                   />
                   <Dialog.Title style={{ textAlign: 'center' }}>
-                    Delete chore
+                    Delete Chore?
                   </Dialog.Title>
                   <Dialog.Content>
                     <Text variant="bodyMedium">
                       Are you sure you want to delete the chore? All data
-                      pertaining to it will be lost forever.
+                      pertaining to it, including statistics, will be lost
+                      forever.
                     </Text>
                   </Dialog.Content>
                   <Dialog.Actions>
