@@ -42,7 +42,7 @@ export default function HomeStackNavigator() {
       screenOptions={({ navigation }) => ({
         headerRight: () => (
           <>
-            <Pressable
+            {/* <Pressable
               style={s.tempExit}
               onPress={() => navigation.replace('Loading')}
             >
@@ -52,7 +52,7 @@ export default function HomeStackNavigator() {
                 size={24}
                 color="#D32F2F"
               />
-            </Pressable>
+            </Pressable> */}
             {isAdminOnHousehold && (
               <Pressable
                 style={s.tempExit}

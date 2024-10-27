@@ -81,7 +81,6 @@ export default function AdminScreen({ navigation }: Props) {
     dispatch(
       kickUserFromHousehold({ userId, householdId: currentHousehold.id }),
     );
-    dispatch(fetchUsersToHouseholds());
   };
 
   const handlePauseToggle = (userId: number) => {
@@ -89,7 +88,6 @@ export default function AdminScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(togglePauseUser({ userId, householdId: currentHousehold.id }));
-    dispatch(fetchUsersToHouseholds());
   };
 
   const handleToggleAdmin = (userId: number) => {
@@ -97,7 +95,6 @@ export default function AdminScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(toggleAdmin({ userId, householdId: currentHousehold.id }));
-    dispatch(fetchUsersToHouseholds());
   };
 
   return (
@@ -112,7 +109,9 @@ export default function AdminScreen({ navigation }: Props) {
         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
           Current Householdname:
         </Text>
-        <Text style={{ fontSize: 24 }}>{currentHousehold?.name}</Text>
+        <Text style={{ fontSize: 24, marginTop: 10, marginBottom: 15 }}>
+          {currentHousehold?.name}
+        </Text>
       </View>
       <View>
         <TextInput
@@ -125,7 +124,6 @@ export default function AdminScreen({ navigation }: Props) {
         style={{
           flexWrap: 'wrap',
           flexDirection: 'row',
-          gap: 65,
           justifyContent: 'center',
           marginTop: 20,
         }}

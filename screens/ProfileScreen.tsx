@@ -322,7 +322,7 @@ export default function ProfileScreen({ navigation }: Props) {
       <View
         style={{
           flexDirection: 'row',
-          marginBottom: 50,
+          marginBottom: 20,
           marginTop: 20,
           justifyContent: 'center',
         }}
@@ -403,7 +403,7 @@ export default function ProfileScreen({ navigation }: Props) {
         style={{
           flex: 1,
           borderRadius: 1,
-          padding: 8,
+          marginTop: 5,
         }}
         onPress={handleSignOut}
       >
