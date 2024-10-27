@@ -121,7 +121,11 @@ export default function HouseholdScreen() {
 
   const renderScreen = () => {
     if (currentPage === 0) {
-      return <DailyViewScreen />;
+      return (
+        <ScrollView>
+          <DailyViewScreen />
+        </ScrollView>
+      );
     } else if (currentPage === 1) {
       return <StatisticsScreen chores={thisWeeksChores} />;
     } else if (currentPage === 2) {
