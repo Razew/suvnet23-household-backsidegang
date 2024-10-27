@@ -10,7 +10,7 @@ import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { color } from '@rneui/themed/dist/config';
+import AdminScreen from '../screens/AdminScreen';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
@@ -19,6 +19,7 @@ export type HomeStackParamList = {
   CreateHousehold: undefined;
   HouseholdScreen: undefined;
   Profile: undefined;
+  Admin: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -55,7 +56,7 @@ export default function HomeStackNavigator() {
             {isAdminOnHousehold && (
               <Pressable
                 style={s.tempExit}
-                onPress={() => navigation.replace('Loading')}
+                onPress={() => navigation.replace('Admin')}
               >
                 <MaterialIcons
                   name="admin-panel-settings"
@@ -83,6 +84,10 @@ export default function HomeStackNavigator() {
         headerTitleAlign: 'center',
       })}
     >
+      <HomeStack.Screen
+        name="Admin"
+        component={AdminScreen}
+      />
       <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}

@@ -31,8 +31,6 @@ export default function HomeScreen({ navigation }: Props) {
   const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
   const allAvatars = useAppSelector(selectAvatars);
 
-  console.log(allAvatars);
-
   const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
     (userToHousehold) => userToHousehold.user_id === loggedInUser?.id,
   );
@@ -45,7 +43,7 @@ export default function HomeScreen({ navigation }: Props) {
   });
 
   // console.log(JSON.stringify(allUserToHouseholds, null, 2));
-  console.log(JSON.stringify(profileAndHouseholds, null, 2));
+  // console.log(JSON.stringify(profileAndHouseholds, null, 2));
 
   useEffect(() => {
     if (profileAndHouseholds.length === 1) {
