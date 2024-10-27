@@ -9,11 +9,9 @@ import {
 } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { fetchAvatars } from '../store/avatars/slice';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import {
   selectCurrentHousehold,
-  fetchHouseholds,
   setCurrentHousehold,
   updateHouseholdName,
 } from '../store/households/slice';
@@ -68,10 +66,8 @@ export default function AdminScreen({ navigation }: Props) {
         code: currentHousehold.code,
       }),
     );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    navigation.push('Profile');
-    // }, 2000);
+
+    navigation.push('Admin');
   };
 
   const handleKickUser = (userId: number) => {
