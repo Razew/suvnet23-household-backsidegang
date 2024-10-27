@@ -12,8 +12,6 @@ export type RootStackParamList = {
   Register: undefined;
   HomeNavigator: undefined;
   HandleChore: { chore?: Chore };
-  CreateChore: undefined;
-  EditChore: { chore: Chore };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
