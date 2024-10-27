@@ -11,37 +11,53 @@ import ButtonGroup, { ButtonGroupProps } from '../components/ButtonGroup';
 import ChoreFrequency from '../components/ChoreFrequency';
 import ChoreWeight from '../components/ChoreWeight';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { addChore } from '../store/chores/slice';
+import { addChore, updateChore } from '../store/chores/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
 import { NewChore } from '../types/types';
 import { createButton } from '../utils/buttonUtils';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'CreateChore'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'HandleChore'>;
 
-export default function CreateChoreScreen({ navigation }: Props) {
+export default function HandleChoreScreen({ navigation, route }: Props) {
+  const chore = route.params.chore;
   const dispatch = useAppDispatch();
-  const [titleText, setTitleText] = useState('');
-  const [descriptionText, setDescriptionText] = useState('');
-  const [frequency, setFrequency] = useState(7);
-  const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(2);
+  const [titleText, setTitleText] = useState(chore?.name ?? '');
+  const [descriptionText, setDescriptionText] = useState(
+    chore?.description ?? '',
+  );
+  const [frequency, setFrequency] = useState(chore?.frequency ?? 7);
+  const [weight, setWeight] = useState<1 | 2 | 4 | 6 | 8>(chore?.weight ?? 2);
 
-  const usersLastHousehold = useAppSelector(selectCurrentHousehold);
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
 
   const handlePress = () => {
-    if (titleText.length > 2 && usersLastHousehold) {
-      const newChore: NewChore = {
-        name: titleText,
-        household_id: usersLastHousehold.id,
-        description: descriptionText,
-        frequency: frequency,
-        weight: weight,
-      };
+    if (titleText.length > 2 && currentHousehold) {
+      if (chore) {
+        dispatch(
+          updateChore({
+            id: chore.id,
+            name: titleText,
+            description: descriptionText,
+            frequency: frequency,
+            weight: weight,
+          }),
+        );
+        navigation.goBack();
+      } else {
+        const newChore: NewChore = {
+          name: titleText,
+          household_id: currentHousehold.id,
+          description: descriptionText,
+          frequency: frequency,
+          weight: weight,
+        };
 
-      dispatch(addChore(newChore));
-      navigation.goBack();
+        dispatch(addChore(newChore));
+        navigation.goBack();
+      }
     } else {
-      alert('Unable to add chore');
+      alert(`Unable to ${chore ? 'edit chore' : 'add chore'}`);
     }
   };
 
@@ -55,7 +71,9 @@ export default function CreateChoreScreen({ navigation }: Props) {
       <View style={s.root}>
         <View style={s.container}>
           <View>
-            <Text style={s.title}>Create a new chore</Text>
+            <Text style={s.title}>
+              {chore ? 'Edit chore' : 'Create a new chore'}
+            </Text>
           </View>
           <Surface style={s.inputCard}>
             <TextInput
@@ -85,10 +103,16 @@ export default function CreateChoreScreen({ navigation }: Props) {
             />
           </Surface>
           <View style={s.frequencyComponent}>
-            <ChoreFrequency setFrequency={setFrequency} />
+            <ChoreFrequency
+              initialFrequency={frequency}
+              setFrequency={setFrequency}
+            />
           </View>
           <View style={s.weightComponent}>
-            <ChoreWeight setWeight={setWeight} />
+            <ChoreWeight
+              initialWeight={weight}
+              setWeight={setWeight}
+            />
           </View>
         </View>
         <ButtonGroup buttons={buttons} />
