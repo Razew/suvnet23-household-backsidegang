@@ -105,11 +105,10 @@ const householdsSlice = createSlice({
   name: 'households',
   initialState,
   reducers: {
-    setCurrentHousehold(state, action) {
+    setCurrentHousehold(state, action: PayloadAction<Household>) {
       state.current = action.payload;
     },
   },
-
   extraReducers: (builder) => {
     builder
       .addCase(fetchHouseholds.pending, (state) => {

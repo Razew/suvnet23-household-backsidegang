@@ -4,11 +4,15 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Badge, Card, Text } from 'react-native-paper';
 
 type ChoreFrequencyProps = {
+  initialFrequency?: number;
   setFrequency: (value: number) => void; // Lägg till typ för setFrequency
 };
 
-export default function ChoreFrequency({ setFrequency }: ChoreFrequencyProps) {
-  const [value, setValue] = useState(7);
+export default function ChoreFrequency({
+  initialFrequency,
+  setFrequency,
+}: ChoreFrequencyProps) {
+  const [value, setValue] = useState(initialFrequency);
   const [isPressed, setIsPressed] = useState(false);
 
   const numbers = Array.from({ length: 31 }, (_, index) => index + 1);

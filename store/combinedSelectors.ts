@@ -1,7 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { selectLoggedInUser } from './auth/slice';
 import { selectAvatars } from './avatars/slice';
 import { selectChores } from './chores/slice';
-import { selectCompletedChoreToUsersByChoreId } from './choreToUser/slice';
+import {
+  selectChoresToUsersStatus,
+  selectCompletedChoreToUsersByChoreId,
+} from './choreToUser/slice';
 import { selectCurrentHousehold } from './households/slice';
 import { selectUsersToHouseholds } from './userToHousehold/slice';
 
@@ -10,6 +14,25 @@ export const selectUsersCurrentHousehold = createSelector(
   [selectUsersToHouseholds, selectCurrentHousehold],
   (users, currentHousehold) => {
     return users.filter((user) => user.household_id === currentHousehold?.id);
+  },
+);
+
+export const selectIsCurrentUserAdminForCurrentHousehold = createSelector(
+  [selectUsersCurrentHousehold, selectLoggedInUser],
+  (users, currentUser) => {
+    return users.some(
+      (user) => user.user_id === currentUser?.id && user.is_admin,
+    );
+  },
+);
+
+// USERS TO HOUSEHOLDS
+export const selectCurrentUserHouseholds = createSelector(
+  [selectLoggedInUser, selectUsersToHouseholds],
+  (currentUser, usersToHouseholds) => {
+    return usersToHouseholds.filter(
+      (userToHousehold) => userToHousehold.user_id === currentUser?.id,
+    );
   },
 );
 
@@ -114,3 +137,23 @@ export const selectAvailableAvatarsCurrentHousehold = createSelector(
     return avatars.filter((avatar) => !usedAvatarIds.includes(avatar.id));
   },
 );
+
+// CHORECARD
+export const selectChoreCardData = (choreId: number) =>
+  createSelector(
+    [
+      selectDaysSinceLastCompleted(choreId),
+      selectIsCurrentUserAdminForCurrentHousehold,
+      selectUsersWithAvatarsWhoCompletedChoreToday(choreId),
+      selectLoggedInUser,
+      selectChoresToUsersStatus,
+    ],
+    (daysSinceLastCompleted, isAdmin, profiles, currentUser, status) => ({
+      daysSinceLastCompleted: daysSinceLastCompleted ?? -1,
+      isAdmin,
+      profiles,
+      currentUser,
+      loading: status.loading,
+      errorMessage: status.errorMessage,
+    }),
+  );

@@ -1,20 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HandleChoreScreen from '../screens/HandleChoreScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import HomeStackNavigator, { HomeStackParamList } from './HomeStackNavigator';
+import HomeStackNavigator from './HomeStackNavigator';
 import CreateChoreScreen from '../screens/CreateChoreScreen';
 import EditScreen from '../screens/EditChoreScreen';
-import { NavigatorScreenParams } from '@react-navigation/native';
-import { Chore } from '../types/types';
 
 export type RootStackParamList = {
   Loading: undefined;
   Login: undefined;
   Register: undefined;
-  HomeNavigator: NavigatorScreenParams<HomeStackParamList>;
+  HomeNavigator: undefined;
   CreateChore: undefined;
-  EditChore: { chore: Chore };
+  EditChore: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -43,17 +42,8 @@ export default function RootStackNavigator() {
         options={{ headerShown: false }}
       />
       <RootStack.Screen
-        name="CreateChore"
-        component={CreateChoreScreen}
-        options={{
-          headerShown: false,
-          presentation: 'modal',
-          animation: 'slide_from_bottom',
-        }}
-      />
-      <RootStack.Screen
-        name="EditChore"
-        component={EditScreen}
+        name="HandleChore"
+        component={HandleChoreScreen}
         options={{
           headerShown: false,
           presentation: 'modal',
