@@ -28,7 +28,7 @@
 
 ### Chores (3)
 
-- [ ] 12. An owner should be able to add chores to be done in the home.
+- [x] 12. An owner should be able to add chores to be done in the home.
 - [x] 13. A chore should have a name, a description (text), how often it should be done (days), and a weight that describes how energy-consuming it is.
 - [x] 14. An owner should be able to edit a chore.
 
