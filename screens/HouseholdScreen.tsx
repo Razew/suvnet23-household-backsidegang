@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-// import { container } from '../themes/styles';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
+  ScrollView,
   PanGestureHandlerGestureEvent,
   State,
 } from 'react-native-gesture-handler';

@@ -1,21 +1,37 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Surface, Text } from 'react-native-paper';
-import { container } from '../themes/styles';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import ChoreCard from '../components/ChoreCard';
+import { selectActiveChoresCurrentHousehold } from '../store/combinedSelectors';
+import { useAppSelector } from '../store/hooks';
+import { large } from '../themes/styles';
 
 export default function DailyViewScreen() {
+  const chores = useAppSelector(selectActiveChoresCurrentHousehold);
+  // const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchChores());
+  // }, []);
+
   return (
-    <Surface
-      style={container}
-      elevation={0}
-    >
-      <Text style={styles.text}>Daily View Screen</Text>
-    </Surface>
+    <View style={s.root}>
+      {chores.length === 0 ? (
+        <Text style={large}>Household screen</Text>
+      ) : (
+        chores.map((chore) => (
+          <ChoreCard
+            key={chore.id}
+            chore={chore}
+          />
+        ))
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 20,
+const s = StyleSheet.create({
+  root: {
+    padding: 15,
   },
 });
