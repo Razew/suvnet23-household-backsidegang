@@ -12,14 +12,9 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { selectLoggedInUser } from '../store/auth/slice';
 import { updateChore } from '../store/chores/slice';
 import { addChoreToUser } from '../store/choreToUser/slice';
-import {
-  selectDaysSinceLastCompleted,
-  selectIsCurrentUserAdminForCurrentHousehold,
-  selectUsersWithAvatarsWhoCompletedChoreToday,
-} from '../store/combinedSelectors';
+import { selectChoreCardData } from '../store/combinedSelectors';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Chore } from '../types/types';
 import { CollapsibleContainer } from './CollapsibleContainer';
@@ -36,13 +31,8 @@ export default function ChoreCard({ chore }: Props) {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const profiles = useAppSelector(
-    selectUsersWithAvatarsWhoCompletedChoreToday(chore.id),
-  );
-  const daysSinceLastCompleted =
-    useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
-  const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
-  const currentUser = useAppSelector(selectLoggedInUser);
+  const { daysSinceLastCompleted, isAdmin, profiles, currentUser } =
+    useAppSelector(selectChoreCardData(chore.id));
 
   const hideDialog = () => setVisible(false);
 

@@ -134,3 +134,20 @@ export const selectAvailableAvatarsCurrentHousehold = createSelector(
     return avatars.filter((avatar) => !usedAvatarIds.includes(avatar.id));
   },
 );
+
+// CHORECARD
+export const selectChoreCardData = (choreId: number) =>
+  createSelector(
+    [
+      selectDaysSinceLastCompleted(choreId),
+      selectIsCurrentUserAdminForCurrentHousehold,
+      selectUsersWithAvatarsWhoCompletedChoreToday(choreId),
+      selectLoggedInUser,
+    ],
+    (daysSinceLastCompleted, isAdmin, profiles, currentUser) => ({
+      daysSinceLastCompleted: daysSinceLastCompleted ?? -1,
+      isAdmin,
+      profiles,
+      currentUser,
+    }),
+  );
