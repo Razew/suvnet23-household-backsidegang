@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
-import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import HouseholdScreen from '../screens/HouseholdScreen';
+import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
@@ -45,7 +45,7 @@ export default function HomeStackNavigator() {
         headerLeft: () => (
           <Pressable
             style={s.tempExit}
-            onPress={() => navigation.replace('Profile')}
+            onPress={() => navigation.navigate('Profile')}
           >
             {/* <Text style={s.tempText}>ProfileScreen</Text> */}
             <MaterialIcons
