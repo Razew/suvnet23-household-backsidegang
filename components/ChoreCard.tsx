@@ -31,8 +31,14 @@ export default function ChoreCard({ chore }: Props) {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const { daysSinceLastCompleted, isAdmin, profiles, currentUser } =
-    useAppSelector(selectChoreCardData(chore.id));
+  const {
+    daysSinceLastCompleted,
+    isAdmin,
+    profiles,
+    currentUser,
+    loading,
+    // errorMessage,
+  } = useAppSelector(selectChoreCardData(chore.id));
 
   const hideDialog = () => setVisible(false);
 
@@ -142,8 +148,10 @@ export default function ChoreCard({ chore }: Props) {
             icon="check"
             style={s.button}
             onPress={onCompletedPress}
+            disabled={loading !== 'succeeded'}
           >
             Complete
+            {/* {loading !== 'succeeded' ? 'Loading...' : 'Complete'} */}
           </Button>
           {isAdmin && (
             <View style={s.buttonRow}>
