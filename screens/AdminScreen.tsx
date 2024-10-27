@@ -1,11 +1,11 @@
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import {
   TextInput,
   Button,
   Text,
   List,
-  Icon,
   Divider,
+  IconButton,
 } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { selectLoggedInUser } from '../store/auth/slice';
@@ -25,9 +25,6 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { User_To_Household } from '../types/types';
-import { Item } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
-import { Accordion } from 'react-native-paper/lib/typescript/components/List/List';
-import { map } from 'zod';
 import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelectors';
 
 type Props = {
@@ -35,12 +32,9 @@ type Props = {
 };
 
 export default function AdminScreen({ navigation }: Props) {
-  const allAvatars = useAppSelector(selectAvatars);
-  const allUserToHouseholds = useAppSelector(selectUsersToHouseholds);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const currentHousehold = useAppSelector(selectCurrentHousehold);
-  const allHouseholds = useAppSelector(selectHouseholds);
-  const UsersWithAvatarsCurrentHousehold = useAppSelector(
+  const usersWithAvatars = useAppSelector(
     selectUsersWithAvatarsCurrentHousehold,
   );
   const [householdName, setHouseholdName] = useState('');
@@ -52,17 +46,6 @@ export default function AdminScreen({ navigation }: Props) {
     dispatch(fetchUsersToHouseholds());
     dispatch(fetchHouseholds());
   }, [dispatch]);
-
-  const userHouseholds: User_To_Household[] = allUserToHouseholds.filter(
-    (uth) => uth.household_id === currentHousehold?.id,
-  );
-
-  const profileAndHouseholds = userHouseholds.map((userHousehold) => {
-    const household = allHouseholds.find(
-      (household) => household.id === userHousehold.household_id,
-    )!;
-    return { household, profile: userHousehold };
-  });
 
   const changeHouseholdName = async () => {
     if (loggedInUser?.id === undefined) {
@@ -93,8 +76,16 @@ export default function AdminScreen({ navigation }: Props) {
     // }, 2000);
   };
 
+  const kickUser = (userId: number) => {
+    console.log('Kick user:', userId);
+  };
+
+  const pauseUser = (userId: number) => {
+    console.log('Pause user:', userId);
+  };
+
   return (
-    <View>
+    <ScrollView>
       <View
         style={{
           justifyContent: 'center',
@@ -132,67 +123,62 @@ export default function AdminScreen({ navigation }: Props) {
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
 
-      {profileAndHouseholds.map((profileAndHousehold) => (
-      
-      <List.Item
-        title="First Item"
-        description="Item description"
-        left={(props) => (
-          <List.Icon
-            {...props}
-            icon={123}
+      {usersWithAvatars.map((user) => (
+        <View key={user.user_id}>
+          <List.Item
+            title={`${user.nickname}`}
+            description={user.is_active ? '' : 'Not active'}
+            left={() => (
+              <Text
+                style={{
+                  margin: 10,
+                  marginLeft: 15,
+                  marginTop: 15,
+                  borderWidth: 1,
+                  borderColor: user.avatar?.colour_code,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  backgroundColor: user.avatar?.colour_code,
+                  borderRadius: 20,
+                  fontSize: 20,
+                  textAlign: 'center',
+                  lineHeight: 30,
+                }}
+              >
+                {user.avatar?.emoji}
+              </Text>
+            )}
+            right={(props) => (
+              <>
+                {user.is_admin && (
+                  <List.Icon
+                    {...props}
+                    icon="crown"
+                  />
+                )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 80,
+                  }}
+                >
+                  <IconButton
+                    icon="account-remove"
+                    onPress={() => kickUser(user.user_id)}
+                  />
+                  <IconButton
+                    icon={user.is_active ? 'pause-circle' : 'play-circle'}
+                    onPress={() => pauseUser(user.user_id)}
+                  />
+                </View>
+              </>
+            )}
           />
-        )}
-        />
-      )}
-
-      {/* {profileAndHouseholds.map((profileAndHousehold) => (
-        <View key={profileAndHousehold.household.id}>
-          <List.Accordion
-            title={profileAndHousehold.household.name}
-            description={
-              profileAndHousehold.household.id === currentHousehold?.id
-                ? `${profileAndHousehold.household.code} (Current household)`
-                : profileAndHousehold.household.code
-            }
-            left={(props) => (
-              <List.Icon
-                {...props}
-                icon="home"
-              />
-            )}
-          >
-            {allUserToHouseholds.map(
-              (userToHousehold) =>
-                userToHousehold.household_id ===
-                  profileAndHousehold.household.id && (
-                  <View key={userToHousehold.nickname}>
-                    <List.Item
-                      title={userToHousehold.nickname}
-                      // description={
-                      //   userToHousehold.is_active ? '' : 'Not active'
-                      // }
-                      left={() => {
-                        const avatar = allAvatars.find(
-                          (avatar) => avatar.id === userToHousehold.avatar_id,
-                        );
-                        return avatar ? <Text>{avatar.emoji}</Text> : null;
-                      }}
-                      right={(props) =>
-                        userToHousehold.is_admin ? (
-                          <List.Icon
-                            {...props}
-                            icon="crown"
-                          />
-                        ) : null
-                      }
-                    />
-                  </View>
-                ),
-            )}
-          </List.Accordion>
         </View>
-      ))} */}
-    </View>
+      ))}
+    </ScrollView>
   );
 }

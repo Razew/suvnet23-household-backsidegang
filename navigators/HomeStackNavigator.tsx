@@ -56,7 +56,7 @@ export default function HomeStackNavigator() {
             {isAdminOnHousehold && (
               <Pressable
                 style={s.tempExit}
-                onPress={() => navigation.replace('Admin')}
+                onPress={() => navigation.navigate('Admin')}
               >
                 <MaterialIcons
                   name="admin-panel-settings"
@@ -70,7 +70,7 @@ export default function HomeStackNavigator() {
         headerLeft: () => (
           <Pressable
             style={s.tempExit}
-            onPress={() => navigation.replace('Profile')}
+            onPress={() => navigation.navigate('Profile')}
           >
             {/* <Text style={s.tempText}>ProfileScreen</Text> */}
             <MaterialIcons
@@ -87,10 +87,16 @@ export default function HomeStackNavigator() {
       <HomeStack.Screen
         name="Admin"
         component={AdminScreen}
+        options={{
+          animation: 'slide_from_bottom',
+        }}
       />
       <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}
+        options={{
+          animation: 'slide_from_bottom',
+        }}
       />
       <HomeStack.Screen
         name="Home"

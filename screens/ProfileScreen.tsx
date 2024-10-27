@@ -243,30 +243,29 @@ export default function ProfileScreen({ navigation }: Props) {
       <DarkLightModeButton />
       <View
         style={{
-          flexDirection: 'column',
-          marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
+          marginTop: 20,
         }}
       >
-        <Text
-          style={{
-            fontSize: 20,
-          }}
-        >
-          Household: {currentHousehold?.name}
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+          Current Household:
         </Text>
-
-        <Text
-          style={{
-            fontSize: 20,
-            marginBottom: 20,
-          }}
-        >
-          Code: {currentHousehold?.code}
-        </Text>
+        <Text style={{ fontSize: 24 }}>{currentHousehold?.name}</Text>
       </View>
-      {isAdmin()}
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginTop: 20,
+        }}
+      >
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+          Household Code:{' '}
+        </Text>
+        <Text style={{ fontSize: 24 }}>{currentHousehold?.code}</Text>
+      </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
       <View style={{ justifyContent: 'center' }}>
         <View
@@ -276,7 +275,9 @@ export default function ProfileScreen({ navigation }: Props) {
             justifyContent: 'center',
           }}
         >
-          <Text style={{ fontSize: 20 }}>Current nickname: </Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+            Current nickname:{' '}
+          </Text>
           <Text style={{ fontSize: 20, marginBottom: 20, marginLeft: 10 }}>
             {currentNickname}
           </Text>
@@ -326,7 +327,7 @@ export default function ProfileScreen({ navigation }: Props) {
           justifyContent: 'center',
         }}
       >
-        <Text style={{ fontSize: 20 }}>Change avatar:</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Change avatar:</Text>
       </View>
       <View
         style={{
@@ -395,12 +396,18 @@ export default function ProfileScreen({ navigation }: Props) {
           Leave Household
         </Button>
       </View>
-      <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
+      <Divider style={{ height: 1, marginTop: 15 }} />
       <Button
-        mode="contained"
+        mode="elevated"
+        elevation={5}
+        style={{
+          flex: 1,
+          borderRadius: 1,
+          padding: 8,
+        }}
         onPress={handleSignOut}
       >
-        Sign Out
+        <Text style={{ fontSize: 20, color: 'red' }}>Sign Out</Text>
       </Button>
     </ScrollView>
   );
