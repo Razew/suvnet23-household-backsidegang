@@ -1,32 +1,33 @@
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import DarkLightModeButton from '../components/DarkLightModeButton';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { selectLoggedInUser } from '../store/auth/slice';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   fetchHouseholds,
   selectCurrentHousehold,
-  setCurrentHousehold,
-  updateHousehold,
 } from '../store/households/slice';
 import {
   deleteUserToHousehold,
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
-  setCurrentProfile,
   updateUserToHousehold,
 } from '../store/userToHousehold/slice';
 
-type Props = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParamList, 'Profile'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
 
 export default function ProfileScreen({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
-  const [householdName, setHouseholdName] = useState('');
   const allAvatars = useAppSelector(selectAvatars); // Avatar[]
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
@@ -38,26 +39,15 @@ export default function ProfileScreen({ navigation }: Props) {
     dispatch(fetchAvatars());
     dispatch(fetchUsersToHouseholds());
     dispatch(fetchHouseholds());
-  }, []);
+  }, [dispatch]);
 
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === currentHousehold?.id)
-    // .filter((user) => user.household_id === loggedInUser?.id)
     .map((user) => user.avatar_id);
 
   const availableAvatars = allAvatars.filter(
     (avatar) => !unavailableAvatarIds.includes(avatar.id),
   );
-
-  const isUserActive = allUsersToHouseholds
-    .filter((user) => user.user_id === loggedInUser?.id)
-    .filter((user) => user.household_id === currentHousehold?.id)
-    .find((user) => user.is_active === true);
-
-  const isAdminOnHousehold = allUsersToHouseholds
-    .filter((user) => user.user_id === loggedInUser?.id)
-    .filter((user) => user.household_id === currentHousehold?.id)
-    .find((user) => user.is_admin === true);
 
   const findAvatarId = allUsersToHouseholds
     .filter((user) => user.user_id === loggedInUser?.id)
@@ -68,37 +58,10 @@ export default function ProfileScreen({ navigation }: Props) {
     (avatar) => avatar.id === findAvatarId?.avatar_id,
   );
 
-  const isAdmin = () => {
-    if (isAdminOnHousehold) {
-      return (
-        <View>
-          <View>
-            <TextInput
-              label={currentHousehold?.name}
-              value={householdName}
-              onChangeText={setHouseholdName}
-            />
-          </View>
-          <View
-            style={{
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              gap: 65,
-              justifyContent: 'center',
-              marginTop: 20,
-            }}
-          >
-            <Button
-              mode="contained"
-              onPress={changeHouseholdName}
-            >
-              Change household name
-            </Button>
-          </View>
-        </View>
-      );
-    }
-    return null;
+  const handleSignOut = () => {
+    console.log('Sign out');
+    dispatch(resetState());
+    navigation.replace('Login');
   };
 
   const handleLeaveHousehold = async () => {
@@ -114,38 +77,8 @@ export default function ProfileScreen({ navigation }: Props) {
         user_id: loggedInUser.id,
       }),
     );
-    // setTimeout(() => {
-    navigation.replace('Home');
-    // }, 2000);
-  };
 
-  const changeHouseholdName = async () => {
-    if (loggedInUser?.id === undefined) {
-      return console.log('No logged in user');
-    }
-    if (householdName === '') {
-      return console.log('No household name');
-    }
-    if (currentHousehold?.id === undefined) {
-      return console.log('No current household');
-    }
-    dispatch(
-      updateHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-      }),
-    );
-    dispatch(
-      setCurrentHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-        code: currentHousehold.code,
-      }),
-    );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    // navigation.push('Profile');
-    // }, 2000);
+    navigation.replace('Home');
   };
 
   const changeName = async () => {
@@ -165,29 +98,7 @@ export default function ProfileScreen({ navigation }: Props) {
         household_id: currentHousehold.id,
       }),
     );
-    dispatch(
-      setCurrentProfile({
-        nickname: nickname,
-        userId: loggedInUser.id,
-        householdId: currentHousehold.id,
-        avatarId: currentHouseholdUserAvatar?.emoji,
-        isAdmin: isAdminOnHousehold?.is_admin,
-        isActive: isUserActive,
-      }),
-    );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    //   navigation.push('Profile');
-    // }, 2000);
   };
-
-  // useEffect(() => {
-  //   changeName();
-  // }, [loggedInUser, nickname, currentHousehold]);
-
-  // const handleSelectAvatar = (avatarId: number) => {
-  //   setChoosenAvatar(avatarId);
-  // };
 
   const submitAvatar = async () => {
     if (loggedInUser?.id === undefined) {
@@ -206,22 +117,6 @@ export default function ProfileScreen({ navigation }: Props) {
         household_id: currentHousehold?.id,
       }),
     );
-
-    dispatch(
-      setCurrentProfile({
-        nickname: currentNickname,
-        userId: loggedInUser.id,
-        householdId: currentHousehold.id,
-        avatarId: choosenAvatar,
-        isAdmin: isAdminOnHousehold?.is_admin,
-        isActive: isUserActive,
-      }),
-    );
-
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    //   navigation.push('Profile');
-    // }, 2000);
   };
 
   const currentNickname = allUsersToHouseholds
@@ -233,30 +128,29 @@ export default function ProfileScreen({ navigation }: Props) {
       <DarkLightModeButton />
       <View
         style={{
-          flexDirection: 'column',
-          marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
+          marginTop: 20,
         }}
       >
-        <Text
-          style={{
-            fontSize: 20,
-          }}
-        >
-          Household: {currentHousehold?.name}
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+          Current Household:
         </Text>
-
-        <Text
-          style={{
-            fontSize: 20,
-            marginBottom: 20,
-          }}
-        >
-          Code: {currentHousehold?.code}
-        </Text>
+        <Text style={{ fontSize: 24 }}>{currentHousehold?.name}</Text>
       </View>
-      {isAdmin()}
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginTop: 20,
+        }}
+      >
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+          Household Code:{' '}
+        </Text>
+        <Text style={{ fontSize: 24 }}>{currentHousehold?.code}</Text>
+      </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
       <View style={{ justifyContent: 'center' }}>
         <View
@@ -266,7 +160,9 @@ export default function ProfileScreen({ navigation }: Props) {
             justifyContent: 'center',
           }}
         >
-          <Text style={{ fontSize: 20 }}>Current nickname: </Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+            Current nickname:{' '}
+          </Text>
           <Text style={{ fontSize: 20, marginBottom: 20, marginLeft: 10 }}>
             {currentNickname}
           </Text>
@@ -311,12 +207,12 @@ export default function ProfileScreen({ navigation }: Props) {
       <View
         style={{
           flexDirection: 'row',
-          marginBottom: 50,
+          marginBottom: 20,
           marginTop: 20,
           justifyContent: 'center',
         }}
       >
-        <Text style={{ fontSize: 20 }}>Change avatar:</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Change avatar:</Text>
       </View>
       <View
         style={{
@@ -375,7 +271,7 @@ export default function ProfileScreen({ navigation }: Props) {
           mode="contained"
           onPress={() => navigation.replace('Home')}
         >
-          Change household
+          Change Household
         </Button>
         <Button
           mode="contained"
@@ -385,6 +281,19 @@ export default function ProfileScreen({ navigation }: Props) {
           Leave Household
         </Button>
       </View>
+      <Divider style={{ height: 1, marginTop: 15 }} />
+      <Button
+        mode="elevated"
+        elevation={5}
+        style={{
+          flex: 1,
+          borderRadius: 1,
+          marginTop: 5,
+        }}
+        onPress={handleSignOut}
+      >
+        <Text style={{ fontSize: 20, color: 'red' }}>Sign Out</Text>
+      </Button>
     </ScrollView>
   );
 }

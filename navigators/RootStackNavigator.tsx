@@ -3,15 +3,17 @@ import HandleChoreScreen from '../screens/HandleChoreScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import { Chore } from '../types/types';
 import HomeStackNavigator from './HomeStackNavigator';
+import { Chore } from '../types/types';
 
 export type RootStackParamList = {
   Loading: undefined;
   Login: undefined;
   Register: undefined;
   HomeNavigator: undefined;
-  HandleChore: { chore?: Chore };
+  CreateChore: undefined;
+  EditChore: undefined;
+  HandleChore: { chore: Chore | undefined };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();

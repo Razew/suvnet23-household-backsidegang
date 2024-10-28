@@ -1,5 +1,5 @@
 // store/households/slice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Household } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
@@ -109,6 +109,9 @@ const householdsSlice = createSlice({
           if (targetHousehold) {
             Object.assign(targetHousehold, action.payload);
           }
+          if (state.current?.id === action.payload.id) {
+            state.current = action.payload;
+          }
           state.loading = 'succeeded';
         },
       )
@@ -125,5 +128,13 @@ export const householdsReducer = householdsSlice.reducer;
 export const selectHouseholds = (state: RootState) => state.households.list;
 export const selectCurrentHousehold = (state: RootState) =>
   state.households.current;
+export const selectHouseholdErrorMessage = (state: RootState) =>
+  state.households.errorMessage;
+export const selectHouseholdLoadingStatus = (state: RootState) =>
+  state.households.loading;
+export const selectHouseholdStatus = createSelector(
+  [selectHouseholdLoadingStatus, selectHouseholdErrorMessage],
+  (loading, errorMessage) => ({ loading, errorMessage }),
+);
 
 export const { setCurrentHousehold } = householdsSlice.actions;

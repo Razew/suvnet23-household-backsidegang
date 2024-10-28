@@ -56,8 +56,8 @@
 - [x] 2. All users in a household should be able to see who belongs to the household.
 - [ ] 3. An owner of a household should be able to see requests to join the household.
 - [ ] 4. An owner should be able to accept or decline requests.
-- [ ] 5. An owner should be able to make others owners.
-- [ ] 6. An owner should be able to pause a user, and during paused periods, X users should not be included in the statistics.
+- [x] 5. An owner should be able to make others owners.
+- [x] 6. An owner should be able to pause a user, and during paused periods, users should not be included in the statistics.
 - [ ] 7. If a user has been paused during part of a period in the statistics, the graphs should be normalized.
 
 ### Account (2)
