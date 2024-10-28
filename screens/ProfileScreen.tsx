@@ -1,26 +1,25 @@
-import { TouchableOpacity, View, ScrollView } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Divider, Text, TextInput } from 'react-native-paper';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import DarkLightModeButton from '../components/DarkLightModeButton';
+import { HomeStackParamList } from '../navigators/HomeStackNavigator';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+  fetchHouseholds,
+  selectCurrentHousehold,
+  setCurrentHousehold,
+  updateHousehold,
+} from '../store/households/slice';
+import {
+  deleteUserToHousehold,
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
   setCurrentProfile,
-  updateAvatarEmoji,
-  updateNickname,
+  updateUserToHousehold,
 } from '../store/userToHousehold/slice';
-import {
-  fetchHouseholds,
-  leaveHousehold,
-  selectCurrentHousehold,
-  setCurrentHousehold,
-  updateHouseholdName,
-} from '../store/households/slice';
-import { selectLoggedInUser } from '../store/auth/slice';
-import DarkLightModeButton from '../components/DarkLightModeButton';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
@@ -110,14 +109,14 @@ export default function ProfileScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(
-      leaveHousehold({
-        householdId: currentHousehold.id,
-        userId: loggedInUser.id,
+      deleteUserToHousehold({
+        household_id: currentHousehold.id,
+        user_id: loggedInUser.id,
       }),
     );
-    setTimeout(() => {
-      navigation.replace('Home');
-    }, 2000);
+    // setTimeout(() => {
+    navigation.replace('Home');
+    // }, 2000);
   };
 
   const changeHouseholdName = async () => {
@@ -131,7 +130,7 @@ export default function ProfileScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(
-      updateHouseholdName({
+      updateHousehold({
         name: householdName,
         id: currentHousehold.id,
       }),
@@ -145,7 +144,7 @@ export default function ProfileScreen({ navigation }: Props) {
     );
     // Add the timer when using the emulator it works on the phone witout it
     // setTimeout(() => {
-    navigation.push('Profile');
+    // navigation.push('Profile');
     // }, 2000);
   };
 
@@ -160,10 +159,10 @@ export default function ProfileScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(
-      updateNickname({
+      updateUserToHousehold({
         nickname,
-        userId: loggedInUser.id,
-        currentHouseholdId: currentHousehold.id,
+        user_id: loggedInUser.id,
+        household_id: currentHousehold.id,
       }),
     );
     dispatch(
@@ -177,9 +176,9 @@ export default function ProfileScreen({ navigation }: Props) {
       }),
     );
     // Add the timer when using the emulator it works on the phone witout it
-    setTimeout(() => {
-      navigation.push('Profile');
-    }, 2000);
+    // setTimeout(() => {
+    //   navigation.push('Profile');
+    // }, 2000);
   };
 
   // useEffect(() => {
@@ -201,10 +200,10 @@ export default function ProfileScreen({ navigation }: Props) {
       return console.log('No current household');
     }
     dispatch(
-      updateAvatarEmoji({
-        avatarId: choosenAvatar,
-        userId: loggedInUser.id,
-        currentHouseholdId: currentHousehold?.id,
+      updateUserToHousehold({
+        avatar_id: choosenAvatar,
+        user_id: loggedInUser.id,
+        household_id: currentHousehold?.id,
       }),
     );
 
@@ -220,9 +219,9 @@ export default function ProfileScreen({ navigation }: Props) {
     );
 
     // Add the timer when using the emulator it works on the phone witout it
-    setTimeout(() => {
-      navigation.push('Profile');
-    }, 2000);
+    // setTimeout(() => {
+    //   navigation.push('Profile');
+    // }, 2000);
   };
 
   const currentNickname = allUsersToHouseholds
