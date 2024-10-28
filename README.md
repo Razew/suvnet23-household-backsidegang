@@ -74,7 +74,7 @@ The following requirements have been successfully implemented:
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/Razew/suvnet23-household-backsidegang.git
    cd hushållet
    ```
 2. **Install Dependencies**:

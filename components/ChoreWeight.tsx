@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Badge, Card } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Badge, Card, Text, useTheme } from 'react-native-paper';
 
 type ChoreWeightProps = {
   initialWeight: 1 | 2 | 4 | 6 | 8;
@@ -14,6 +14,7 @@ export default function ChoreWeight({
   const [isPressed, setIsPressed] = useState(false);
   const [value, setValue] = useState(initialWeight);
   const [backgroundColor, setBackgroundColor] = useState('rgba(0, 0, 0, 0.2)');
+  const { colors, dark } = useTheme();
 
   const handlePress = () => {
     setIsPressed(true);
@@ -32,7 +33,9 @@ export default function ChoreWeight({
         {isPressed ? (
           <View style={s.numberRow}>
             {([1, 2, 4, 6, 8] as const).map((num, index) => {
-              const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
+              const color = !dark
+                ? `rgba(0, 0, 0, ${0.1 + index * 0.1})`
+                : `rgba(255, 255, 255, ${0.5 - index * 0.1})`;
               return (
                 <TouchableOpacity
                   onPress={() => handleNumberPress(num, color)}
@@ -48,7 +51,12 @@ export default function ChoreWeight({
           <Card.Actions>
             <View style={s.content}>
               <View style={s.textContainer}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                  }}
+                >
                   Value:{' '}
                 </Text>
                 <Text>How energy-demanding is the task?</Text>
@@ -56,7 +64,7 @@ export default function ChoreWeight({
               <View>
                 <Badge
                   size={24}
-                  style={[s.badge, { backgroundColor }]}
+                  style={{ backgroundColor, color: colors.onBackground }}
                 >
                   {value}
                 </Badge>
@@ -76,7 +84,6 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
-    backgroundColor: 'white',
   },
   content: {
     flexDirection: 'row',
@@ -85,9 +92,6 @@ const s = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-  },
-  badge: {
-    color: 'black',
   },
   numberRow: {
     flexDirection: 'row',
@@ -104,7 +108,6 @@ const s = StyleSheet.create({
     marginHorizontal: 5,
   },
   circleText: {
-    color: 'black',
     fontWeight: 'bold',
   },
 });

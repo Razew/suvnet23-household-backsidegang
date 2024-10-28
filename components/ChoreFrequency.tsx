@@ -78,11 +78,9 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
-    backgroundColor: 'white',
   },
   text: {
     fontWeight: 'bold',
-    color: 'black',
     fontSize: 18,
   },
   content: {
@@ -103,13 +101,11 @@ const s = StyleSheet.create({
     color: 'white',
   },
   textRight: {
-    color: 'black',
     fontSize: 18,
   },
   numberText: {
     marginHorizontal: 5,
     fontSize: 16,
-    color: 'black',
   },
   numberContainer: {
     flexDirection: 'row',
