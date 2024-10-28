@@ -10,8 +10,7 @@
 
 ### Household (1)
 
-- [x] 4. A household should have a name and a generated (simple) code so others can join the household;
-- [x] the name should be editable.
+- [x] 4. A household should have a name and a generated (simple) code so others can join the household; the name should be editable.
 
 ### Account (3)
 
