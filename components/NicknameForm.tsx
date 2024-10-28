@@ -4,7 +4,10 @@ import { Button, Snackbar, TextInput } from 'react-native-paper';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectCurrentAvatar } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectHouseholdBeingJoined } from '../store/households/slice';
+import {
+  selectHouseholdBeingJoined,
+  setCurrentHousehold,
+} from '../store/households/slice';
 import {
   selectCurrentProfile,
   setCurrentProfile,
@@ -12,6 +15,8 @@ import {
 } from '../store/userToHousehold/slice';
 import { User_To_Household } from '../types/types';
 import { supabase } from '../utils/supabase';
+
+// type Props = NativeStackScreenProps<HomeStackParamList, 'HouseholdScreen'>;
 
 export default function NicknameForm() {
   const dispatch = useAppDispatch();
@@ -21,18 +26,19 @@ export default function NicknameForm() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
   const currentUser = useAppSelector(selectCurrentProfile); //UserToHousehold
+  // const { setMostRecentHousehold } = useHouseholdContext();
 
   const currentAvatar = useAppSelector(selectCurrentAvatar);
 
   const onDismissSnackBar = () => setSnackBarVisible(false);
 
   const insertUserToHousehold = async () => {
-    console.log('Pre flight check avatar!', currentAvatar?.emoji);
-    console.log('Entarrdd insertUserToHousehold function');
+    // console.log('Pre flight check avatar!', currentAvatar?.emoji);
+    // console.log('Entarrdd insertUserToHousehold function');
     // const result: boolean = loggedinuser, currentHousehold;
-    console.log('logged in user:', loggedInUser?.username);
-    console.log('household being joined:', householdBeingJoined);
-    console.log('chosen avatar:', currentAvatar?.id);
+    // console.log('logged in user:', loggedInUser?.username);
+    // console.log('household being joined:', householdBeingJoined);
+    // console.log('chosen avatar:', currentAvatar?.id);
 
     if (loggedInUser && householdBeingJoined && currentAvatar) {
       const userToInsert: User_To_Household = {
@@ -105,12 +111,14 @@ export default function NicknameForm() {
     dispatch(
       setCurrentProfile({
         nickname: nickname,
-        userId: loggedInUser.id, //potential error, change to currentuser if so moron
+        userId: loggedInUser.id,
         householdId: householdBeingJoined.id,
-        avatarId: currentAvatar?.id, //needs to be fetched from global state
+        avatarId: currentAvatar?.id,
         isAdmin: currentUser?.is_admin,
         isActive: currentUser?.is_active,
       }),
+      // setMostRecentHousehold(householdBeingJoined),
+      dispatch(setCurrentHousehold(householdBeingJoined)),
     );
   };
 

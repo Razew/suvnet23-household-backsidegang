@@ -98,10 +98,13 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
         setSnackBarMessage('Already in this household');
         onToggleSnackBar();
       } else {
+        console.log('Joined household: ', householdBeingJoined.name);
         dispatch(setHouseholdBeingJoined(householdBeingJoined));
         dispatch(fetchUsersToHouseholds());
         setSnackBarMessage(`Joined household: ${householdBeingJoined.name}`);
         setAvatarSelectorVisible(true);
+        // navigation.replace('HouseholdScreen');
+        //set current household
         // console.log('TETSTSTATATTA:', loggedInUser?.household_id);
       }
     }
@@ -150,6 +153,14 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
         <View>
           <AvatarSelector />
           <NicknameForm />
+          {/* set current household */}
+          {/* {navigation.replace("HouseholdScreen")} */}
+          <Button
+            mode="contained"
+            onPress={() => navigation.replace('HouseholdScreen')}
+          >
+            JoIn SuCkA
+          </Button>
         </View>
       ) : null}
     </View>
