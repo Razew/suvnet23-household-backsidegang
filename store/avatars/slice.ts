@@ -19,12 +19,10 @@ const initialState: AvatarsState = {
 export const fetchAvatars = createAppAsyncThunk<Avatar[], void>(
   'avatars/fetchAvatars',
   async (_, { rejectWithValue }) => {
-    // console.log('Fetching avatars...');
     try {
       const { data: fetchedAvatars, error } = await supabase
         .from('avatar')
-        .select('*');
-      // console.log('Fetched Avatars:', fetchedAvatars);
+        .select();
 
       if (error) {
         console.error('Supabase Error:', error);
