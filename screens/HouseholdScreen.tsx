@@ -36,19 +36,11 @@ export default function HouseholdScreen() {
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
 
-  if (!currentHousehold) {
-    return (
-      <View>
-        <Text>No household selected</Text>
-      </View>
-    );
-  }
-
-  const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
-    getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
-  console.log('this weeks chores: ', thisWeeksChores);
-  console.log('last weeks chores: ', lastWeeksChores);
-  console.log('last months chores: ', lastMonthsChores);
+  // const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
+  //   getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
+  // console.log('this weeks chores: ', thisWeeksChores);
+  // console.log('last weeks chores: ', lastWeeksChores);
+  // console.log('last months chores: ', lastMonthsChores);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
@@ -157,6 +149,20 @@ export default function HouseholdScreen() {
   const isRightArrowDisabled = () => {
     return findNextPageWithChores(currentPage + 1) === -1;
   };
+
+  if (!currentHousehold) {
+    return (
+      <View>
+        <Text>No household selected</Text>
+      </View>
+    );
+  }
+
+  const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
+    getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
+  console.log('this weeks chores: ', thisWeeksChores);
+  console.log('last weeks chores: ', lastWeeksChores);
+  console.log('last months chores: ', lastMonthsChores);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
