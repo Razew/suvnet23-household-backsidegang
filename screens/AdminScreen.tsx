@@ -11,13 +11,13 @@ import React, { useEffect, useState } from 'react';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import {
+  leaveHousehold,
   selectCurrentHousehold,
   setCurrentHousehold,
   updateHouseholdName,
 } from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
-  kickUserFromHousehold,
   toggleAdmin,
   togglePauseUser,
 } from '../store/userToHousehold/slice';
@@ -74,9 +74,7 @@ export default function AdminScreen({ navigation }: Props) {
     if (currentHousehold?.id === undefined) {
       return console.log('No current household');
     }
-    dispatch(
-      kickUserFromHousehold({ userId, householdId: currentHousehold.id }),
-    );
+    dispatch(leaveHousehold({ userId, householdId: currentHousehold.id }));
   };
 
   const handlePauseToggle = (userId: number) => {

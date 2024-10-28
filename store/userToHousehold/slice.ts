@@ -152,31 +152,6 @@ export const togglePauseUser = createAppAsyncThunk(
   },
 );
 
-export const kickUserFromHousehold = createAppAsyncThunk(
-  'usersToHouseholds/kickUser',
-  async (
-    { userId, householdId }: { userId: number; householdId: number },
-    { rejectWithValue },
-  ) => {
-    try {
-      const { error } = await supabase
-        .from('user_to_household')
-        .delete()
-        .match({ user_id: userId, household_id: householdId });
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      return console.log('User kicked');
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while kicking user');
-    }
-  },
-);
-
 export const toggleAdmin = createAppAsyncThunk(
   'usersToHouseholds/toggleAdmin',
   async (
