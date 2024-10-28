@@ -74,6 +74,7 @@ export default function ProfileScreen({ navigation }: Props) {
     dispatch(resetState());
     navigation.replace('Login');
   };
+
   const handleLeaveHousehold = async () => {
     if (loggedInUser?.id === undefined) {
       return console.log('No logged in user');

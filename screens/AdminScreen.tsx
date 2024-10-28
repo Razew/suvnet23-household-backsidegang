@@ -20,6 +20,7 @@ import {
   fetchUsersToHouseholds,
   toggleAdmin,
   togglePauseUser,
+  updateUserToHousehold,
 } from '../store/userToHousehold/slice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
@@ -79,18 +80,22 @@ export default function AdminScreen({ navigation }: Props) {
     );
   };
 
-  const handlePauseToggle = (userId: number) => {
+  const handlePauseToggle = (user_id: number) => {
     if (currentHousehold?.id === undefined) {
       return console.log('No current household');
     }
-    dispatch(togglePauseUser({ userId, householdId: currentHousehold.id }));
+    dispatch(
+      updateUserToHousehold({ user_id, household_id: currentHousehold.id }),
+    );
   };
 
-  const handleToggleAdmin = (userId: number) => {
+  const handleToggleAdmin = (user_id: number) => {
     if (currentHousehold?.id === undefined) {
       return console.log('No current household');
     }
-    dispatch(toggleAdmin({ userId, householdId: currentHousehold.id }));
+    dispatch(
+      updateUserToHousehold({ user_id, household_id: currentHousehold.id }),
+    );
   };
 
   return (
