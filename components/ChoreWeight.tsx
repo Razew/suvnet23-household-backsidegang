@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
+import { ThemeContext } from '../providers/ThemeProvider';
 
 type ChoreWeightProps = {
   initialWeight: 1 | 2 | 4 | 6 | 8;
@@ -13,18 +14,23 @@ export default function ChoreWeight({
 }: ChoreWeightProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [value, setValue] = useState(initialWeight);
-  const [backgroundColor, setBackgroundColor] = useState('rgba(0, 0, 0, 0.2)');
+  const { colorMode, setColorMode } = useContext(ThemeContext) as {
+    colorMode: string;
+    setColorMode: (value: string) => void;
+  };
 
   const handlePress = () => {
     setIsPressed(true);
   };
 
-  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8, color: string) => {
+  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8) => {
     setIsPressed(false);
     setValue(num);
     setWeight(num);
-    setBackgroundColor(color);
+    setColorMode(colorMode);
   };
+
+  const textColor = colorMode === 'dark' ? '#FFFFFF' : '#000000';
 
   return (
     <Card style={s.container}>
@@ -32,10 +38,13 @@ export default function ChoreWeight({
         {isPressed ? (
           <View style={s.numberRow}>
             {([1, 2, 4, 6, 8] as const).map((num, index) => {
-              const color = `rgba(0, 0, 0, ${0.1 + index * 0.1})`;
+              const color =
+                colorMode === 'light'
+                  ? `rgba(0, 0, 0, ${0.1 + index * 0.1})`
+                  : `rgba(255, 255, 255, ${0.4 + index * 0.2})`;
               return (
                 <TouchableOpacity
-                  onPress={() => handleNumberPress(num, color)}
+                  onPress={() => handleNumberPress(num)}
                   key={num}
                   style={[s.circle, { backgroundColor: color }]}
                 >
@@ -48,15 +57,19 @@ export default function ChoreWeight({
           <Card.Actions>
             <View style={s.content}>
               <View style={s.textContainer}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                <Text
+                  style={{ fontWeight: 'bold', fontSize: 18, color: textColor }}
+                >
                   Value:{' '}
                 </Text>
-                <Text>How energy-demanding is the task?</Text>
+                <Text style={{ color: textColor }}>
+                  How energy-demanding is the task?
+                </Text>
               </View>
               <View>
                 <Badge
                   size={24}
-                  style={[s.badge, { backgroundColor }]}
+                  style={[s.badge]}
                 >
                   {value}
                 </Badge>
@@ -76,7 +89,6 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
-    backgroundColor: 'white',
   },
   content: {
     flexDirection: 'row',
@@ -87,7 +99,7 @@ const s = StyleSheet.create({
     flex: 1,
   },
   badge: {
-    color: 'black',
+    // color: 'black',
   },
   numberRow: {
     flexDirection: 'row',
@@ -104,7 +116,7 @@ const s = StyleSheet.create({
     marginHorizontal: 5,
   },
   circleText: {
-    color: 'black',
+    // color: 'black',
     fontWeight: 'bold',
   },
 });

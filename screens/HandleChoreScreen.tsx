@@ -140,11 +140,9 @@ const s = StyleSheet.create({
   inputCard: {
     marginBottom: 16,
     borderRadius: 10,
-    backgroundColor: 'white',
   },
   input: {
     // flex: 1,
-    backgroundColor: 'white',
   },
   inputOutline: {
     borderRadius: 10,
