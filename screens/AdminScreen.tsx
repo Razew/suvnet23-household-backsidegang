@@ -129,9 +129,9 @@ export default function AdminScreen() {
         <Button
           mode="contained"
           onPress={changeHouseholdName}
-          disabled={loading !== 'succeeded'}
+          disabled={loading === 'pending'}
         >
-          {loading !== 'succeeded'
+          {loading === 'pending'
             ? 'Updating household name...'
             : 'Change household name'}
         </Button>
