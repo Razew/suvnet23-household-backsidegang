@@ -13,6 +13,7 @@ import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelecto
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
+  selectHouseholdStatus,
   updateHousehold,
 } from '../store/households/slice';
 import {
@@ -28,6 +29,8 @@ export default function AdminScreen() {
   const usersWithAvatars = useAppSelector(
     selectUsersWithAvatarsCurrentHousehold,
   );
+  // const { loading, errorMessage } = useAppSelector(selectHouseholdStatus);
+  const { loading } = useAppSelector(selectHouseholdStatus);
   const [householdName, setHouseholdName] = useState('');
 
   const dispatch = useAppDispatch();
@@ -126,8 +129,11 @@ export default function AdminScreen() {
         <Button
           mode="contained"
           onPress={changeHouseholdName}
+          disabled={loading !== 'succeeded'}
         >
-          Change household name
+          {loading !== 'succeeded'
+            ? 'Updating household name...'
+            : 'Change household name'}
         </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
