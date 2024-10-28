@@ -146,6 +146,12 @@ const usersToHouseholdsSlice = createSlice({
         if (targetUser) {
           Object.assign(targetUser, action.payload);
         }
+        if (
+          state.current?.user_id === action.payload.user_id &&
+          state.current.household_id === action.payload.household_id
+        ) {
+          state.current = action.payload;
+        }
         state.loading = 'succeeded';
       },
     );
