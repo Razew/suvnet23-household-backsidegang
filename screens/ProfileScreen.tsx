@@ -4,14 +4,12 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import DarkLightModeButton from '../components/DarkLightModeButton';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { selectLoggedInUser } from '../store/auth/slice';
+import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   fetchHouseholds,
   selectCurrentHousehold,
-  setCurrentHousehold,
-  updateHousehold,
 } from '../store/households/slice';
 import {
   deleteUserToHousehold,
@@ -20,15 +18,6 @@ import {
   setCurrentProfile,
   updateUserToHousehold,
 } from '../store/userToHousehold/slice';
-import {
-  fetchHouseholds,
-  leaveHousehold,
-  selectCurrentHousehold,
-} from '../store/households/slice';
-import { resetState, selectLoggedInUser } from '../store/auth/slice';
-import DarkLightModeButton from '../components/DarkLightModeButton';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 
@@ -55,7 +44,6 @@ export default function ProfileScreen({ navigation }: Props) {
 
   const unavailableAvatarIds = allUsersToHouseholds
     .filter((user) => user.household_id === currentHousehold?.id)
-    // .filter((user) => user.household_id === loggedInUser?.id)
     .map((user) => user.avatar_id);
 
   const availableAvatars = allAvatars.filter(
@@ -104,35 +92,6 @@ export default function ProfileScreen({ navigation }: Props) {
     // }, 2000);
   };
 
-  const changeHouseholdName = async () => {
-    if (loggedInUser?.id === undefined) {
-      return console.log('No logged in user');
-    }
-    if (householdName === '') {
-      return console.log('No household name');
-    }
-    if (currentHousehold?.id === undefined) {
-      return console.log('No current household');
-    }
-    dispatch(
-      updateHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-      }),
-    );
-    dispatch(
-      setCurrentHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-        code: currentHousehold.code,
-      }),
-    );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    // navigation.push('Profile');
-    // }, 2000);
-  };
-
   const changeName = async () => {
     if (loggedInUser?.id === undefined) {
       return console.log('No logged in user');
@@ -165,14 +124,6 @@ export default function ProfileScreen({ navigation }: Props) {
     //   navigation.push('Profile');
     // }, 2000);
   };
-
-  // useEffect(() => {
-  //   changeName();
-  // }, [loggedInUser, nickname, currentHousehold]);
-
-  // const handleSelectAvatar = (avatarId: number) => {
-  //   setChoosenAvatar(avatarId);
-  // };
 
   const submitAvatar = async () => {
     if (loggedInUser?.id === undefined) {
