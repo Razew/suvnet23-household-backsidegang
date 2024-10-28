@@ -109,6 +109,9 @@ const householdsSlice = createSlice({
           if (targetHousehold) {
             Object.assign(targetHousehold, action.payload);
           }
+          if (state.current?.id === action.payload.id) {
+            state.current = action.payload;
+          }
           state.loading = 'succeeded';
         },
       )

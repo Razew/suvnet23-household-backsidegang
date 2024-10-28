@@ -1,4 +1,3 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import {
@@ -9,13 +8,11 @@ import {
   Text,
   TextInput,
 } from 'react-native-paper';
-import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelectors';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
-  setCurrentHousehold,
   updateHousehold,
 } from '../store/households/slice';
 import {
@@ -25,11 +22,7 @@ import {
 } from '../store/userToHousehold/slice';
 import { User_To_Household as UserToHousehold } from '../types/types';
 
-type Props = {
-  navigation: NativeStackNavigationProp<HomeStackParamList, 'Admin'>;
-};
-
-export default function AdminScreen({ navigation }: Props) {
+export default function AdminScreen() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const currentHousehold = useAppSelector(selectCurrentHousehold);
   const usersWithAvatars = useAppSelector(
@@ -59,15 +52,6 @@ export default function AdminScreen({ navigation }: Props) {
         id: currentHousehold.id,
       }),
     );
-    dispatch(
-      setCurrentHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-        code: currentHousehold.code,
-      }),
-    );
-
-    navigation.push('Admin');
   };
 
   const handleKickUser = (user: UserToHousehold) => {
