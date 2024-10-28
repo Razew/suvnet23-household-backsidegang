@@ -16,7 +16,7 @@
 
 - [x] 5. A user should be able to register and log in.
 - [x] 6. A user should be able to create a new household.
-- [] 7. A user should be able to join a household by entering the household’s code.
+- [ ] 7. A user should be able to join a household by entering the household’s code.
 
 ### Profile (4)
 
