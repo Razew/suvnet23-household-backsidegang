@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Portal, Snackbar, Text, useTheme } from 'react-native-paper';
+import { Portal, Snackbar, Text } from 'react-native-paper';
 import ChoreCard from '../components/ChoreCard';
 import { selectChoresToUsersErrorMessage } from '../store/choreToUser/slice';
 import { selectActiveChoresCurrentHousehold } from '../store/combinedSelectors';
@@ -8,7 +8,7 @@ import { useAppSelector } from '../store/hooks';
 import { large } from '../themes/styles';
 
 export default function DailyViewScreen() {
-  const { colors } = useTheme();
+  // const { colors } = useTheme();
   const chores = useAppSelector(selectActiveChoresCurrentHousehold);
   const errorMessage = useAppSelector(selectChoresToUsersErrorMessage);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -46,11 +46,11 @@ export default function DailyViewScreen() {
           onDismiss={hideSnackbar}
           duration={2000}
           onIconPress={hideSnackbar}
-          style={errorMessage ? { backgroundColor: colors.error } : null}
+          // style={errorMessage ? { backgroundColor: colors.error } : null}
         >
-          <Text style={errorMessage ? { color: colors.onError } : null}>
-            {snackbarMessage}
-          </Text>
+          {/* <Text style={errorMessage ? { color: colors.onError } : null}> */}
+          {snackbarMessage}
+          {/* </Text> */}
         </Snackbar>
       </Portal>
     </View>

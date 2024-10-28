@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Button, Surface, useTheme } from 'react-native-paper';
 
 export type ButtonGroupProps = {
   buttons: {
@@ -15,21 +15,25 @@ export default function ButtonGroup({ buttons }: ButtonGroupProps) {
   const { colors } = useTheme();
 
   return (
-    <View style={[s.buttonRow, { backgroundColor: colors.elevation.level2 }]}>
+    <Surface
+      style={s.buttonRow}
+      elevation={5}
+    >
       {buttons.map((button, index) => (
         <Button
           key={index}
           icon={button.icon}
           mode={button.mode ?? 'elevated'}
           elevation={5}
-          style={s.button}
+          style={[s.button, { backgroundColor: colors.elevation.level2 }]}
           onPress={button.onPress}
           labelStyle={{ fontSize: button.labelSize ?? 16 }}
+          contentStyle={s.buttonContent}
         >
           {button.label}
         </Button>
       ))}
-    </View>
+    </Surface>
   );
 }
 
@@ -37,10 +41,13 @@ const s = StyleSheet.create({
   button: {
     flex: 1,
     borderRadius: 0,
-    padding: 8,
+  },
+  buttonContent: {
+    paddingVertical: 8,
   },
   buttonRow: {
     flexDirection: 'row',
-    gap: 1,
+    paddingTop: 0.75,
+    // gap: 1,
   },
 });
