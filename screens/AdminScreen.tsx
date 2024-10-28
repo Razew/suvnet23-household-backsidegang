@@ -18,8 +18,6 @@ import {
 import {
   deleteUserToHousehold,
   fetchUsersToHouseholds,
-  toggleAdmin,
-  togglePauseUser,
   updateUserToHousehold,
 } from '../store/userToHousehold/slice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
