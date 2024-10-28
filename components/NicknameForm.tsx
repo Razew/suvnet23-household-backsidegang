@@ -16,8 +16,6 @@ import {
 import { User_To_Household } from '../types/types';
 import { supabase } from '../utils/supabase';
 
-// type Props = NativeStackScreenProps<HomeStackParamList, 'HouseholdScreen'>;
-
 export default function NicknameForm() {
   const dispatch = useAppDispatch();
 
@@ -117,9 +115,8 @@ export default function NicknameForm() {
         isAdmin: currentUser?.is_admin,
         isActive: currentUser?.is_active,
       }),
-      // setMostRecentHousehold(householdBeingJoined),
-      dispatch(setCurrentHousehold(householdBeingJoined)),
     );
+    dispatch(setCurrentHousehold(householdBeingJoined));
   };
 
   return (
@@ -169,7 +166,7 @@ export default function NicknameForm() {
             onPress={() => changeNickname()}
             mode="contained"
           >
-            Change name
+            Set nickname
           </Button>
         </View>
       </View>

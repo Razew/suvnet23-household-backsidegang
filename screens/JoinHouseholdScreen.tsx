@@ -9,10 +9,16 @@ import AvatarSelector from '../components/AvatarSelector';
 import NicknameForm from '../components/NicknameForm';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { selectLoggedInUser } from '../store/auth/slice';
+import { selectCurrentAvatar } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setHouseholdBeingJoined } from '../store/households/slice';
+import {
+  selectCurrentHousehold,
+  selectHouseholdBeingJoined,
+  setHouseholdBeingJoined,
+} from '../store/households/slice';
 import {
   fetchUsersToHouseholds,
+  selectCurrentProfile,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
 import { Household } from '../types/types';
@@ -31,15 +37,15 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [visible, setVisible] = useState(false);
   const [avatarSelectorVisible, setAvatarSelectorVisible] = useState(false);
-  // const [nicknameFormVisible, setnicknameFormVisible] = useState(false);
+
+  const currentAvatar = useAppSelector(selectCurrentAvatar);
+  const currentNickname = useAppSelector(selectCurrentProfile); //UserToHousehold
+  const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
+
   const currentUser = useAppSelector(selectLoggedInUser);
   const dispatch = useAppDispatch();
-  // const loggedInUser = useAppSelector(selectCurrentProfile);
   const usersToHouseholds = useAppSelector(selectUsersToHouseholds);
-
-  // const { setMostRecentHousehold } = useHouseholdContext();
-
-  // console.log(`user: ${currentUser?.id}`);
 
   const {
     control,
@@ -98,15 +104,16 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
         setSnackBarMessage('Already in this household');
         onToggleSnackBar();
       } else {
-        console.log('Joined household: ', householdBeingJoined.name);
+        console.log('Joining household: ', householdBeingJoined.name);
         dispatch(setHouseholdBeingJoined(householdBeingJoined));
         dispatch(fetchUsersToHouseholds());
         setSnackBarMessage(`Joined household: ${householdBeingJoined.name}`);
         setAvatarSelectorVisible(true);
-        // navigation.replace('HouseholdScreen');
-        //set current household
-        // console.log('TETSTSTATATTA:', loggedInUser?.household_id);
       }
+    } else {
+      console.log('Create a snackbar to say no such household, you lazi fucks');
+      setSnackBarMessage(`No household with that code exists`);
+      onToggleSnackBar();
     }
   };
 
@@ -153,14 +160,28 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
         <View>
           <AvatarSelector />
           <NicknameForm />
-          {/* set current household */}
-          {/* {navigation.replace("HouseholdScreen")} */}
-          <Button
-            mode="contained"
-            onPress={() => navigation.replace('HouseholdScreen')}
-          >
-            JoIn SuCkA
-          </Button>
+
+          {currentAvatar && currentNickname && householdBeingJoined ? (
+            <>
+              <TextInput>Chosen emoji: {currentAvatar.emoji}</TextInput>
+              <TextInput>Chosen nickanme: {currentNickname.nickname}</TextInput>
+              <TextInput>Current household: {currentHousehold?.name}</TextInput>
+              <TextInput>
+                Houeshold being joined: {householdBeingJoined.name}
+              </TextInput>
+              <Button
+                mode="contained"
+                onPress={() => {
+                  // dispatch(setCurrentHousehold(householdBeingJoined));
+                  dispatch(setHouseholdBeingJoined(null));
+                  console.log(currentHousehold);
+                  navigation.replace('HouseholdScreen');
+                }}
+              >
+                Join household
+              </Button>
+            </>
+          ) : null}
         </View>
       ) : null}
     </View>
