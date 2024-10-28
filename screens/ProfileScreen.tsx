@@ -1,9 +1,11 @@
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import DarkLightModeButton from '../components/DarkLightModeButton';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -15,11 +17,8 @@ import {
   deleteUserToHousehold,
   fetchUsersToHouseholds,
   selectUsersToHouseholds,
-  setCurrentProfile,
   updateUserToHousehold,
 } from '../store/userToHousehold/slice';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { RootStackParamList } from '../navigators/RootStackNavigator';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParamList, 'Profile'>,
@@ -50,16 +49,6 @@ export default function ProfileScreen({ navigation }: Props) {
     (avatar) => !unavailableAvatarIds.includes(avatar.id),
   );
 
-  const isUserActive = allUsersToHouseholds
-    .filter((user) => user.user_id === loggedInUser?.id)
-    .filter((user) => user.household_id === currentHousehold?.id)
-    .find((user) => user.is_active === true);
-
-  const isAdminOnHousehold = allUsersToHouseholds
-    .filter((user) => user.user_id === loggedInUser?.id)
-    .filter((user) => user.household_id === currentHousehold?.id)
-    .find((user) => user.is_admin === true);
-
   const findAvatarId = allUsersToHouseholds
     .filter((user) => user.user_id === loggedInUser?.id)
     .filter((user) => user.household_id === currentHousehold?.id)
@@ -88,9 +77,8 @@ export default function ProfileScreen({ navigation }: Props) {
         user_id: loggedInUser.id,
       }),
     );
-    // setTimeout(() => {
+
     navigation.replace('Home');
-    // }, 2000);
   };
 
   const changeName = async () => {
@@ -110,20 +98,6 @@ export default function ProfileScreen({ navigation }: Props) {
         household_id: currentHousehold.id,
       }),
     );
-    dispatch(
-      setCurrentProfile({
-        nickname: nickname,
-        userId: loggedInUser.id,
-        householdId: currentHousehold.id,
-        avatarId: currentHouseholdUserAvatar?.emoji,
-        isAdmin: isAdminOnHousehold?.is_admin,
-        isActive: isUserActive,
-      }),
-    );
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    //   navigation.push('Profile');
-    // }, 2000);
   };
 
   const submitAvatar = async () => {
@@ -143,22 +117,6 @@ export default function ProfileScreen({ navigation }: Props) {
         household_id: currentHousehold?.id,
       }),
     );
-
-    dispatch(
-      setCurrentProfile({
-        nickname: currentNickname,
-        userId: loggedInUser.id,
-        householdId: currentHousehold.id,
-        avatarId: choosenAvatar,
-        isAdmin: isAdminOnHousehold?.is_admin,
-        isActive: isUserActive,
-      }),
-    );
-
-    // Add the timer when using the emulator it works on the phone witout it
-    // setTimeout(() => {
-    //   navigation.push('Profile');
-    // }, 2000);
   };
 
   const currentNickname = allUsersToHouseholds

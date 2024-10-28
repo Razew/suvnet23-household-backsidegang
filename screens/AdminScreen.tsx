@@ -1,18 +1,19 @@
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import {
-  TextInput,
   Button,
-  Text,
-  List,
   Divider,
   IconButton,
+  List,
+  Text,
+  TextInput,
 } from 'react-native-paper';
-import React, { useEffect, useState } from 'react';
 import { selectLoggedInUser } from '../store/auth/slice';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelectors';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
-  setCurrentHousehold,
+  selectHouseholdStatus,
   updateHousehold,
 } from '../store/households/slice';
 import {
@@ -20,20 +21,16 @@ import {
   fetchUsersToHouseholds,
   updateUserToHousehold,
 } from '../store/userToHousehold/slice';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { selectUsersWithAvatarsCurrentHousehold } from '../store/combinedSelectors';
+import { User_To_Household as UserToHousehold } from '../types/types';
 
-type Props = {
-  navigation: NativeStackNavigationProp<HomeStackParamList, 'Admin'>;
-};
-
-export default function AdminScreen({ navigation }: Props) {
+export default function AdminScreen() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const currentHousehold = useAppSelector(selectCurrentHousehold);
   const usersWithAvatars = useAppSelector(
     selectUsersWithAvatarsCurrentHousehold,
   );
+  // const { loading, errorMessage } = useAppSelector(selectHouseholdStatus);
+  const { loading } = useAppSelector(selectHouseholdStatus);
   const [householdName, setHouseholdName] = useState('');
 
   const dispatch = useAppDispatch();
@@ -58,41 +55,43 @@ export default function AdminScreen({ navigation }: Props) {
         id: currentHousehold.id,
       }),
     );
+  };
+
+  const handleKickUser = (user: UserToHousehold) => {
+    if (currentHousehold?.id === undefined) {
+      return console.log('No current household');
+    }
     dispatch(
-      setCurrentHousehold({
-        name: householdName,
-        id: currentHousehold.id,
-        code: currentHousehold.code,
+      deleteUserToHousehold({
+        user_id: user.user_id,
+        household_id: currentHousehold.id,
       }),
     );
-
-    navigation.push('Admin');
   };
 
-  const handleKickUser = (user_id: number) => {
+  const handlePauseToggle = (user: UserToHousehold) => {
     if (currentHousehold?.id === undefined) {
       return console.log('No current household');
     }
     dispatch(
-      deleteUserToHousehold({ user_id, household_id: currentHousehold.id }),
+      updateUserToHousehold({
+        is_active: !user.is_active,
+        user_id: user.user_id,
+        household_id: currentHousehold.id,
+      }),
     );
   };
 
-  const handlePauseToggle = (user_id: number) => {
+  const handleToggleAdmin = (user: UserToHousehold) => {
     if (currentHousehold?.id === undefined) {
       return console.log('No current household');
     }
     dispatch(
-      updateUserToHousehold({ user_id, household_id: currentHousehold.id }),
-    );
-  };
-
-  const handleToggleAdmin = (user_id: number) => {
-    if (currentHousehold?.id === undefined) {
-      return console.log('No current household');
-    }
-    dispatch(
-      updateUserToHousehold({ user_id, household_id: currentHousehold.id }),
+      updateUserToHousehold({
+        is_admin: !user.is_admin,
+        user_id: user.user_id,
+        household_id: currentHousehold.id,
+      }),
     );
   };
 
@@ -130,8 +129,11 @@ export default function AdminScreen({ navigation }: Props) {
         <Button
           mode="contained"
           onPress={changeHouseholdName}
+          disabled={loading === 'pending'}
         >
-          Change household name
+          {loading === 'pending'
+            ? 'Updating household name...'
+            : 'Change household name'}
         </Button>
       </View>
       <Divider style={{ height: 1, marginTop: 15, marginBottom: 15 }} />
@@ -172,15 +174,15 @@ export default function AdminScreen({ navigation }: Props) {
               >
                 <IconButton
                   icon="account-remove"
-                  onPress={() => handleKickUser(user.user_id)}
+                  onPress={() => handleKickUser(user)}
                 />
                 <IconButton
                   icon={user.is_active ? 'pause-circle' : 'play-circle'}
-                  onPress={() => handlePauseToggle(user.user_id)}
+                  onPress={() => handlePauseToggle(user)}
                 />
                 <IconButton
                   icon={user.is_admin ? 'crown' : 'crown-outline'}
-                  onPress={() => handleToggleAdmin(user.user_id)}
+                  onPress={() => handleToggleAdmin(user)}
                 />
               </View>
             )}

@@ -107,90 +107,6 @@ export const deleteUserToHousehold = createAppAsyncThunk<
   },
 );
 
-export const togglePauseUser = createAppAsyncThunk(
-  'usersToHouseholds/togglePauseUser',
-  async (
-    { userId, householdId }: { userId: number; householdId: number },
-    { rejectWithValue },
-  ) => {
-    try {
-      const { data: userToHousehold, error } = await supabase
-        .from('user_to_household')
-        .select('*')
-        .match({ user_id: userId, household_id: householdId });
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      if (!userToHousehold || userToHousehold.length === 0) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      const updatedUserToHousehold = userToHousehold[0];
-      const updatedIsActive = !updatedUserToHousehold.is_active;
-      const { error: updateError } = await supabase
-        .from('user_to_household')
-        .update({ is_active: updatedIsActive })
-        .match({ user_id: userId, household_id: householdId });
-
-      if (updateError) {
-        console.error('Supabase Error:', updateError);
-        return rejectWithValue(updateError.message);
-      }
-
-      return console.log('User paused');
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while pausing user');
-    }
-  },
-);
-
-export const toggleAdmin = createAppAsyncThunk(
-  'usersToHouseholds/toggleAdmin',
-  async (
-    { userId, householdId }: { userId: number; householdId: number },
-    { rejectWithValue },
-  ) => {
-    try {
-      const { data: userToHousehold, error } = await supabase
-        .from('user_to_household')
-        .select('*')
-        .match({ user_id: userId, household_id: householdId });
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      if (!userToHousehold || userToHousehold.length === 0) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      const updatedUserToHousehold = userToHousehold[0];
-      const updatedIsAdmin = !updatedUserToHousehold.is_admin;
-      const { error: updateError } = await supabase
-        .from('user_to_household')
-        .update({ is_admin: updatedIsAdmin })
-        .match({ user_id: userId, household_id: householdId });
-
-      if (updateError) {
-        console.error('Supabase Error:', updateError);
-        return rejectWithValue(updateError.message);
-      }
-
-      return console.log('Admin status updated');
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while updating admin status');
-    }
-  },
-);
-
 const usersToHouseholdsSlice = createSlice({
   name: 'usersToHouseholds',
   initialState: initialState,
@@ -230,6 +146,12 @@ const usersToHouseholdsSlice = createSlice({
         if (targetUser) {
           Object.assign(targetUser, action.payload);
         }
+        if (
+          state.current?.user_id === action.payload.user_id &&
+          state.current.household_id === action.payload.household_id
+        ) {
+          state.current = action.payload;
+        }
         state.loading = 'succeeded';
       },
     );
@@ -261,6 +183,7 @@ const usersToHouseholdsSlice = createSlice({
   },
 });
 
+export const { setCurrentProfile } = usersToHouseholdsSlice.actions;
 export const usersToHouseholdsReducer = usersToHouseholdsSlice.reducer;
 
 // SELECTORS
@@ -268,5 +191,3 @@ export const selectUsersToHouseholds = (state: RootState) =>
   state.usersToHouseholds.list;
 export const selectCurrentProfile = (state: RootState) =>
   state.usersToHouseholds.current;
-
-export const { setCurrentProfile } = usersToHouseholdsSlice.actions;
