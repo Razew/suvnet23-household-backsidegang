@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, Snackbar, TextInput } from 'react-native-paper';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectCurrentAvatar } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -17,11 +17,14 @@ export default function NicknameForm() {
   const dispatch = useAppDispatch();
 
   const [nickname, setNickname] = useState('');
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
   const currentUser = useAppSelector(selectCurrentProfile); //UserToHousehold
 
   const currentAvatar = useAppSelector(selectCurrentAvatar);
+
+  const onDismissSnackBar = () => setSnackBarVisible(false);
 
   const insertUserToHousehold = async () => {
     console.log('Pre flight check avatar!', currentAvatar?.emoji);
@@ -46,17 +49,36 @@ export default function NicknameForm() {
         const { error } = await supabase
           .from('user_to_household')
           .insert(userToInsert);
-        console.log('Post insert');
 
         if (error) {
           console.error(error.message);
-          throw error;
+          // Snackbar error: you are already in this household
+          setSnackBarVisible(true);
+          <Snackbar
+            visible={snackBarVisible}
+            onDismiss={onDismissSnackBar}
+            action={{
+              label: 'Hail Satan',
+              onPress: () => {
+                console.error(error.message);
+              },
+            }}
+          >
+            {error.message}
+          </Snackbar>;
+        } else {
+          console.log('Post inserted');
         }
       } catch (error) {
-        console.log('CALL DA POLICE: ', (error as Error).message);
+        console.error(
+          'Something catastrophic happened eg DB connection failed: ',
+          (error as Error).message,
+        );
+        // Some other snackbar error too
       }
     } else {
-      console.log('You are an idiot');
+      // Did not select avatar
+      console.error('You did not select an avatar, or something else happened');
     }
   };
 
