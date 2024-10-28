@@ -16,11 +16,7 @@ export default function ButtonGroup({ buttons }: ButtonGroupProps) {
 
   return (
     <Surface
-      style={[
-        s.buttonRow,
-        { paddingTop: 0.75 },
-        // { backgroundColor: colors.elevation.level2 },
-      ]}
+      style={s.buttonRow}
       elevation={5}
     >
       {buttons.map((button, index) => (
@@ -32,6 +28,7 @@ export default function ButtonGroup({ buttons }: ButtonGroupProps) {
           style={[s.button, { backgroundColor: colors.elevation.level2 }]}
           onPress={button.onPress}
           labelStyle={{ fontSize: button.labelSize ?? 16 }}
+          contentStyle={s.buttonContent}
         >
           {button.label}
         </Button>
@@ -44,10 +41,13 @@ const s = StyleSheet.create({
   button: {
     flex: 1,
     borderRadius: 0,
-    padding: 8,
+  },
+  buttonContent: {
+    paddingVertical: 8,
   },
   buttonRow: {
     flexDirection: 'row',
+    paddingTop: 0.75,
     // gap: 1,
   },
 });
