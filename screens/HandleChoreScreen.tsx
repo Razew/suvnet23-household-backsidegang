@@ -79,12 +79,11 @@ export default function HandleChoreScreen({ navigation, route }: Props) {
             <TextInput
               placeholder="Title"
               value={titleText}
-              textColor="black"
               mode="outlined"
               underlineColor="transparent"
               outlineColor="transparent"
               onChangeText={setTitleText}
-              style={s.input}
+              style={s.inputTransparent}
               outlineStyle={s.inputOutline}
             />
           </Surface>
@@ -94,11 +93,10 @@ export default function HandleChoreScreen({ navigation, route }: Props) {
               value={descriptionText}
               onChangeText={setDescriptionText}
               mode="outlined"
-              textColor="black"
               underlineColor="transparent"
               outlineColor="transparent"
               multiline
-              style={[s.input, { height: 150 }]}
+              style={[s.input, s.inputTransparent]}
               outlineStyle={s.inputOutline}
             />
           </Surface>
@@ -127,7 +125,6 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   container: {
-    // flex: 1,
     padding: 16,
     marginTop: 20,
   },
@@ -142,7 +139,10 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   input: {
-    // flex: 1,
+    height: 150,
+  },
+  inputTransparent: {
+    backgroundColor: 'transparent',
   },
   inputOutline: {
     borderRadius: 10,
@@ -176,98 +176,3 @@ const s = StyleSheet.create({
     marginBottom: 16,
   },
 });
-
-// const handlePress = () => {
-//   try {
-//     if (titleText.length < 2) {
-//       throw new Error('The title must contain at least 2 characters');
-//     } else if (!usersLastHousehold) {
-//       throw new Error('usersLastHousehold.id is undefined');
-//     }
-
-//     const newChore: NewChore = {
-//       name: titleText,
-//       household_id: usersLastHousehold.id,
-//       description: descriptionText,
-//       frequency: frequency,
-//       weight: weight,
-//     };
-
-//     console.log('Chore data:', newChore);
-
-//     navigation.goBack();
-//   } catch (error) {
-//     alert('The title field must consist of at least two characters.');
-//     console.error('Error fetching households:', (error as Error).message);
-//   }
-// };
-
-//  return (
-//     <TouchableNativeFeedback onPress={Keyboard.dismiss}>
-//       <View style={s.container}>
-//         <View>
-//           <Text style={s.title}>Create a new chore</Text>
-//         </View>
-//         <Card style={s.inputCard}>
-//           <Card.Actions>
-//             <TextInput
-//               placeholder="Title"
-//               value={titleText}
-//               textColor="black"
-//               mode="flat"
-//               underlineColor="transparent"
-//               onChangeText={setTitleText}
-//               style={s.input}
-//             />
-//           </Card.Actions>
-//         </Card>
-//         <Card style={s.inputCard}>
-//           <Card.Actions>
-//             <TextInput
-//               placeholder="Description"
-//               value={descriptionText}
-//               onChangeText={setDescriptionText}
-//               mode="flat"
-//               textColor="black"
-//               underlineColor="transparent"
-//               multiline={true}
-//               style={[s.input, { height: 100 }]}
-//             />
-//           </Card.Actions>
-//         </Card>
-//         <View style={s.frequencyComponent}>
-//           <ChoreFrequency setFrequency={setFrequency} />
-//         </View>
-//         <View style={s.weightComponent}>
-//           <ChoreWeight setWeight={setWeight} />
-//         </View>
-//         <View style={s.buttonRow}>
-//           <Card
-//             style={s.saveButton}
-//             onPress={handlePress}
-//           >
-//             <Card.Actions>
-//               <Icon
-//                 source={'plus'}
-//                 size={20}
-//               />
-//               <Text style={{ fontSize: 20 }}>Save</Text>
-//             </Card.Actions>
-//           </Card>
-//           <Card
-//             style={s.closeButton}
-//             onPress={() => navigation.goBack()}
-//           >
-//             <Card.Actions>
-//               <Icon
-//                 source={'close'}
-//                 size={20}
-//               />
-//               <Text style={{ fontSize: 20 }}>Close</Text>
-//             </Card.Actions>
-//           </Card>
-//         </View>
-//       </View>
-//     </TouchableNativeFeedback>
-//   );
-// }

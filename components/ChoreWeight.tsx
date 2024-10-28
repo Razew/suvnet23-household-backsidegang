@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Badge, Card } from 'react-native-paper';
-import { ThemeContext } from '../providers/ThemeProvider';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Badge, Card, Text, useTheme } from 'react-native-paper';
 
 type ChoreWeightProps = {
   initialWeight: 1 | 2 | 4 | 6 | 8;
@@ -14,23 +13,19 @@ export default function ChoreWeight({
 }: ChoreWeightProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [value, setValue] = useState(initialWeight);
-  const { colorMode, setColorMode } = useContext(ThemeContext) as {
-    colorMode: string;
-    setColorMode: (value: string) => void;
-  };
+  const [backgroundColor, setBackgroundColor] = useState('rgba(0, 0, 0, 0.2)');
+  const { colors, dark } = useTheme();
 
   const handlePress = () => {
     setIsPressed(true);
   };
 
-  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8) => {
+  const handleNumberPress = (num: 1 | 2 | 4 | 6 | 8, color: string) => {
     setIsPressed(false);
     setValue(num);
     setWeight(num);
-    setColorMode(colorMode);
+    setBackgroundColor(color);
   };
-
-  const textColor = colorMode === 'dark' ? '#FFFFFF' : '#000000';
 
   return (
     <Card style={s.container}>
@@ -38,13 +33,12 @@ export default function ChoreWeight({
         {isPressed ? (
           <View style={s.numberRow}>
             {([1, 2, 4, 6, 8] as const).map((num, index) => {
-              const color =
-                colorMode === 'light'
-                  ? `rgba(0, 0, 0, ${0.1 + index * 0.1})`
-                  : `rgba(255, 255, 255, ${0.4 + index * 0.2})`;
+              const color = !dark
+                ? `rgba(0, 0, 0, ${0.1 + index * 0.1})`
+                : `rgba(255, 255, 255, ${0.5 - index * 0.1})`;
               return (
                 <TouchableOpacity
-                  onPress={() => handleNumberPress(num)}
+                  onPress={() => handleNumberPress(num, color)}
                   key={num}
                   style={[s.circle, { backgroundColor: color }]}
                 >
@@ -58,18 +52,19 @@ export default function ChoreWeight({
             <View style={s.content}>
               <View style={s.textContainer}>
                 <Text
-                  style={{ fontWeight: 'bold', fontSize: 18, color: textColor }}
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                  }}
                 >
                   Value:{' '}
                 </Text>
-                <Text style={{ color: textColor }}>
-                  How energy-demanding is the task?
-                </Text>
+                <Text>How energy-demanding is the task?</Text>
               </View>
               <View>
                 <Badge
                   size={24}
-                  style={[s.badge]}
+                  style={{ backgroundColor, color: colors.onBackground }}
                 >
                   {value}
                 </Badge>
@@ -98,9 +93,6 @@ const s = StyleSheet.create({
   textContainer: {
     flex: 1,
   },
-  badge: {
-    // color: 'black',
-  },
   numberRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -116,7 +108,6 @@ const s = StyleSheet.create({
     marginHorizontal: 5,
   },
   circleText: {
-    // color: 'black',
     fontWeight: 'bold',
   },
 });
