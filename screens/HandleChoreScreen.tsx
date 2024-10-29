@@ -14,7 +14,6 @@ import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { addChore, updateChore } from '../store/chores/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
-import { NewChore } from '../types/types';
 import { createButton } from '../utils/buttonUtils';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HandleChore'>;
@@ -45,15 +44,15 @@ export default function HandleChoreScreen({ navigation, route }: Props) {
         );
         navigation.goBack();
       } else {
-        const newChore: NewChore = {
-          name: titleText,
-          household_id: currentHousehold.id,
-          description: descriptionText,
-          frequency: frequency,
-          weight: weight,
-        };
-
-        dispatch(addChore(newChore));
+        dispatch(
+          addChore({
+            name: titleText,
+            household_id: currentHousehold.id,
+            description: descriptionText,
+            frequency: frequency,
+            weight: weight,
+          }),
+        );
         navigation.goBack();
       }
     } else {
