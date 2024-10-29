@@ -188,7 +188,7 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
                     );
                   }, 1000); // Adjust the timeout delay (1000 ms) as needed
 
-                  // navigation.replace('HouseholdScreen');
+                  navigation.replace('HouseholdScreen');
                 }}
               >
                 Join household
