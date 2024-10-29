@@ -4,10 +4,7 @@ import { Button, Snackbar, TextInput } from 'react-native-paper';
 import { selectLoggedInUser } from '../store/auth/slice';
 import { selectCurrentAvatar } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-  selectHouseholdBeingJoined,
-  setCurrentHousehold,
-} from '../store/households/slice';
+import { selectHouseholdBeingJoined } from '../store/households/slice';
 import {
   selectCurrentProfile,
   setCurrentProfile,
@@ -97,7 +94,7 @@ export default function NicknameForm() {
       return console.log('No household is being joined');
     }
     // DB Insert | Should really be in an extraReducer
-    insertUserToHousehold();
+    await insertUserToHousehold();
 
     dispatch(
       updateNickname({
@@ -116,7 +113,7 @@ export default function NicknameForm() {
         isActive: currentUser?.is_active,
       }),
     );
-    dispatch(setCurrentHousehold(householdBeingJoined));
+    // dispatch(setCurrentHousehold(householdBeingJoined));
   };
 
   return (

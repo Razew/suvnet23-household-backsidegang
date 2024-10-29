@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
@@ -14,6 +14,8 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectCurrentHousehold,
   selectHouseholdBeingJoined,
+  selectHouseholds,
+  setCurrentHousehold,
   setHouseholdBeingJoined,
 } from '../store/households/slice';
 import {
@@ -21,8 +23,6 @@ import {
   selectCurrentProfile,
   selectUsersToHouseholds,
 } from '../store/userToHousehold/slice';
-import { Household } from '../types/types';
-import { supabase } from '../utils/supabase';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'JoinHousehold'>;
 
@@ -33,7 +33,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function JoinHouseholdScreen({ navigation }: Props) {
-  const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
+  // const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [visible, setVisible] = useState(false);
   const [avatarSelectorVisible, setAvatarSelectorVisible] = useState(false);
@@ -42,6 +42,7 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const currentNickname = useAppSelector(selectCurrentProfile); //UserToHousehold
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
   const currentHousehold = useAppSelector(selectCurrentHousehold);
+  const allHouseholds = useAppSelector(selectHouseholds);
 
   const currentUser = useAppSelector(selectLoggedInUser);
   const dispatch = useAppDispatch();
@@ -58,35 +59,35 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
 
-  useEffect(() => {
-    getAllHouseholds();
-  }, []);
+  // useEffect(() => {
+  //   getAllHouseholds();
+  // }, []);
 
-  const getAllHouseholds = async () => {
-    try {
-      const { data: dbQueryResult, error } = await supabase
-        .from('household')
-        .select();
+  // const getAllHouseholds = async () => {
+  //   try {
+  //     const { data: dbQueryResult, error } = await supabase
+  //       .from('household')
+  //       .select();
 
-      if (error) {
-        console.error(error.message);
-        throw error;
-      }
+  //     if (error) {
+  //       console.error(error.message);
+  //       throw error;
+  //     }
 
-      if (dbQueryResult && dbQueryResult.length > 0) {
-        setExistingHouseholds(dbQueryResult);
-      } else {
-        console.log('No household records found');
-      }
-    } catch (error) {
-      console.error('Error fetching households:', (error as Error).message);
-    }
-  };
+  //     if (dbQueryResult && dbQueryResult.length > 0) {
+  //       setExistingHouseholds(dbQueryResult);
+  //     } else {
+  //       console.log('No household records found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching households:', (error as Error).message);
+  //   }
+  // };
 
   const onSubmit = async (data: FormData) => {
     const { householdCode } = data;
 
-    const householdBeingJoined = existingHouseholds.find(
+    const householdBeingJoined = allHouseholds.find(
       (h) => h.code.toLowerCase() === householdCode.toLowerCase(),
     );
     // console.log('Household being joined:', householdBeingJoined);
@@ -172,10 +173,22 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
               <Button
                 mode="contained"
                 onPress={() => {
-                  // dispatch(setCurrentHousehold(householdBeingJoined));
-                  dispatch(setHouseholdBeingJoined(null));
-                  console.log(currentHousehold);
-                  navigation.replace('HouseholdScreen');
+                  dispatch(setCurrentHousehold(householdBeingJoined));
+                  // dispatch(setHouseholdBeingJoined(null));
+
+                  console.log(
+                    '!!!! Household being joined',
+                    householdBeingJoined,
+                  );
+
+                  setTimeout(() => {
+                    console.log(
+                      '!!!! Current household should be the same as household being joined',
+                      currentHousehold,
+                    );
+                  }, 1000); // Adjust the timeout delay (1000 ms) as needed
+
+                  // navigation.replace('HouseholdScreen');
                 }}
               >
                 Join household
