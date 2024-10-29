@@ -20,21 +20,13 @@ export default function NicknameForm() {
   const [snackBarVisible, setSnackBarVisible] = useState(false);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
-  const currentUser = useAppSelector(selectCurrentProfile); //UserToHousehold
-  // const { setMostRecentHousehold } = useHouseholdContext();
+  const currentUser = useAppSelector(selectCurrentProfile);
 
   const currentAvatar = useAppSelector(selectCurrentAvatar);
 
   const onDismissSnackBar = () => setSnackBarVisible(false);
 
   const insertUserToHousehold = async () => {
-    // console.log('Pre flight check avatar!', currentAvatar?.emoji);
-    // console.log('Entarrdd insertUserToHousehold function');
-    // const result: boolean = loggedinuser, currentHousehold;
-    // console.log('logged in user:', loggedInUser?.username);
-    // console.log('household being joined:', householdBeingJoined);
-    // console.log('chosen avatar:', currentAvatar?.id);
-
     if (loggedInUser && householdBeingJoined && currentAvatar) {
       const userToInsert: User_To_Household = {
         user_id: loggedInUser.id,
@@ -53,7 +45,6 @@ export default function NicknameForm() {
 
         if (error) {
           console.error(error.message);
-          // Snackbar error: you are already in this household
           setSnackBarVisible(true);
           <Snackbar
             visible={snackBarVisible}
@@ -75,10 +66,8 @@ export default function NicknameForm() {
           'Something catastrophic happened eg DB connection failed: ',
           (error as Error).message,
         );
-        // Some other snackbar error too
       }
     } else {
-      // Did not select avatar
       console.error('You did not select an avatar, or something else happened');
     }
   };
@@ -113,7 +102,6 @@ export default function NicknameForm() {
         isActive: currentUser?.is_active,
       }),
     );
-    // dispatch(setCurrentHousehold(householdBeingJoined));
   };
 
   return (

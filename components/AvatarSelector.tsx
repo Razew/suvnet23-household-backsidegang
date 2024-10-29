@@ -1,43 +1,18 @@
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { selectLoggedInUser } from '../store/auth/slice';
 import {
   selectAvatars,
   selectCurrentAvatar,
   setCurrentAvatar,
 } from '../store/avatars/slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-  selectCurrentHousehold,
-  selectHouseholdBeingJoined,
-} from '../store/households/slice';
-import {
-  selectCurrentProfile,
-  selectUsersToHouseholds,
-} from '../store/userToHousehold/slice';
-
-// type Props = {
-//   avatar: Avatar;
-// };
-
-// {avatar}: Props
-
-/*
-Selecting an avatar
-inserting to user_to_household
-  - avatar id / user id / household id / is active / is admin
-
-
-
-*/
+import { selectHouseholdBeingJoined } from '../store/households/slice';
+import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 
 export default function AvatarSelector() {
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
-  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
-  const allAvatars = useAppSelector(selectAvatars); // Avatar[]
-  const loggedinuser = useAppSelector(selectCurrentProfile); //UserToHousehold
-  const currentHousehold = useAppSelector(selectCurrentHousehold); //UserToHousehold
-  const currentUser = useAppSelector(selectLoggedInUser);
+  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const allAvatars = useAppSelector(selectAvatars);
   const householdBeingJoined = useAppSelector(selectHouseholdBeingJoined);
   const dispatch = useAppDispatch();
   const currentAvatar = useAppSelector(selectCurrentAvatar);
@@ -62,14 +37,11 @@ export default function AvatarSelector() {
       {availableAvatars.map((avatar) => (
         <TouchableOpacity
           key={avatar.id}
-          // Onpress -> tell reducer to insert to user_to_household table
           onPress={() => {
             setChoosenAvatar(avatar.id);
             dispatch(setCurrentAvatar(avatar));
             console.log('Avatar selected: ', currentAvatar?.id);
           }}
-          // onPress={() => setChoosenAvatar(avatar.id)}
-          // onPress={() => insertUserToHousehold}
           style={{
             borderWidth: 1,
             borderColor: avatar.colour_code,
@@ -86,13 +58,6 @@ export default function AvatarSelector() {
           </Text>
         </TouchableOpacity>
       ))}
-
-      {/* <Button
-        mode="contained"
-        onPress={}
-      >
-        JOIN
-      </Button> */}
     </View>
   );
 }
