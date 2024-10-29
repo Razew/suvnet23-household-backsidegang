@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import CustomPieChart from '../components/CustomPieChart';
-import { useAppSelector } from '../store/hooks';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { selectAvatars } from '../store/avatars/slice';
 import { selectChores } from '../store/chores/slice';
+import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
 import {
-  PieDataItem,
   Chore,
-  User_To_Household,
   Chore_To_User,
+  PieDataItem,
+  User_To_Household,
 } from '../types/types';
-import { selectLoggedInUser } from '../store/auth/slice';
 
 const screenWidth = Dimensions.get('window').width;
 const bigChartRadius = screenWidth * 0.45;

@@ -98,48 +98,63 @@ export const updateChore = createAppAsyncThunk<Chore, UpdateChorePayload>(
   },
 );
 
+export const deleteChore = createAppAsyncThunk<number, number>(
+  'chores/deleteChore',
+  async (choreId, { rejectWithValue }) => {
+    try {
+      const { error } = await supabase.from('chore').delete().eq('id', choreId);
+
+      if (error) {
+        console.error('Supabase Error: ', error);
+        return rejectWithValue(error.message);
+      }
+
+      return choreId;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Unable to delete chore');
+    }
+  },
+);
+
 const choresSlice = createSlice({
   name: 'chores',
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchChores.pending, (state) => {
-      state.loading = 'pending';
-      state.errorMessage = undefined;
-    });
-    builder.addCase(
-      fetchChores.fulfilled,
-      (state, action: PayloadAction<Chore[]>) => {
-        state.list = action.payload;
-        state.loading = 'succeeded';
-      },
-    );
-    builder.addCase(fetchChores.rejected, (state, action) => {
-      state.errorMessage = action.payload;
-      state.loading = 'failed';
-    });
-    builder.addCase(addChore.pending, (state) => {
-      state.loading = 'pending';
-      state.errorMessage = undefined;
-    });
-    builder.addCase(
-      addChore.fulfilled,
-      (state, action: PayloadAction<Chore>) => {
+    builder
+      .addCase(fetchChores.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(
+        fetchChores.fulfilled,
+        (state, action: PayloadAction<Chore[]>) => {
+          state.list = action.payload;
+          state.loading = 'succeeded';
+        },
+      )
+      .addCase(fetchChores.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.loading = 'failed';
+      })
+      .addCase(addChore.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(addChore.fulfilled, (state, action: PayloadAction<Chore>) => {
         state.list.push(action.payload);
         state.loading = 'succeeded';
-      },
-    );
-    builder.addCase(addChore.rejected, (state, action) => {
-      state.errorMessage = action.payload;
-      state.loading = 'failed';
-    });
-    builder.addCase(updateChore.pending, (state) => {
-      state.loading = 'pending';
-      state.errorMessage = undefined;
-    });
-    builder.addCase(
-      updateChore.fulfilled,
-      (state, action: PayloadAction<Chore>) => {
+      })
+      .addCase(addChore.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.loading = 'failed';
+      })
+      .addCase(updateChore.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(updateChore.fulfilled, (state, action: PayloadAction<Chore>) => {
         const targetChore = state.list.find(
           (chore) => chore.id === action.payload.id,
         );
@@ -147,12 +162,28 @@ const choresSlice = createSlice({
           Object.assign(targetChore, action.payload);
         }
         state.loading = 'succeeded';
-      },
-    );
-    builder.addCase(updateChore.rejected, (state, action) => {
-      state.errorMessage = action.payload;
-      state.loading = 'failed';
-    });
+      })
+      .addCase(updateChore.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.loading = 'failed';
+      })
+      .addCase(deleteChore.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(
+        deleteChore.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.list = state.list.filter(
+            (chore) => chore.id !== action.payload,
+          );
+          state.loading = 'succeeded';
+        },
+      )
+      .addCase(deleteChore.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.loading = 'failed';
+      });
   },
 });
 
