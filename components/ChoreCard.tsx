@@ -12,7 +12,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
-import { updateChore } from '../store/chores/slice';
+import { deleteChore, updateChore } from '../store/chores/slice';
 import { addChoreToUser } from '../store/choreToUser/slice';
 import { selectChoreCardData } from '../store/combinedSelectors';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -47,11 +47,14 @@ export default function ChoreCard({ chore, onComplete }: Props) {
     setExpanded(!expanded);
   };
 
-  // Used for both archive and delete, as we don't have an "is_deleted" field for our soft delete currently.
   const onArchive = () => {
     dispatch(
       updateChore({ id: chore.id, is_active: false, is_archived: true }),
     );
+  };
+
+  const onDelete = () => {
+    dispatch(deleteChore(chore.id));
   };
 
   const onCompletedPress = () => {
@@ -150,10 +153,9 @@ export default function ChoreCard({ chore, onComplete }: Props) {
             icon="check"
             style={s.button}
             onPress={onCompletedPress}
-            disabled={loading !== 'succeeded'}
+            disabled={loading === 'pending'}
           >
             Complete
-            {/* {loading !== 'succeeded' ? 'Loading...' : 'Complete'} */}
           </Button>
           {isAdmin && (
             <View style={s.buttonRow}>
@@ -200,7 +202,8 @@ export default function ChoreCard({ chore, onComplete }: Props) {
                     </Button>
                     <Button
                       icon="delete"
-                      onPress={onArchive}
+                      onPress={onDelete}
+                      textColor={colors.error}
                     >
                       Confirm
                     </Button>
