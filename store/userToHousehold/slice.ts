@@ -18,66 +18,60 @@ export const initialState: UsersToHouseholdsState = {
   loading: 'idle',
 };
 
-export type TableId = {
-  avatarId: number;
-  userId: number;
-  currentHouseholdId: number;
-};
-export type NicknameAndIds = {
-  nickname: string;
-  userId: number;
-  currentHouseholdId: number;
-};
+type UniqueUserToHousehold = Pick<UserToHousehold, 'user_id' | 'household_id'>;
+
+type UpdateUserToHousehold = UniqueUserToHousehold &
+  Partial<Omit<UserToHousehold, 'user_id' | 'household_id'>>;
 
 export const fetchUsersToHouseholds = createAppAsyncThunk<
   UserToHousehold[],
   void
+>('userToHousehold/fetchUsersToHouseholds', async (_, { rejectWithValue }) => {
+  try {
+    const { data: fetchedUsersToHouseholds, error } = await supabase
+      .from('user_to_household')
+      .select('*');
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      return rejectWithValue(error.message);
+    }
+
+    if (!fetchedUsersToHouseholds || fetchedUsersToHouseholds.length === 0) {
+      console.error('No user to household found');
+      return rejectWithValue('No user to household found');
+    }
+
+    return fetchedUsersToHouseholds;
+  } catch (error) {
+    console.error(error);
+    return rejectWithValue('Error while fetching user to household');
+  }
+});
+
+export const updateUserToHousehold = createAppAsyncThunk<
+  UserToHousehold,
+  UpdateUserToHousehold
 >(
-  'usersToHouseholds/fetchUsersToHouseholds',
-  async (_, { rejectWithValue }) => {
-    // console.log('Fetching users to households...');
+  'userToHousehold/updateUserToHousehold',
+  async (updateUserData, { rejectWithValue }) => {
     try {
-      const { data: fetchedUsersToHouseholds, error } = await supabase
+      const { data: updatedUserToHousehold, error } = await supabase
         .from('user_to_household')
-        .select('*');
-      // console.log('Fetched users to households:', fetchedUsersToHouseholds);
+        .update(updateUserData)
+        .match({
+          user_id: updateUserData.user_id,
+          household_id: updateUserData.household_id,
+        })
+        .select()
+        .single();
 
       if (error) {
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
 
-      if (!fetchedUsersToHouseholds || fetchedUsersToHouseholds.length === 0) {
-        console.error('No user to household found');
-        return rejectWithValue('No user to household found');
-      }
-
-      return fetchedUsersToHouseholds;
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while fetching user to household');
-    }
-  },
-);
-
-export const updateAvatarEmoji = createAppAsyncThunk(
-  'usersToHouseholds/updateAvatarEmoji',
-  async (
-    { avatarId, userId, currentHouseholdId }: TableId,
-    { rejectWithValue },
-  ) => {
-    try {
-      const { error } = await supabase
-        .from('user_to_household')
-        .update({ avatar_id: avatarId })
-        .match({ user_id: userId, household_id: currentHouseholdId });
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      return console.log('Avatar updated');
+      return updatedUserToHousehold;
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while updating user to household');
@@ -85,27 +79,30 @@ export const updateAvatarEmoji = createAppAsyncThunk(
   },
 );
 
-export const updateNickname = createAppAsyncThunk(
-  'usersToHouseholds/updateNickname',
-  async (
-    { nickname, userId, currentHouseholdId }: NicknameAndIds,
-    { rejectWithValue },
-  ) => {
+export const deleteUserToHousehold = createAppAsyncThunk<
+  UniqueUserToHousehold,
+  UniqueUserToHousehold
+>(
+  'userToHousehold/deleteUserToHousehold',
+  async (deleteUserData, { rejectWithValue }) => {
     try {
       const { error } = await supabase
         .from('user_to_household')
-        .update({ nickname })
-        .match({ user_id: userId, household_id: currentHouseholdId });
+        .delete()
+        .match({
+          user_id: deleteUserData.user_id,
+          household_id: deleteUserData.household_id,
+        });
 
       if (error) {
         console.error('Supabase Error:', error);
         return rejectWithValue(error.message);
       }
 
-      return console.log('Nickname updated');
+      return deleteUserData;
     } catch (error) {
       console.error(error);
-      return rejectWithValue('Error while updating user to household');
+      return rejectWithValue('Error while deleting user from household');
     }
   },
 );
@@ -134,9 +131,59 @@ const usersToHouseholdsSlice = createSlice({
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
+    builder.addCase(updateUserToHousehold.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      updateUserToHousehold.fulfilled,
+      (state, action: PayloadAction<UserToHousehold>) => {
+        const targetUser = state.list.find(
+          (user) =>
+            user.user_id === action.payload.user_id &&
+            user.household_id === action.payload.household_id,
+        );
+        if (targetUser) {
+          Object.assign(targetUser, action.payload);
+        }
+        if (
+          state.current?.user_id === action.payload.user_id &&
+          state.current.household_id === action.payload.household_id
+        ) {
+          state.current = action.payload;
+        }
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(updateUserToHousehold.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(deleteUserToHousehold.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      deleteUserToHousehold.fulfilled,
+      (state, action: PayloadAction<UniqueUserToHousehold>) => {
+        state.list = state.list.filter(
+          (user) =>
+            !(
+              user.user_id === action.payload.user_id &&
+              user.household_id === action.payload.household_id
+            ),
+        );
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(deleteUserToHousehold.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
   },
 });
 
+export const { setCurrentProfile } = usersToHouseholdsSlice.actions;
 export const usersToHouseholdsReducer = usersToHouseholdsSlice.reducer;
 
 // SELECTORS
@@ -144,5 +191,3 @@ export const selectUsersToHouseholds = (state: RootState) =>
   state.usersToHouseholds.list;
 export const selectCurrentProfile = (state: RootState) =>
   state.usersToHouseholds.current;
-
-export const { setCurrentProfile } = usersToHouseholdsSlice.actions;

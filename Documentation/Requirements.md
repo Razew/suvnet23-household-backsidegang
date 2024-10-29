@@ -10,14 +10,13 @@
 
 ### Household (1)
 
-- [x] 4. A household should have a name and a generated (simple) code so others can join the household;
-- [x] the name should be editable.
+- [x] 4. A household should have a name and a generated (simple) code so others can join the household; the name should be editable.
 
 ### Account (3)
 
 - [x] 5. A user should be able to register and log in.
 - [x] 6. A user should be able to create a new household.
-- [x] 7. A user should be able to join a household by entering the household’s code.
+- [ ] 7. A user should be able to join a household by entering the household’s code.
 
 ### Profile (4)
 
@@ -28,15 +27,15 @@
 
 ### Chores (3)
 
-- [ ] 12. An owner should be able to add chores to be done in the home.
+- [x] 12. An owner should be able to add chores to be done in the home.
 - [x] 13. A chore should have a name, a description (text), how often it should be done (days), and a weight that describes how energy-consuming it is.
-- [ ] 14. An owner should be able to edit a chore.
+- [x] 14. An owner should be able to edit a chore.
 
 ### Daily View (3)
 
 - [x] 15. All chores should be listed in a daily view and provide an overview of what needs to be done.
 - [x] 16. In addition to the chore’s name, it should also show who has done the chore, how many days since the chore was last done, and if it is overdue.
-- [ ] 17. When a user selects a chore, the description of the chore should be displayed, and it should be possible to mark the chore as done with a simple tap.
+- [x] 17. When a user selects a chore, the description of the chore should be displayed, and it should be possible to mark the chore as done with a simple tap.
 
 ### Statistics (3)
 
@@ -57,8 +56,8 @@
 - [x] 2. All users in a household should be able to see who belongs to the household.
 - [ ] 3. An owner of a household should be able to see requests to join the household.
 - [ ] 4. An owner should be able to accept or decline requests.
-- [ ] 5. An owner should be able to make others owners.
-- [ ] 6. An owner should be able to pause a user, and during paused periods, X users should not be included in the statistics.
+- [x] 5. An owner should be able to make others owners.
+- [x] 6. An owner should be able to pause a user, and during paused periods, users should not be included in the statistics.
 - [ ] 7. If a user has been paused during part of a period in the statistics, the graphs should be normalized.
 
 ### Account (2)
@@ -74,8 +73,8 @@
 ### Chores (3)
 
 - [ ] 12. A user should be able to add a voice recording and a picture to further describe the chore.
-- [ ] 13. An owner should be able to delete a chore.
-- [ ] 14. When a chore is deleted, the user should receive a warning that all statistics related to the chore will also be deleted and be given the option to archive the chore instead.
+- [x] 13. An owner should be able to delete a chore.
+- [x] 14. When a chore is deleted, the user should receive a warning that all statistics related to the chore will also be deleted and be given the option to archive the chore instead.
 
 ### Daily View (0)
 

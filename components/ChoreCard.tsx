@@ -1,23 +1,77 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Surface, Text, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import {
-  selectDaysSinceLastCompleted,
-  selectUsersWithAvatarsWhoCompletedChoreToday,
-} from '../store/combinedSelectors';
-import { useAppSelector } from '../store/hooks';
+  Button,
+  Dialog,
+  Divider,
+  Portal,
+  Surface,
+  Text,
+  useTheme,
+} from 'react-native-paper';
+import { RootStackParamList } from '../navigators/RootStackNavigator';
+import { updateChore } from '../store/chores/slice';
+import { addChoreToUser } from '../store/choreToUser/slice';
+import { selectChoreCardData } from '../store/combinedSelectors';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Chore } from '../types/types';
+import { CollapsibleContainer } from './CollapsibleContainer';
 
 type Props = {
   chore: Chore;
+  onComplete: () => void;
 };
 
-export default function ChoreCard({ chore }: Props) {
+export default function ChoreCard({ chore, onComplete }: Props) {
+  const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { colors } = useTheme();
-  const profiles = useAppSelector(
-    selectUsersWithAvatarsWhoCompletedChoreToday(chore.id),
-  );
-  const daysSinceLastCompleted =
-    useAppSelector(selectDaysSinceLastCompleted(chore.id)) ?? -1;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useAppDispatch();
+
+  const {
+    daysSinceLastCompleted,
+    isAdmin,
+    profiles,
+    currentUser,
+    loading,
+    // errorMessage,
+  } = useAppSelector(selectChoreCardData(chore.id));
+
+  const hideDialog = () => setVisible(false);
+
+  const onItemPress = () => {
+    setExpanded(!expanded);
+  };
+
+  // Used for both archive and delete, as we don't have an "is_deleted" field for our soft delete currently.
+  const onArchive = () => {
+    dispatch(
+      updateChore({ id: chore.id, is_active: false, is_archived: true }),
+    );
+  };
+
+  const onCompletedPress = () => {
+    if (currentUser) {
+      dispatch(
+        addChoreToUser({
+          user_id: currentUser?.id,
+          chore_id: chore.id,
+          is_completed: true,
+          done_date: new Date(),
+        }),
+      );
+      setExpanded(false);
+      onComplete();
+    } else {
+      console.warn(
+        "Could not dispatch addChoreToUser as there's no current user",
+      );
+    }
+  };
 
   const daysContainerStyle = {
     ...s.daysContainer,
@@ -50,55 +104,130 @@ export default function ChoreCard({ chore }: Props) {
   };
 
   return (
-    <Pressable style={s.pressableContainer}>
-      <Surface
-        style={s.cardSurface}
-        elevation={2}
-      >
-        <Text
-          style={s.choreTitle}
-          numberOfLines={1}
-        >
-          {chore.name}
-        </Text>
-        {daysSinceLastCompleted === 0 ? (
-          profiles.slice(0, 4).map((profile, index) => (
-            <Text
-              key={index}
-              style={s.avatar}
-            >
-              {profile.avatar?.emoji}
-            </Text>
-          ))
-        ) : daysSinceLastCompleted > 0 ? (
-          <View style={daysContainerStyle}>
-            <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
-          </View>
-        ) : (
-          <View style={ribbonContainerStyle}>
-            <View style={ribbonStyle}>
-              <Text style={ribbonTextStyle}>New</Text>
+    <Surface
+      style={s.cardContainer}
+      elevation={2}
+    >
+      <TouchableWithoutFeedback onPress={onItemPress}>
+        <View style={s.card}>
+          <Text
+            style={s.choreTitle}
+            numberOfLines={1}
+          >
+            {chore.name}
+          </Text>
+          {daysSinceLastCompleted === 0 ? (
+            profiles.slice(0, 4).map((profile, index) => (
+              <Text
+                key={index}
+                style={s.avatar}
+              >
+                {profile.avatar?.emoji}
+              </Text>
+            ))
+          ) : daysSinceLastCompleted > 0 ? (
+            <View style={daysContainerStyle}>
+              <Text style={daysTextStyle}>{daysSinceLastCompleted}</Text>
             </View>
-          </View>
-        )}
-      </Surface>
-    </Pressable>
+          ) : (
+            <View style={ribbonContainerStyle}>
+              <View style={ribbonStyle}>
+                <Text style={ribbonTextStyle}>New</Text>
+              </View>
+            </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+      <CollapsibleContainer expanded={expanded}>
+        <Divider
+          horizontalInset={true}
+          bold
+        />
+        <View style={s.collapsedContainer}>
+          <Text style={s.description}>{chore.description}</Text>
+          <Button
+            mode="contained"
+            icon="check"
+            style={s.button}
+            onPress={onCompletedPress}
+            disabled={loading !== 'succeeded'}
+          >
+            Complete
+            {/* {loading !== 'succeeded' ? 'Loading...' : 'Complete'} */}
+          </Button>
+          {isAdmin && (
+            <View style={s.buttonRow}>
+              <Button
+                icon="lead-pencil"
+                style={s.button}
+                onPress={() => navigation.navigate('HandleChore', { chore })}
+              >
+                Edit
+              </Button>
+              <Button
+                icon="delete"
+                style={s.button}
+                textColor={colors.error}
+                onPress={() => setVisible(true)}
+              >
+                Delete
+              </Button>
+              <Portal>
+                <Dialog
+                  visible={visible}
+                  onDismiss={hideDialog}
+                >
+                  <Dialog.Icon
+                    icon="alert"
+                    color={colors.error}
+                  />
+                  <Dialog.Title style={{ textAlign: 'center' }}>
+                    Delete Chore?
+                  </Dialog.Title>
+                  <Dialog.Content>
+                    <Text variant="bodyMedium">
+                      Are you sure you want to delete the chore? All data
+                      pertaining to it, including statistics, will be lost
+                      forever.
+                    </Text>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button
+                      icon="archive"
+                      onPress={onArchive}
+                    >
+                      Archive
+                    </Button>
+                    <Button
+                      icon="delete"
+                      onPress={onArchive}
+                    >
+                      Confirm
+                    </Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
+            </View>
+          )}
+        </View>
+      </CollapsibleContainer>
+    </Surface>
   );
 }
 
 const s = StyleSheet.create({
-  pressableContainer: {
+  cardContainer: {
     marginBottom: 13,
-    height: 65,
+    borderRadius: 10,
   },
-  cardSurface: {
-    width: '100%',
-    alignItems: 'center',
+  card: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
+    minHeight: 65,
     padding: 15,
-    borderRadius: 10,
   },
   daysContainer: {
     width: 32,
@@ -119,6 +248,20 @@ const s = StyleSheet.create({
   avatar: {
     fontSize: 22,
   },
+  collapsedContainer: {
+    padding: 15,
+    gap: 25,
+  },
+  description: {
+    opacity: 0.7,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  button: {
+    width: 125,
+  },
   newLabelContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -126,7 +269,6 @@ const s = StyleSheet.create({
   newLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'green',
   },
   ribbonContainer: {
     position: 'absolute',
@@ -135,15 +277,15 @@ const s = StyleSheet.create({
     overflow: 'hidden',
     width: 75,
     height: 65,
-    borderBottomRightRadius: 10,
+    borderBottomRightRadius: 5,
   },
   ribbon: {
     position: 'absolute',
     top: 10,
     right: -25,
-    transform: [{ rotate: '45deg' }],
+    transform: [{ rotate: '40deg' }],
     padding: 5,
-    width: 100,
+    width: 105,
   },
   ribbonText: {
     fontWeight: 'bold',

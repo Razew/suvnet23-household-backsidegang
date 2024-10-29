@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
 import HouseholdScreen from '../screens/HouseholdScreen';
@@ -8,6 +8,9 @@ import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
+import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
+import { selectLoggedInUser } from '../store/auth/slice';
+import AdminScreen from '../screens/AdminScreen';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
@@ -16,6 +19,7 @@ export type HomeStackParamList = {
   CreateHousehold: undefined;
   HouseholdScreen: undefined;
   Profile: undefined;
+  Admin: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -24,28 +28,49 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 // navigating back easier during development
 export default function HomeStackNavigator() {
   const currentHousehold = useAppSelector(selectCurrentHousehold);
+  const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds);
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+
+  const isAdminOnHousehold = allUsersToHouseholds
+    .filter((user) => user.user_id === loggedInUser?.id)
+    .filter((user) => user.household_id === currentHousehold?.id)
+    .find((user) => user.is_admin === true);
 
   return (
     <HomeStack.Navigator
       initialRouteName="Home"
       screenOptions={({ navigation }) => ({
         headerRight: () => (
-          <Pressable
-            style={s.tempExit}
-            onPress={() => navigation.replace('Loading')}
-          >
-            <Text style={s.tempText}>LoadingScreen</Text>
-            <MaterialIcons
-              name="exit-to-app"
-              size={24}
-              color="#D32F2F"
-            />
-          </Pressable>
+          <>
+            {/* <Pressable
+              style={s.tempExit}
+              onPress={() => navigation.replace('Loading')}
+            >
+              <Text style={s.tempText}>LoadingScreen</Text>
+              <MaterialIcons
+                name="exit-to-app"
+                size={24}
+                color="#D32F2F"
+              />
+            </Pressable> */}
+            {isAdminOnHousehold && (
+              <Pressable
+                style={s.tempExit}
+                onPress={() => navigation.navigate('Admin')}
+              >
+                <MaterialIcons
+                  name="admin-panel-settings"
+                  size={40}
+                  color="black"
+                />
+              </Pressable>
+            )}
+          </>
         ),
         headerLeft: () => (
           <Pressable
             style={s.tempExit}
-            onPress={() => navigation.replace('Profile')}
+            onPress={() => navigation.navigate('Profile')}
           >
             {/* <Text style={s.tempText}>ProfileScreen</Text> */}
             <MaterialIcons
@@ -60,8 +85,18 @@ export default function HomeStackNavigator() {
       })}
     >
       <HomeStack.Screen
+        name="Admin"
+        component={AdminScreen}
+        options={{
+          animation: 'slide_from_bottom',
+        }}
+      />
+      <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}
+        options={{
+          animation: 'slide_from_bottom',
+        }}
       />
       <HomeStack.Screen
         name="Home"

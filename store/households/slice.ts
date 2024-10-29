@@ -1,5 +1,5 @@
 // store/households/slice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Household } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
@@ -21,19 +21,15 @@ const initialState: HouseholdState = {
   errorMessage: undefined,
 };
 
-type HouseholdNameAndId = { name: string; id: number };
-type DeleteUserFromHousehold = { householdId: number; userId: number };
-// export type changeHouseholdName =  {name: string; id: string };
+type UpdateHousehold = Omit<Household, 'code'>;
 
 export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   'households/fetchHouseholds',
   async (_, { rejectWithValue }) => {
-    // console.log('Fetching households...');
     try {
       const { data: fetchedHouseholds, error } = await supabase
         .from('household')
-        .select('*');
-      // console.log('Fetched Households:', fetchedHouseholds);
+        .select();
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -53,18 +49,15 @@ export const fetchHouseholds = createAppAsyncThunk<Household[], void>(
   },
 );
 
-export const leaveHousehold = createAppAsyncThunk<
-  DeleteUserFromHousehold,
-  { householdId: number; userId: number }
->(
-  'households/leaveHousehold',
-  async ({ householdId, userId }, { rejectWithValue }) => {
+export const updateHousehold = createAppAsyncThunk<Household, UpdateHousehold>(
+  'households/updateHousehold',
+  async (updateHouseholdData, { rejectWithValue }) => {
     try {
-      const { error } = await supabase
-        .from('user_to_household')
-        .delete()
-        .eq('household_id', householdId)
-        .eq('user_id', userId)
+      const { data: updatedHousehold, error } = await supabase
+        .from('household')
+        .update(updateHouseholdData)
+        .eq('id', updateHouseholdData.id)
+        .select()
         .single();
 
       if (error) {
@@ -72,33 +65,10 @@ export const leaveHousehold = createAppAsyncThunk<
         return rejectWithValue(error.message);
       }
 
-      console.log('Left household');
-      return { householdId, userId };
+      return updatedHousehold;
     } catch (error) {
       console.error(error);
-      return rejectWithValue('Error while leaving household');
-    }
-  },
-);
-
-export const updateHouseholdName = createAppAsyncThunk(
-  'usersToHouseholds/updateHouseholdName',
-  async ({ name, id }: HouseholdNameAndId, { rejectWithValue }) => {
-    try {
-      const { error } = await supabase
-        .from('household')
-        .update({ name: name })
-        .match({ id: id });
-
-      if (error) {
-        console.error('Supabase Error:', error);
-        return rejectWithValue(error.message);
-      }
-
-      return console.log('Username updated');
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error while updating user to household');
+      return rejectWithValue('Error while updating household');
     }
   },
 );
@@ -107,14 +77,13 @@ const householdsSlice = createSlice({
   name: 'households',
   initialState,
   reducers: {
-    setCurrentHousehold(state, action) {
+    setCurrentHousehold(state, action: PayloadAction<Household>) {
       state.current = action.payload;
     },
     setHouseholdBeingJoined(state, action) {
       state.foundHousehold = action.payload;
-    }
+    },
   },
-
   extraReducers: (builder) => {
     builder
       .addCase(fetchHouseholds.pending, (state) => {
@@ -131,6 +100,29 @@ const householdsSlice = createSlice({
       .addCase(fetchHouseholds.rejected, (state, action) => {
         state.loading = 'failed';
         state.errorMessage = action.payload as string;
+      })
+      .addCase(updateHousehold.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(
+        updateHousehold.fulfilled,
+        (state, action: PayloadAction<Household>) => {
+          const targetHousehold = state.list.find(
+            (household) => household.id === action.payload.id,
+          );
+          if (targetHousehold) {
+            Object.assign(targetHousehold, action.payload);
+          }
+          if (state.current?.id === action.payload.id) {
+            state.current = action.payload;
+          }
+          state.loading = 'succeeded';
+        },
+      )
+      .addCase(updateHousehold.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.errorMessage = action.payload as string;
       });
   },
 });
@@ -141,9 +133,19 @@ export const householdsReducer = householdsSlice.reducer;
 export const selectHouseholds = (state: RootState) => state.households.list;
 export const selectCurrentHousehold = (state: RootState) =>
   state.households.current;
-export const selectHouseholdBeingJoined = (state: RootState) => state.households.list.find(
-  (h) => h.id === state.households.foundHousehold?.id,
-);
+export const selectHouseholdBeingJoined = (state: RootState) =>
+  state.households.list.find(
+    (h) => h.id === state.households.foundHousehold?.id,
+  );
 //Alex and Andrews selector, dont get mad Marcus :( <3<3<3<3<3
+export const selectHouseholdErrorMessage = (state: RootState) =>
+  state.households.errorMessage;
+export const selectHouseholdLoadingStatus = (state: RootState) =>
+  state.households.loading;
+export const selectHouseholdStatus = createSelector(
+  [selectHouseholdLoadingStatus, selectHouseholdErrorMessage],
+  (loading, errorMessage) => ({ loading, errorMessage }),
+);
 
-export const { setCurrentHousehold, setHouseholdBeingJoined } = householdsSlice.actions;
+export const { setCurrentHousehold, setHouseholdBeingJoined } =
+  householdsSlice.actions;

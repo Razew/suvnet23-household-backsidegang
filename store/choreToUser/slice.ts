@@ -16,15 +16,15 @@ const initialState: ChoresToUsersState = {
   loading: 'idle',
 };
 
+type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
+
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
   async (_, { rejectWithValue }) => {
-    // console.log('Fetching chores to users...');
     try {
       const { data: fetchedChoresToUsers, error } = await supabase
         .from('chore_to_user')
         .select('*');
-      // console.log('Fetched Chores To Users:', fetchedChoresToUsers);
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -40,6 +40,29 @@ export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
     } catch (error) {
       console.error(error);
       return rejectWithValue('Error while fetching chore to user');
+    }
+  },
+);
+
+export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
+  'choresToUsers/addChoreToUser',
+  async (newChoreToUser, { rejectWithValue }) => {
+    try {
+      const { data: insertedChoreToUser, error } = await supabase
+        .from('chore_to_user')
+        .insert(newChoreToUser)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return insertedChoreToUser;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while adding chore to user');
     }
   },
 );
@@ -61,6 +84,21 @@ const choresToUsersSlice = createSlice({
       },
     );
     builder.addCase(fetchChoresToUsers.rejected, (state, action) => {
+      state.errorMessage = action.payload;
+      state.loading = 'failed';
+    });
+    builder.addCase(addChoreToUser.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      addChoreToUser.fulfilled,
+      (state, action: PayloadAction<ChoreToUser>) => {
+        state.list.push(action.payload);
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(addChoreToUser.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
     });
@@ -89,4 +127,15 @@ export const selectCompletedChoreToUsersByChoreId = (choreId: number) =>
         choreRecord.chore_id === choreId && choreRecord.is_completed,
     ),
   );
-// export const selectCompletedChoresToUsers;
+export const selectChoresToUsersErrorMessage = (state: RootState) =>
+  state.choresToUsers.errorMessage;
+export const selectChoresToUsersStatus = createSelector(
+  [
+    (state: RootState) => state.choresToUsers.loading,
+    selectChoresToUsersErrorMessage,
+  ],
+  (loading, errorMessage) => ({
+    loading,
+    errorMessage,
+  }),
+);
