@@ -36,12 +36,6 @@ export default function HouseholdScreen() {
   const allChoreToUsers = useAppSelector(selectChoresToUsers);
   const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
 
-  // const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
-  //   getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
-  // console.log('this weeks chores: ', thisWeeksChores);
-  // console.log('last weeks chores: ', lastWeeksChores);
-  // console.log('last months chores: ', lastMonthsChores);
-
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [title, setTitle] = useState<string>('Today');
   const translateX = useSharedValue(0);
