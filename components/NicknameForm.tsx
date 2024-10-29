@@ -135,10 +135,10 @@ export default function NicknameForm() {
               marginLeft: 10,
               fontSize: 20,
               borderWidth: 1,
-              borderColor: currentAvatar?.colour_code, // TODO: find avatar and select from current user
+              borderColor: currentAvatar?.colour_code,
               width: 27,
               height: 27,
-              backgroundColor: currentAvatar?.colour_code, // TODO: find avatar and select from current user
+              backgroundColor: currentAvatar?.colour_code,
               borderRadius: 20,
             }}
           >

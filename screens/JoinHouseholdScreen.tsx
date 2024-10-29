@@ -59,31 +59,6 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
 
-  // useEffect(() => {
-  //   getAllHouseholds();
-  // }, []);
-
-  // const getAllHouseholds = async () => {
-  //   try {
-  //     const { data: dbQueryResult, error } = await supabase
-  //       .from('household')
-  //       .select();
-
-  //     if (error) {
-  //       console.error(error.message);
-  //       throw error;
-  //     }
-
-  //     if (dbQueryResult && dbQueryResult.length > 0) {
-  //       setExistingHouseholds(dbQueryResult);
-  //     } else {
-  //       console.log('No household records found');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching households:', (error as Error).message);
-  //   }
-  // };
-
   const onSubmit = async (data: FormData) => {
     const { householdCode } = data;
 
@@ -110,6 +85,12 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
         dispatch(fetchUsersToHouseholds());
         setSnackBarMessage(`Joined household: ${householdBeingJoined.name}`);
         setAvatarSelectorVisible(true);
+        //   dispatch(
+        // updateNickname({
+        //   nickname,
+        //   userId: loggedInUser.id,
+        //   currentHouseholdId: householdBeingJoined.id,
+        // }));
       }
     } else {
       console.log('Create a snackbar to say no such household, you lazi fucks');
@@ -164,29 +145,20 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
 
           {currentAvatar && currentNickname && householdBeingJoined ? (
             <>
-              <TextInput>Chosen emoji: {currentAvatar.emoji}</TextInput>
-              <TextInput>Chosen nickanme: {currentNickname.nickname}</TextInput>
-              <TextInput>Current household: {currentHousehold?.name}</TextInput>
-              <TextInput>
-                Houeshold being joined: {householdBeingJoined.name}
-              </TextInput>
               <Button
                 mode="contained"
                 onPress={() => {
                   dispatch(setCurrentHousehold(householdBeingJoined));
-                  // dispatch(setHouseholdBeingJoined(null));
+                  dispatch(setHouseholdBeingJoined(null));
 
                   console.log(
                     '!!!! Household being joined',
                     householdBeingJoined,
                   );
-
-                  setTimeout(() => {
-                    console.log(
-                      '!!!! Current household should be the same as household being joined',
-                      currentHousehold,
-                    );
-                  }, 1000); // Adjust the timeout delay (1000 ms) as needed
+                  console.log(
+                    '!!!! Current household should be the same as household being joined',
+                    currentHousehold,
+                  );
 
                   navigation.replace('HouseholdScreen');
                 }}
