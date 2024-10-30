@@ -1,17 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-  selectCurrentHousehold,
+  selectHouseholds,
   setCurrentHousehold,
 } from '../store/households/slice';
-import { Household, NewHousehold } from '../types/types';
+import { NewHousehold } from '../types/types';
 import { supabase } from '../utils/supabase';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
@@ -23,7 +23,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function CreateHouseholdScreen({ navigation }: Props) {
-  const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
+  // const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -36,18 +36,19 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+  const allHouseholds = useAppSelector(selectHouseholds);
 
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
 
-  useEffect(() => {
-    getAllHouseholds();
-    console.log('Most recent household');
-    console.log(selectCurrentHousehold);
-  }, []);
+  // useEffect(() => {
+  //   getAllHouseholds();
+  //   console.log('Most recent household');
+  //   console.log(selectCurrentHousehold);
+  // }, []);
 
   const checkIfHouseholdCodeExists = (code: string): boolean => {
-    return existingHouseholds.some((household) => household.code === code);
+    return allHouseholds.some((household) => household.code === code);
   };
 
   const generateRandomHouseholdCode = (): string => {
@@ -91,28 +92,28 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     }
   };
 
-  const getAllHouseholds = async () => {
-    try {
-      const { data: dbQueryResult, error } = await supabase
-        .from('household')
-        .select();
+  // const getAllHouseholds = async () => {
+  //   try {
+  //     const { data: dbQueryResult, error } = await supabase
+  //       .from('household')
+  //       .select();
 
-      if (error) {
-        console.error(error.message);
-        throw error;
-      }
+  //     if (error) {
+  //       console.error(error.message);
+  //       throw error;
+  //     }
 
-      if (dbQueryResult && dbQueryResult.length > 0) {
-        // console.log(JSON.stringify(dbQueryResult, null, 2));
-        console.log(`Total households in DB: ${dbQueryResult.length}`);
-        setExistingHouseholds(dbQueryResult);
-      } else {
-        console.log('No household records found');
-      }
-    } catch (error) {
-      console.error('Error fetching households:', (error as Error).message);
-    }
-  };
+  //     if (dbQueryResult && dbQueryResult.length > 0) {
+  //       // console.log(JSON.stringify(dbQueryResult, null, 2));
+  //       console.log(`Total households in DB: ${dbQueryResult.length}`);
+  //       setExistingHouseholds(dbQueryResult);
+  //     } else {
+  //       console.log('No household records found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching households:', (error as Error).message);
+  //   }
+  // };
 
   const onSubmit = async (data: FormData) => {
     const { household } = data;
@@ -130,7 +131,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
     // check if our user household name & code already exists in the DB
     // If household exists return an errormessage, else insert the new household
-    const householdExists = existingHouseholds.some(
+    const householdExists = allHouseholds.some(
       (h) =>
         newHousehold.name.toLowerCase() === h.name.toLowerCase() &&
         newHousehold.code.toLowerCase() === h.code.toLowerCase(),
