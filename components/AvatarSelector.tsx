@@ -8,8 +8,13 @@ import {
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectHouseholdBeingJoined } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
+import { Avatar } from '../types/types';
 
-export default function AvatarSelector() {
+type Props = {
+  setAvatar: (avatar: Avatar) => void;
+};
+
+export default function AvatarSelector({ setAvatar }: Props) {
   const [choosenAvatar, setChoosenAvatar] = useState<number | undefined>();
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds);
   const allAvatars = useAppSelector(selectAvatars);
@@ -38,6 +43,7 @@ export default function AvatarSelector() {
         <TouchableOpacity
           key={avatar.id}
           onPress={() => {
+            setAvatar(avatar);
             setChoosenAvatar(avatar.id);
             dispatch(setCurrentAvatar(avatar));
             console.log('Avatar selected: ', currentAvatar?.id);

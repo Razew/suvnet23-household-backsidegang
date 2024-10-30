@@ -18,6 +18,7 @@ export const initialState: UsersToHouseholdsState = {
   loading: 'idle',
 };
 
+type NewUserToHousehold = Omit<UserToHousehold, 'is_active'>;
 type UniqueUserToHousehold = Pick<UserToHousehold, 'user_id' | 'household_id'>;
 
 type UpdateUserToHousehold = UniqueUserToHousehold &
@@ -54,6 +55,32 @@ export const fetchUsersToHouseholds = createAppAsyncThunk<
     return rejectWithValue('Error while fetching user to household');
   }
 });
+
+export const addUserToHousehold = createAppAsyncThunk<
+  UserToHousehold,
+  NewUserToHousehold
+>(
+  'userToHousehold/addUserToHousehold',
+  async (addUserToHouseholdData, { rejectWithValue }) => {
+    try {
+      const { data: addedUserToHousehold, error } = await supabase
+        .from('user_to_household')
+        .insert(addUserToHouseholdData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return addedUserToHousehold;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while creating user to household');
+    }
+  },
+);
 
 export const updateUserToHousehold = createAppAsyncThunk<
   UserToHousehold,
@@ -210,6 +237,22 @@ const usersToHouseholdsSlice = createSlice({
     builder.addCase(deleteUserToHousehold.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
+    });
+    builder.addCase(addUserToHousehold.pending, (state) => {
+      state.loading = 'pending';
+      state.errorMessage = undefined;
+    });
+    builder.addCase(
+      addUserToHousehold.fulfilled,
+      (state, action: PayloadAction<UserToHousehold>) => {
+        state.list.push(action.payload);
+        state.current = action.payload;
+        state.loading = 'succeeded';
+      },
+    );
+    builder.addCase(addUserToHousehold.rejected, (state, action) => {
+      state.loading = 'failed';
+      state.errorMessage = action.payload as string;
     });
   },
 });

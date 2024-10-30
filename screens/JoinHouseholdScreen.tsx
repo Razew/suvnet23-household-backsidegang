@@ -210,7 +210,7 @@ export default function JoinHouseholdScreen({ navigation }: Props) {
       </Snackbar>
       {avatarSelectorVisible ? (
         <View>
-          <AvatarSelector />
+          <AvatarSelector setAvatar={() => {}} />
 
           <View style={{ justifyContent: 'center' }}>
             <View
