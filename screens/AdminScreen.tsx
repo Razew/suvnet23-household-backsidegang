@@ -175,14 +175,17 @@ export default function AdminScreen() {
                 <IconButton
                   icon="account-remove"
                   onPress={() => handleKickUser(user)}
+                  disabled={user.is_admin}
                 />
                 <IconButton
                   icon={user.is_active ? 'pause-circle' : 'play-circle'}
                   onPress={() => handlePauseToggle(user)}
+                  disabled={user.is_admin}
                 />
                 <IconButton
                   icon={user.is_admin ? 'crown' : 'crown-outline'}
                   onPress={() => handleToggleAdmin(user)}
+                  disabled={user.is_admin}
                 />
               </View>
             )}
