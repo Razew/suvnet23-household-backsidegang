@@ -1,6 +1,6 @@
 // store/households/slice.ts
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Household } from '../../types/types';
+import { Household, NewHousehold } from '../../types/types';
 import { supabase } from '../../utils/supabase';
 import { createAppAsyncThunk } from '../hooks';
 import { RootState } from '../store';
@@ -73,6 +73,29 @@ export const updateHousehold = createAppAsyncThunk<Household, UpdateHousehold>(
   },
 );
 
+export const createHousehold = createAppAsyncThunk<Household, NewHousehold>(
+  'households/createHousehold',
+  async (createHouseholdData, { rejectWithValue }) => {
+    try {
+      const { data: createdHousehold, error } = await supabase
+        .from('household')
+        .insert(createHouseholdData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        return rejectWithValue(error.message);
+      }
+
+      return createdHousehold;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error while creating household');
+    }
+  },
+);
+
 const householdsSlice = createSlice({
   name: 'households',
   initialState,
@@ -123,10 +146,28 @@ const householdsSlice = createSlice({
       .addCase(updateHousehold.rejected, (state, action) => {
         state.loading = 'failed';
         state.errorMessage = action.payload as string;
+      })
+      .addCase(createHousehold.pending, (state) => {
+        state.loading = 'pending';
+        state.errorMessage = undefined;
+      })
+      .addCase(
+        createHousehold.fulfilled,
+        (state, action: PayloadAction<Household>) => {
+          state.list.push(action.payload);
+          state.current = action.payload;
+          state.loading = 'succeeded';
+        },
+      )
+      .addCase(createHousehold.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.errorMessage = action.payload as string;
       });
   },
 });
 
+export const { setCurrentHousehold, setHouseholdBeingJoined } =
+  householdsSlice.actions;
 export const householdsReducer = householdsSlice.reducer;
 
 // Selector function
@@ -146,6 +187,3 @@ export const selectHouseholdStatus = createSelector(
   [selectHouseholdLoadingStatus, selectHouseholdErrorMessage],
   (loading, errorMessage) => ({ loading, errorMessage }),
 );
-
-export const { setCurrentHousehold, setHouseholdBeingJoined } =
-  householdsSlice.actions;

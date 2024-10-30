@@ -1,18 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
+import AvatarSelector from '../components/AvatarSelector';
+import NicknameForm from '../components/NicknameForm';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
-import { useAppDispatch } from '../store/hooks';
+import { selectLoggedInUser } from '../store/auth/slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+  createHousehold,
   selectCurrentHousehold,
-  setCurrentHousehold,
+  selectHouseholds,
 } from '../store/households/slice';
-import { Household, NewHousehold } from '../types/types';
-import { supabase } from '../utils/supabase';
+import { addUserToHousehold } from '../store/userToHousehold/slice';
+import { Avatar, NewHousehold } from '../types/types';
 
 type Props = NativeStackScreenProps<HomeStackParamList, 'CreateHousehold'>;
 
@@ -23,12 +27,16 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function CreateHouseholdScreen({ navigation }: Props) {
-  const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
   const [visible, setVisible] = useState(false);
-  // const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
+  const currentHousehold = useAppSelector(selectCurrentHousehold);
+  const currentUser = useAppSelector(selectLoggedInUser);
+  const allHouseholds = useAppSelector(selectHouseholds);
   const dispatch = useAppDispatch();
+
   const {
     control,
     handleSubmit,
@@ -40,14 +48,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
 
-  useEffect(() => {
-    getAllHouseholds();
-    console.log('Most recent household');
-    console.log(selectCurrentHousehold);
-  }, []);
-
   const checkIfHouseholdCodeExists = (code: string): boolean => {
-    return existingHouseholds.some((household) => household.code === code);
+    return allHouseholds.some((household) => household.code === code);
   };
 
   const generateRandomHouseholdCode = (): string => {
@@ -60,59 +62,35 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
     return result;
   };
 
-  const insertNewHousehold = async (newHousehold: NewHousehold) => {
-    console.log(`Inserting ${newHousehold.name} ${newHousehold.code}`);
+  // const insertNewHousehold = async (newHousehold: NewHousehold) => {
+  //   console.log(`Inserting ${newHousehold.name} ${newHousehold.code}`);
 
-    try {
-      const { data: dbQueryResult, error } = await supabase
-        .from('household')
-        .insert(newHousehold)
-        .select()
-        .single();
+  //   try {
+  //     const { data: dbQueryResult, error } = await supabase
+  //       .from('household')
+  //       .insert(newHousehold)
+  //       .select()
+  //       .single();
 
-      if (error) {
-        console.error(error.message);
-        throw error;
-      }
+  //     if (error) {
+  //       console.error(error.message);
+  //       throw error;
+  //     }
 
-      if (dbQueryResult) {
-        const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
-        console.log(householdAddedMessage);
-        console.log(JSON.stringify(dbQueryResult, null, 2));
-        // setMostRecentHousehold(dbQueryResult);
+  //     if (dbQueryResult) {
+  //       const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
+  //       console.log(householdAddedMessage);
+  //       console.log(JSON.stringify(dbQueryResult, null, 2));
 
-        dispatch(setCurrentHousehold(dbQueryResult));
-        setSnackBarMessage(householdAddedMessage);
-      } else {
-        console.log('Something did not work');
-      }
-    } catch (error) {
-      console.log('Error inserting household:', (error as Error).message);
-    }
-  };
-
-  const getAllHouseholds = async () => {
-    try {
-      const { data: dbQueryResult, error } = await supabase
-        .from('household')
-        .select();
-
-      if (error) {
-        console.error(error.message);
-        throw error;
-      }
-
-      if (dbQueryResult && dbQueryResult.length > 0) {
-        // console.log(JSON.stringify(dbQueryResult, null, 2));
-        console.log(`Total households in DB: ${dbQueryResult.length}`);
-        setExistingHouseholds(dbQueryResult);
-      } else {
-        console.log('No household records found');
-      }
-    } catch (error) {
-      console.error('Error fetching households:', (error as Error).message);
-    }
-  };
+  //       dispatch(setCurrentHousehold(dbQueryResult));
+  //       setSnackBarMessage(householdAddedMessage);
+  //     } else {
+  //       console.log('Something did not work');
+  //     }
+  //   } catch (error) {
+  //     console.log('Error inserting household:', (error as Error).message);
+  //   }
+  // };
 
   const onSubmit = async (data: FormData) => {
     const { household } = data;
@@ -130,7 +108,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
 
     // check if our user household name & code already exists in the DB
     // If household exists return an errormessage, else insert the new household
-    const householdExists = existingHouseholds.some(
+    const householdExists = allHouseholds.some(
       (h) =>
         newHousehold.name.toLowerCase() === h.name.toLowerCase() &&
         newHousehold.code.toLowerCase() === h.code.toLowerCase(),
@@ -142,7 +120,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       setSnackBarMessage(errorMessage);
       setAddedToDataBase(false);
     } else {
-      insertNewHousehold(newHousehold);
+      dispatch(createHousehold(newHousehold));
+      // insertNewHousehold(newHousehold);
       setAddedToDataBase(true);
     }
 
@@ -179,19 +158,45 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       </Card>
 
       {AddedToDataBase ? (
-        <Snackbar
-          visible={visible}
-          onDismiss={onDismissSnackBar}
-          duration={1800000}
-          action={{
-            label: 'Continue',
-            onPress: () => {
-              navigation.replace('HouseholdScreen');
-            },
-          }}
-        >
-          {snackBarMessage}
-        </Snackbar>
+        <>
+          <View>
+            <AvatarSelector setAvatar={setAvatar} />
+            <NicknameForm setNickname={setNickname} />
+            <Text>{avatar.emoji}</Text>
+            <Text>Nickname: {nickname}</Text>
+            <Button
+              onPress={() => {
+                if (currentUser && currentHousehold) {
+                  dispatch(
+                    addUserToHousehold({
+                      user_id: currentUser?.id,
+                      household_id: currentHousehold?.id,
+                      nickname: nickname,
+                      avatar_id: avatar.id,
+                      is_admin: true,
+                    }),
+                  );
+
+                  navigation.replace('HouseholdScreen');
+                }
+              }}
+            >
+              Submit
+            </Button>
+          </View>
+          <Snackbar
+            visible={visible}
+            onDismiss={onDismissSnackBar}
+            action={{
+              label: 'Household created',
+              // onPress: () => {
+              //   navigation.replace('HouseholdScreen');
+              // },
+            }}
+          >
+            {snackBarMessage}
+          </Snackbar>
+        </>
       ) : (
         <Snackbar
           visible={visible}
