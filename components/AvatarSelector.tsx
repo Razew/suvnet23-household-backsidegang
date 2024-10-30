@@ -39,28 +39,28 @@ export default function AvatarSelector({ setAvatar }: Props) {
         justifyContent: 'center',
       }}
     >
-      {availableAvatars.map((avatar) => (
+      {availableAvatars.map((a) => (
         <TouchableOpacity
-          key={avatar.id}
+          key={a.id}
           onPress={() => {
-            setAvatar(avatar);
-            setChoosenAvatar(avatar.id);
-            dispatch(setCurrentAvatar(avatar));
+            setAvatar(a);
+            setChoosenAvatar(a.id);
+            dispatch(setCurrentAvatar(a));
             console.log('Avatar selected: ', currentAvatar?.id);
           }}
           style={{
             borderWidth: 1,
-            borderColor: avatar.colour_code,
+            borderColor: a.colour_code,
             alignItems: 'center',
             justifyContent: 'center',
             width: 60,
             height: 60,
-            backgroundColor: avatar.colour_code,
+            backgroundColor: a.colour_code,
             borderRadius: 40,
           }}
         >
-          <Text style={{ fontSize: choosenAvatar === avatar.id ? 60 : 30 }}>
-            {avatar.emoji}
+          <Text style={{ fontSize: choosenAvatar === a.id ? 60 : 30 }}>
+            {a.emoji}
           </Text>
         </TouchableOpacity>
       ))}
