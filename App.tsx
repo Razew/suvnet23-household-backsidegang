@@ -6,13 +6,11 @@ import { store } from './store/store';
 
 export default function App() {
   return (
-    // <HouseholdProvider>
     <Provider store={store}>
       <ThemeProvider>
         <StatusBar style="auto" />
         <RootStackNavigator />
       </ThemeProvider>
     </Provider>
-    // </HouseholdProvider>
   );
 }
