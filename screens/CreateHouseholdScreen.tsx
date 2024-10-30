@@ -5,8 +5,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Snackbar, Text, TextInput } from 'react-native-paper';
 import { z } from 'zod';
-import { useHouseholdContext } from '../contexts/HouseholdContext';
 import { HomeStackParamList } from '../navigators/HomeStackNavigator';
+import { useAppDispatch } from '../store/hooks';
+import {
+  selectCurrentHousehold,
+  setCurrentHousehold,
+} from '../store/households/slice';
 import { Household, NewHousehold } from '../types/types';
 import { supabase } from '../utils/supabase';
 
@@ -23,7 +27,8 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
   const [visible, setVisible] = useState(false);
-  const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
+  // const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
+  const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
@@ -38,7 +43,7 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   useEffect(() => {
     getAllHouseholds();
     console.log('Most recent household');
-    console.log(mostRecentHousehold);
+    console.log(selectCurrentHousehold);
   }, []);
 
   const checkIfHouseholdCodeExists = (code: string): boolean => {
@@ -74,7 +79,9 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
         console.log(householdAddedMessage);
         console.log(JSON.stringify(dbQueryResult, null, 2));
-        setMostRecentHousehold(dbQueryResult);
+        // setMostRecentHousehold(dbQueryResult);
+
+        dispatch(setCurrentHousehold(dbQueryResult));
         setSnackBarMessage(householdAddedMessage);
       } else {
         console.log('Something did not work');
