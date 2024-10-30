@@ -60,7 +60,7 @@ The following requirements have been successfully implemented:
 
 - **Git and GitHub** were used to track progress and manage code collaboratively.
 - **CI/CD** tools were integrated to streamline development and deployment.
-- Data communication between app and server was implemented with **Redux** and **redux-thunk**.
+- Data communication between app and server was implemented with **Redux Toolkit** and **redux-thunk**.
 
 ## How to Build and Run the Project
 
