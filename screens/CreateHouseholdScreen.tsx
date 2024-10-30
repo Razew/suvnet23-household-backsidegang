@@ -23,12 +23,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function CreateHouseholdScreen({ navigation }: Props) {
-  // const [existingHouseholds, setExistingHouseholds] = useState<Household[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [AddedToDataBase, setAddedToDataBase] = useState(false);
   const [visible, setVisible] = useState(false);
-  // const { mostRecentHousehold, setMostRecentHousehold } = useHouseholdContext();
+  const allHouseholds = useAppSelector(selectHouseholds);
   const dispatch = useAppDispatch();
+
   const {
     control,
     handleSubmit,
@@ -36,16 +36,9 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
-  const allHouseholds = useAppSelector(selectHouseholds);
 
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
-
-  // useEffect(() => {
-  //   getAllHouseholds();
-  //   console.log('Most recent household');
-  //   console.log(selectCurrentHousehold);
-  // }, []);
 
   const checkIfHouseholdCodeExists = (code: string): boolean => {
     return allHouseholds.some((household) => household.code === code);
@@ -80,7 +73,6 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         const householdAddedMessage: string = `Added ${dbQueryResult.name} household. Your code is: ${dbQueryResult.code}`;
         console.log(householdAddedMessage);
         console.log(JSON.stringify(dbQueryResult, null, 2));
-        // setMostRecentHousehold(dbQueryResult);
 
         dispatch(setCurrentHousehold(dbQueryResult));
         setSnackBarMessage(householdAddedMessage);
@@ -91,29 +83,6 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
       console.log('Error inserting household:', (error as Error).message);
     }
   };
-
-  // const getAllHouseholds = async () => {
-  //   try {
-  //     const { data: dbQueryResult, error } = await supabase
-  //       .from('household')
-  //       .select();
-
-  //     if (error) {
-  //       console.error(error.message);
-  //       throw error;
-  //     }
-
-  //     if (dbQueryResult && dbQueryResult.length > 0) {
-  //       // console.log(JSON.stringify(dbQueryResult, null, 2));
-  //       console.log(`Total households in DB: ${dbQueryResult.length}`);
-  //       setExistingHouseholds(dbQueryResult);
-  //     } else {
-  //       console.log('No household records found');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching households:', (error as Error).message);
-  //   }
-  // };
 
   const onSubmit = async (data: FormData) => {
     const { household } = data;
