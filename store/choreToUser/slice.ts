@@ -17,6 +17,7 @@ const initialState: ChoresToUsersState = {
 };
 
 type NewChoreToUser = Omit<ChoreToUser, 'due_date'>;
+type OptimisticChoreToUser = NewChoreToUser & { tempId: number };
 
 export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
   'choresToUsers/fetchChoresToUsers',
@@ -24,7 +25,7 @@ export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
     try {
       const { data: fetchedChoresToUsers, error } = await supabase
         .from('chore_to_user')
-        .select('*');
+        .select();
 
       if (error) {
         console.error('Supabase Error:', error);
@@ -46,7 +47,15 @@ export const fetchChoresToUsers = createAppAsyncThunk<ChoreToUser[], void>(
 
 export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
   'choresToUsers/addChoreToUser',
-  async (newChoreToUser, { rejectWithValue }) => {
+  async (newChoreToUser, { rejectWithValue, dispatch }) => {
+    const tempId = Date.now();
+    const optimisticChoreToUser: OptimisticChoreToUser = {
+      ...newChoreToUser,
+      tempId,
+    };
+
+    dispatch(addOptimisticChoreToUser(optimisticChoreToUser));
+
     try {
       const { data: insertedChoreToUser, error } = await supabase
         .from('chore_to_user')
@@ -56,12 +65,15 @@ export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
 
       if (error) {
         console.error('Supabase Error:', error);
+        dispatch(removeOptimisticChoreToUser(tempId));
         return rejectWithValue(error.message);
       }
 
+      dispatch(updateOptimisticChoreToUser({ tempId, insertedChoreToUser }));
       return insertedChoreToUser;
     } catch (error) {
       console.error(error);
+      dispatch(removeOptimisticChoreToUser(tempId));
       return rejectWithValue('Error while adding chore to user');
     }
   },
@@ -70,7 +82,36 @@ export const addChoreToUser = createAppAsyncThunk<ChoreToUser, NewChoreToUser>(
 const choresToUsersSlice = createSlice({
   name: 'choresToUsers',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    addOptimisticChoreToUser: (
+      state,
+      action: PayloadAction<OptimisticChoreToUser>,
+    ) => {
+      state.list.push(action.payload as ChoreToUser);
+    },
+    removeOptimisticChoreToUser: (state, action: PayloadAction<number>) => {
+      state.list = state.list.filter(
+        (choreToUser) =>
+          (choreToUser as OptimisticChoreToUser).tempId !== action.payload,
+      );
+    },
+    updateOptimisticChoreToUser: (
+      state,
+      action: PayloadAction<{
+        tempId: number;
+        insertedChoreToUser: ChoreToUser;
+      }>,
+    ) => {
+      const { tempId, insertedChoreToUser } = action.payload;
+      const index = state.list.findIndex(
+        (choreToUser) =>
+          (choreToUser as OptimisticChoreToUser).tempId === tempId,
+      );
+      if (index !== -1) {
+        state.list[index] = insertedChoreToUser;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchChoresToUsers.pending, (state) => {
       state.loading = 'pending';
@@ -91,13 +132,11 @@ const choresToUsersSlice = createSlice({
       state.loading = 'pending';
       state.errorMessage = undefined;
     });
-    builder.addCase(
-      addChoreToUser.fulfilled,
-      (state, action: PayloadAction<ChoreToUser>) => {
-        state.list.push(action.payload);
-        state.loading = 'succeeded';
-      },
-    );
+    builder.addCase(addChoreToUser.fulfilled, (state) => {
+      state.loading = 'succeeded';
+      // (state, action: PayloadAction<ChoreToUser>) => {
+      // state.list.push(action.payload);
+    });
     builder.addCase(addChoreToUser.rejected, (state, action) => {
       state.errorMessage = action.payload;
       state.loading = 'failed';
@@ -105,6 +144,11 @@ const choresToUsersSlice = createSlice({
   },
 });
 
+export const {
+  addOptimisticChoreToUser,
+  removeOptimisticChoreToUser,
+  updateOptimisticChoreToUser,
+} = choresToUsersSlice.actions;
 export const choresToUsersReducer = choresToUsersSlice.reducer;
 
 // SELECTORS
