@@ -46,7 +46,7 @@ export type Chore_To_User = {
   chore_id: number;
   is_completed: boolean;
   due_date?: Date | null;
-  done_date?: Date | null;
+  done_date: Date;
 };
 
 export type PieDataItem = {
