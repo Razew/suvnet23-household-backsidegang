@@ -154,9 +154,9 @@ export default function HouseholdScreen() {
 
   const { thisWeeksChores, lastWeeksChores, lastMonthsChores } =
     getChoresByDates(allChoreToUsers, allChores, currentHousehold.id);
-  console.log('this weeks chores: ', thisWeeksChores);
-  console.log('last weeks chores: ', lastWeeksChores);
-  console.log('last months chores: ', lastMonthsChores);
+  // console.log('this weeks chores: ', thisWeeksChores);
+  // console.log('last weeks chores: ', lastWeeksChores);
+  // console.log('last months chores: ', lastMonthsChores);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
