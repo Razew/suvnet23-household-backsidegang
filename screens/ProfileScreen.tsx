@@ -8,6 +8,7 @@ import { HomeStackParamList } from '../navigators/HomeStackNavigator';
 import { RootStackParamList } from '../navigators/RootStackNavigator';
 import { resetState, selectLoggedInUser } from '../store/auth/slice';
 import { fetchAvatars, selectAvatars } from '../store/avatars/slice';
+import { selectIsCurrentUserAdminForCurrentHousehold } from '../store/combinedSelectors';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   fetchHouseholds,
@@ -32,6 +33,7 @@ export default function ProfileScreen({ navigation }: Props) {
   const allUsersToHouseholds = useAppSelector(selectUsersToHouseholds); //UserToHousehold[]
   const loggedInUser = useAppSelector(selectLoggedInUser); // User
   const currentHousehold = useAppSelector(selectCurrentHousehold); //Household[]
+  const isAdmin = useAppSelector(selectIsCurrentUserAdminForCurrentHousehold);
 
   const dispatch = useAppDispatch();
 
@@ -277,6 +279,7 @@ export default function ProfileScreen({ navigation }: Props) {
           mode="contained"
           style={{ backgroundColor: 'red' }}
           onPress={handleLeaveHousehold}
+          disabled={isAdmin}
         >
           Leave Household
         </Button>
