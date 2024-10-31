@@ -1,16 +1,16 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable, StyleSheet } from 'react-native';
+import AdminScreen from '../screens/AdminScreen';
 import CreateHouseholdScreen from '../screens/CreateHouseholdScreen';
 import HomeScreen from '../screens/HomeScreen';
 import HouseholdScreen from '../screens/HouseholdScreen';
 import JoinHouseholdScreen from '../screens/JoinHouseholdScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { selectLoggedInUser } from '../store/auth/slice';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrentHousehold } from '../store/households/slice';
 import { selectUsersToHouseholds } from '../store/userToHousehold/slice';
-import { selectLoggedInUser } from '../store/auth/slice';
-import AdminScreen from '../screens/AdminScreen';
 // import HouseholdTabNavigator from './HouseholdTabNavigator';
 
 export type HomeStackParamList = {
@@ -42,17 +42,6 @@ export default function HomeStackNavigator() {
       screenOptions={({ navigation }) => ({
         headerRight: () => (
           <>
-            {/* <Pressable
-              style={s.tempExit}
-              onPress={() => navigation.replace('Loading')}
-            >
-              <Text style={s.tempText}>LoadingScreen</Text>
-              <MaterialIcons
-                name="exit-to-app"
-                size={24}
-                color="#D32F2F"
-              />
-            </Pressable> */}
             {isAdminOnHousehold && (
               <Pressable
                 style={s.tempExit}
