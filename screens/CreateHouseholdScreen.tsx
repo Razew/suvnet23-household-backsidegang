@@ -161,10 +161,12 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
         <>
           <View>
             <AvatarSelector setAvatar={setAvatar} />
-            <NicknameForm setNickname={setNickname} />
-            <Text>{avatar.emoji}</Text>
-            <Text>Nickname: {nickname}</Text>
+            <NicknameForm
+              nickname={nickname}
+              setNickname={setNickname}
+            />
             <Button
+              disabled={nickname.length === 0}
               onPress={() => {
                 if (currentUser && currentHousehold) {
                   dispatch(
@@ -187,14 +189,15 @@ export default function CreateHouseholdScreen({ navigation }: Props) {
           <Snackbar
             visible={visible}
             onDismiss={onDismissSnackBar}
-            action={{
-              label: 'Household created',
-              // onPress: () => {
-              //   navigation.replace('HouseholdScreen');
-              // },
-            }}
+            // action={{
+            //   label: 'Household created',
+            //   // onPress: () => {
+            //   //   navigation.replace('HouseholdScreen');
+            //   // },
+            // }}
           >
-            {snackBarMessage}
+            {/* {snackBarMessage} */}
+            Created Household
           </Snackbar>
         </>
       ) : (
