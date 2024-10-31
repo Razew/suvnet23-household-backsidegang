@@ -124,7 +124,7 @@ export default function HouseholdScreen() {
   const renderScreen = () => {
     if (currentPage === 0) {
       return (
-        <View>
+        <View style={styles.dailyView}>
           <ScrollView>
             <DailyViewScreen />
           </ScrollView>
@@ -190,7 +190,7 @@ export default function HouseholdScreen() {
 
         <PanGestureHandler onHandlerStateChange={handleSwipe}>
           <Surface style={[container, { width: '100%' }]}>
-            <Animated.View style={[{ flex: 1 }, animatedStyle]}>
+            <Animated.View style={[styles.animatedView, animatedStyle]}>
               {renderScreen()}
             </Animated.View>
           </Surface>
@@ -217,5 +217,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     alignSelf: 'center',
+  },
+  dailyView: {
+    flex: 1,
+  },
+  animatedView: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
