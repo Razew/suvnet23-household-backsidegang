@@ -44,7 +44,7 @@ export default function DailyViewScreen() {
         <Snackbar
           visible={snackbarVisible}
           onDismiss={hideSnackbar}
-          duration={2000}
+          duration={1000}
           onIconPress={hideSnackbar}
           // style={errorMessage ? { backgroundColor: colors.error } : null}
         >
