@@ -1,17 +1,15 @@
-import { useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { selectCurrentAvatar } from '../store/avatars/slice';
 import { useAppSelector } from '../store/hooks';
 
 type Props = {
+  nickname: string;
   setNickname: (nickname: string) => void;
 };
 
-export default function NicknameForm({ setNickname }: Props) {
-  const [nicknameLocal, setNicknameLocal] = useState('');
+export default function NicknameForm({ nickname, setNickname }: Props) {
   const currentAvatar = useAppSelector(selectCurrentAvatar);
-  const changeNickname = () => setNickname(nicknameLocal);
 
   return (
     <>
@@ -40,8 +38,8 @@ export default function NicknameForm({ setNickname }: Props) {
         </View>
         <TextInput
           label="Choose nickname"
-          value={nicknameLocal}
-          onChangeText={setNicknameLocal}
+          value={nickname}
+          onChangeText={setNickname}
         />
         <View
           style={{
@@ -52,13 +50,13 @@ export default function NicknameForm({ setNickname }: Props) {
             marginTop: 20,
           }}
         >
-          <Button
+          {/* <Button
             // onPress={() => changeNickname()}
             onPress={changeNickname}
             mode="contained"
           >
             Set nickname
-          </Button>
+          </Button> */}
         </View>
       </View>
     </>
