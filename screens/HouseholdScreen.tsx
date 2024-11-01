@@ -118,7 +118,7 @@ export default function HouseholdScreen() {
     createButton('Add chore', 'plus', () =>
       navigation.navigate('HandleChore', { chore: undefined }),
     ),
-    createButton('Admin', 'cog', () => undefined),
+    // createButton('Admin', 'cog', () => undefined),
   ];
 
   const renderScreen = () => {
